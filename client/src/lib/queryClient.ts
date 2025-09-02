@@ -12,46 +12,46 @@ async function throwIfResNotOk(res: Response) {
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL || "http://localhost:54321";
 const API_BASE: string = `${SUPABASE_URL}/functions/v1`;
 
-export async function apiRequest(
-  method: string,
-  url: string,
-  data?: unknown | undefined,
-): Promise<Response> {
-  const { data: { session } } = await supabase.auth.getSession();
-  console.log('Session debug:', { session: !!session, token: session?.access_token ? 'present' : 'missing' });
+export const apiRequest = async (
+  method: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH',
+  endpoint: string,
+  data?: any
+): Promise<Response> => {
+  const { data: { session } } = await supabase.auth.getSession()
   
-  const hdrs: Record<string,string> = {};
+  console.log('Session debug:', { session: !!session, token: session?.access_token ? 'present' : 'missing' })
   
-  // Only set Content-Type for JSON data, not FormData
-  if (data && !(data instanceof FormData)) {
-    hdrs["Content-Type"] = "application/json";
+  const headers: Record<string, string> = {
+    'Content-Type': 'application/json',
   }
   
   if (session?.access_token) {
-    hdrs["Authorization"] = `Bearer ${session.access_token}`;
-    console.log('Added Authorization header');
-  } else {
-    console.log('No access token found - attempting to refresh session');
-    // Try to refresh the session
-    const { data: { session: refreshedSession } } = await supabase.auth.refreshSession();
-    if (refreshedSession?.access_token) {
-      hdrs["Authorization"] = `Bearer ${refreshedSession.access_token}`;
-      console.log('Added Authorization header from refreshed session');
-    } else {
-      console.log('Failed to refresh session - user may need to log in again');
-    }
+    headers['Authorization'] = `Bearer ${session.access_token}`
+    console.log('Added Authorization header')
   }
 
-  const finalUrl = url.startsWith("http") ? url : `${API_BASE}${url}`;
-
-  const res = await fetch(url, {
+  const config: RequestInit = {
     method,
-    headers: hdrs,
-    body: data ? (data instanceof FormData ? data : JSON.stringify(data)) : undefined,
-  });
+    headers,
+  }
 
-  await throwIfResNotOk(res);
-  return res;
+  if (data && method !== 'GET') {
+    config.body = JSON.stringify(data)
+  }
+
+  const url = `${SUPABASE_URL}/functions/v1${endpoint}`
+  console.log('Making API request to:', url)
+  
+  const response = await fetch(url, config)
+  console.log('API response status:', response.status)
+  
+  if (!response.ok) {
+    const errorText = await response.text()
+    console.error('API error response:', errorText)
+    throw new Error(`HTTP error! status: ${response.status}, response: ${errorText}`)
+  }
+  
+  return response
 }
 
 type UnauthorizedBehavior = "returnNull" | "throw";
