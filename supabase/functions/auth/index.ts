@@ -16,7 +16,7 @@ Deno.serve(async (req) => {
     const pathSegments = url.pathname.split('/').filter(Boolean)
 
     // POST /auth/register
-    if (method === 'POST' && pathSegments[0] === 'register') {
+    if (method === 'POST' && pathSegments.includes('register')) {
       const { email, password, username, fullName } = await req.json()
 
       // Create auth user
@@ -51,7 +51,7 @@ Deno.serve(async (req) => {
     }
 
     // POST /auth/login
-    if (method === 'POST' && pathSegments[0] === 'login') {
+    if (method === 'POST' && pathSegments.includes('login')) {
       const { email, password } = await req.json()
 
       const { data, error } = await supabase.auth.signInWithPassword({
@@ -74,7 +74,7 @@ Deno.serve(async (req) => {
     }
 
     // POST /auth/logout
-    if (method === 'POST' && pathSegments[0] === 'logout') {
+    if (method === 'POST' && pathSegments.includes('logout')) {
       const authHeader = req.headers.get('Authorization')
       if (authHeader) {
         const token = authHeader.replace('Bearer ', '')
@@ -87,7 +87,7 @@ Deno.serve(async (req) => {
     }
 
     // POST /auth/complete-profile
-    if (method === 'POST' && pathSegments[0] === 'complete-profile') {
+    if (method === 'POST' && pathSegments.includes('complete-profile')) {
       const authHeader = req.headers.get('Authorization')
       if (!authHeader) {
         return new Response(JSON.stringify({ error: 'Unauthorized' }), {
@@ -128,7 +128,7 @@ Deno.serve(async (req) => {
     }
 
     // POST /auth/google
-    if (method === 'POST' && pathSegments[0] === 'google') {
+    if (method === 'POST' && pathSegments.includes('google')) {
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
