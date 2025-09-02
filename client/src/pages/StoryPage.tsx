@@ -65,7 +65,7 @@ const ratingFormSchema = z.object({
 
 export default function StoryPage() {
   const [, params] = useRoute("/story/:id");
-  const storyId = params?.id || "";
+  const storyId = params?.id ?? "";
   console.log('StoryPage params:', params);
   console.log('StoryPage storyId:', storyId);
   const { user, isAuthenticated } = useAuth();
@@ -97,7 +97,7 @@ export default function StoryPage() {
       try {
         // Try fetching as story first
         console.log('Trying to fetch as story...');
-        const storyResponse = await apiRequest("GET", `/api/stories/${storyId}`);
+        const storyResponse = await apiRequest("GET", `/stories/${storyId}`);
         if (!storyResponse.ok) {
           throw new Error(`Story API failed: ${storyResponse.status}`);
         }
@@ -109,7 +109,7 @@ export default function StoryPage() {
         try {
           // If story fails, try fetching as comic
           console.log('Trying to fetch as comic...');
-          const comicResponse = await apiRequest("GET", `/api/comics/${storyId}`);
+          const comicResponse = await apiRequest("GET", `/comics/${storyId}`);
           if (!comicResponse.ok) {
             throw new Error(`Comic API failed: ${comicResponse.status}`);
           }
@@ -134,7 +134,7 @@ export default function StoryPage() {
     queryKey: ["story-chapters", storyId],
     queryFn: async () => {
       console.log('Fetching chapters for story:', storyId);
-      const response = await apiRequest("GET", `/api/stories/${storyId}/chapters`);
+      const response = await apiRequest("GET", `/stories/${storyId}/chapters`);
       console.log('Chapters API response status:', response.status);
       
       if (!response.ok) {
@@ -156,7 +156,7 @@ export default function StoryPage() {
       console.log('Uploading chapter for story:', storyId);
       console.log('FormData contents:', Array.from(formData.entries()));
       
-      const response = await apiRequest("POST", `/api/stories/${storyId}/chapters`, formData);
+      const response = await apiRequest("POST", `/stories/${storyId}/chapters`, formData);
       
       console.log('Upload response:', response);
       return response;
@@ -269,7 +269,7 @@ export default function StoryPage() {
 
   // Fetch story ratings
   const { data: ratings } = useQuery<Rating[]>({
-    queryKey: [`/api/stories/${storyId}/ratings`],
+    queryKey: [`/stories/${storyId}/ratings`],
     enabled: !!storyId && storyId !== "",
   });
   
@@ -296,16 +296,16 @@ export default function StoryPage() {
   const bookmarkMutation = useMutation({
     mutationFn: async () => {
       if (isBookmarked) {
-        const res = await apiRequest("DELETE", `/api/stories/${storyId}/bookmark`, {});
+        const res = await apiRequest("DELETE", `/stories/${storyId}/bookmark`, {});
         return res.json();
       } else {
-        const res = await apiRequest("POST", `/api/stories/${storyId}/bookmark`, {});
+        const res = await apiRequest("POST", `/stories/${storyId}/bookmark`, {});
         return res.json();
       }
     },
     onSuccess: () => {
       setIsBookmarked(!isBookmarked);
-      queryClient.invalidateQueries({ queryKey: ["/api/bookmarks"] });
+      queryClient.invalidateQueries({ queryKey: ["/bookmarks"] });
       toast({
         title: isBookmarked ? "Removed from library" : "Added to library",
         description: isBookmarked 
@@ -325,12 +325,12 @@ export default function StoryPage() {
   // Rating mutation
   const ratingMutation = useMutation({
     mutationFn: async (data: { rating: number; review: string }) => {
-      const res = await apiRequest("POST", `/api/stories/${storyId}/rate`, data);
+      const res = await apiRequest("POST", `/stories/${storyId}/rate`, data);
       return res.json();
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [`/api/stories/${storyId}`] });
-      queryClient.invalidateQueries({ queryKey: [`/api/stories/${storyId}/ratings`] });
+      queryClient.invalidateQueries({ queryKey: [`/stories/${storyId}`] });
+      queryClient.invalidateQueries({ queryKey: [`/stories/${storyId}/ratings`] });
       setShowRatingForm(false);
       toast({
         title: "Rating submitted",
