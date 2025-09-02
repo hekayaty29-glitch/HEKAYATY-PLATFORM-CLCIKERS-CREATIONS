@@ -22,8 +22,7 @@ Deno.serve(async (req) => {
         .from('stories')
         .select(`
           *,
-          profiles!stories_author_id_fkey(username, full_name, avatar_url),
-          genres(name, icon)
+          profiles(username, full_name, avatar_url)
         `)
         .eq('is_published', true)
         // .eq('category', 'top') // Remove category filter to show all published stories
@@ -43,8 +42,7 @@ Deno.serve(async (req) => {
         .from('stories')
         .select(`
           *,
-          profiles!stories_author_id_fkey(username, full_name, avatar_url),
-          genres(name, icon)
+          profiles(username, full_name, avatar_url)
         `)
         .eq('is_published', true)
         // .eq('placement', 'gems') // Remove placement filter to show all published stories
@@ -64,8 +62,7 @@ Deno.serve(async (req) => {
         .from('stories')
         .select(`
           *,
-          profiles!stories_author_id_fkey(username, full_name, avatar_url),
-          genres(name, icon)
+          profiles(username, full_name, avatar_url)
         `)
         .eq('is_published', true)
         // .eq('placement', 'workshops') // Remove placement filter to show all published stories
@@ -93,8 +90,7 @@ Deno.serve(async (req) => {
         .from('stories')
         .select(`
           *,
-          profiles!stories_author_id_fkey(username, full_name, avatar_url),
-          genres(name, icon)
+          profiles(username, full_name, avatar_url)
         `)
         .eq('is_published', true)
         .order('created_at', { ascending: false })
