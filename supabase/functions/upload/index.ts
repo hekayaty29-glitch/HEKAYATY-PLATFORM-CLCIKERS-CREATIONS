@@ -98,21 +98,25 @@ Deno.serve(async (req) => {
       throw new Error(uploadResult.error?.message || 'Upload failed')
     }
 
-    // Log upload activity
-    await supabase
-      .from('audit_logs')
-      .insert({
-        user_id: user.id,
-        action: 'file_upload',
-        details: {
-          file_name: file.name,
-          file_size: file.size,
-          file_type: file.type,
-          cloudinary_id: uploadResult.public_id
-        },
-        ip_address: req.headers.get('x-forwarded-for') || 'unknown',
-        created_at: new Date().toISOString()
-      })
+    // Log upload activity (optional - don't fail if table doesn't exist)
+    try {
+      await supabase
+        .from('audit_logs')
+        .insert({
+          user_id: user.id,
+          action: 'file_upload',
+          details: {
+            file_name: file.name,
+            file_size: file.size,
+            file_type: file.type,
+            cloudinary_id: uploadResult.public_id
+          },
+          ip_address: req.headers.get('x-forwarded-for') || 'unknown',
+          created_at: new Date().toISOString()
+        })
+    } catch (logError) {
+      console.warn('Failed to log upload activity:', logError)
+    }
 
     return new Response(JSON.stringify({
       url: uploadResult.secure_url,
