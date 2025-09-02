@@ -17,7 +17,7 @@ const useTalesContent = () => {
   return useQuery<TalesContent>({
     queryKey: ['tales-of-prophets'],
     queryFn: async () => {
-      const response = await apiRequest('GET', '/api/tales-of-prophets');
+      const response = await apiRequest('GET', '/tales-of-prophets');
       return await response.json();
     },
     staleTime: 5 * 60 * 1000, // 5 minutes

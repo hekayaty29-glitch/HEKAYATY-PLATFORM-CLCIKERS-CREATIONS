@@ -72,11 +72,14 @@ export default function HekayatyOriginals({ stories, showSearch = false }: Props
   const isAdmin = !!user?.isAdmin;
 
   const originals = stories ?? fetched ?? [];
+  
+  console.log('HekayatyOriginals - fetched data:', fetched);
+  console.log('HekayatyOriginals - originals array:', originals);
 
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedGenre, setSelectedGenre] = useState("all");
 
-  const genres = Array.from(new Set(originals.map((s) => s.genre)));
+  const genres = Array.from(new Set(originals.map((s) => s.genre || 'Unknown')));
 
   const filtered = originals.filter((s) => {
     const matchGenre = selectedGenre === "all" || s.genre === selectedGenre;

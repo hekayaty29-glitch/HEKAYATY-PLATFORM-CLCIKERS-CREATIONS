@@ -15,8 +15,8 @@ import { useQuery } from "@tanstack/react-query";
 
 const useCharacters = () =>
   useQuery<any[]>({
-    queryKey: ["/api/characters"],
-    queryFn: async () => (await apiRequest("GET", "/api/characters")).json(),
+    queryKey: ["/characters"],
+    queryFn: async () => (await apiRequest("GET", "/characters")).json(),
     staleTime: 1000 * 60 * 5,
   });
 
@@ -37,10 +37,10 @@ export default function CharactersSection() {
 
   const addCharacter = useMutation({
     mutationFn: async (data: { name: string; description: string; role: string; image: string }) => {
-      await apiRequest("POST", "/api/characters", data);
+      await apiRequest("POST", "/characters", data);
     },
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ["/api/characters"] });
+      qc.invalidateQueries({ queryKey: ["/characters"] });
       setShowAdd(false);
       setForm({ name: "", description: "", role: "Hero", image: "" });
     },
