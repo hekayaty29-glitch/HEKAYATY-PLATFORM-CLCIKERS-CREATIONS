@@ -34,9 +34,9 @@ export default function CharacterDetailPage() {
 
   // Fetch character data
   const { data: character, isLoading, error } = useQuery<Character>({
-    queryKey: ["/api/characters", characterId],
+    queryKey: ["/characters", characterId],
     queryFn: async () => {
-      const response = await apiRequest("GET", `/api/characters/${characterId}`);
+      const response = await apiRequest("GET", `/characters/${characterId}`);
       return response.json();
     },
     enabled: !!characterId,
@@ -44,10 +44,10 @@ export default function CharacterDetailPage() {
 
   // Fetch associated stories
   const { data: stories = [] } = useQuery<Story[]>({
-    queryKey: ["/api/stories", "character", characterId],
+    queryKey: ["/stories", "character", characterId],
     queryFn: async () => {
       if (!character?.associatedStories?.length) return [];
-      const response = await apiRequest("GET", `/api/stories?ids=${character.associatedStories.join(',')}`);
+      const response = await apiRequest("GET", `/stories?ids=${character.associatedStories.join(',')}`);
       return response.json();
     },
     enabled: !!character?.associatedStories?.length,
