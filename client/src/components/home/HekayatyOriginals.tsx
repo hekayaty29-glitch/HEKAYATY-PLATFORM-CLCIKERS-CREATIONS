@@ -25,8 +25,14 @@ interface Props {
 // Fetch originals
 const useOriginalStories = () =>
   useQuery<OriginalStory[]>({
-    queryKey: ["/api/stories/originals"],
-    queryFn: async () => (await apiRequest("GET", "/api/stories/originals")).json(),
+    queryKey: ["/stories/special"],
+    queryFn: async () => {
+      console.log('Fetching original stories...');
+      const response = await apiRequest("GET", "/stories/special");
+      const data = await response.json();
+      console.log('Original stories response:', data);
+      return data;
+    },
     staleTime: 1000 * 60 * 5,
   });
 

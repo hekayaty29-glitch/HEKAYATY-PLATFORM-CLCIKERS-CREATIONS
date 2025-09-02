@@ -3,6 +3,7 @@ import bgImg from "@/assets/00a75467-b343-4cf1-a5c7-0b7d1270efc4.png";
 import { Link } from "wouter";
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { apiRequest } from "@/lib/queryClient";
 
 interface Story {
   id: number;
@@ -15,20 +16,26 @@ interface Story {
 
 // Fetch special stories
 const useSpecialStories = () =>
-  useQuery<Story[]>({
-    queryKey: ["/stories/special"],
-    staleTime: 1000 * 60 * 5,
+  useQuery({
+    queryKey: ['/stories/special'],
+    queryFn: async () => {
+      console.log('Fetching special stories...');
+      const response = await apiRequest('GET', '/stories/special')
+      const data = await response.json()
+      console.log('Special stories response:', data);
+      return data
+    }
   });
 
 export default function SpecialStories() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedGenre, setSelectedGenre] = useState("all");
 
-  const { data, isLoading } = useSpecialStories();
+  const { data: stories, isLoading, error } = useSpecialStories();
 
-  const genres = Array.from(new Set((data || []).map((s) => s.genre)));
+  const genres = Array.from(new Set((stories || []).map((s: any) => s.genre)));
 
-  const filtered = (data || []).filter((s) => {
+  const filtered = (stories || []).filter((s: any) => {
     const matchGenre = selectedGenre === "all" || s.genre === selectedGenre;
     const matchTitle = s.title.toLowerCase().includes(searchTerm.toLowerCase());
     return matchGenre && matchTitle;
@@ -99,7 +106,7 @@ export default function SpecialStories() {
             className="py-3 px-4 rounded-full bg-amber-50/10 text-amber-50 focus:outline-none focus:ring-2 focus:ring-amber-500"
           >
             <option value="all">All Genres</option>
-            {genres.map((g) => (
+            {genres.map((g: any) => (
               <option key={g} value={g}>
                 {g}
               </option>
