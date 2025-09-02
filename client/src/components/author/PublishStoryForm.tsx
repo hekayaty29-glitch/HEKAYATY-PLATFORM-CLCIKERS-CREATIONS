@@ -139,6 +139,8 @@ export function PublishStoryForm({ isPremium }: PublishStoryFormProps) {
   
   // Handle form submission
   const onSubmit = (values: StoryFormValues) => {
+    console.log('Form submitted with values:', values);
+    console.log('Form errors:', form.formState.errors);
     publishMutation.mutate(values);
   };
   
@@ -403,6 +405,12 @@ export function PublishStoryForm({ isPremium }: PublishStoryFormProps) {
             type="submit"
             className="bg-amber-500 hover:bg-amber-600 text-white font-cinzel"
             disabled={publishMutation.isPending}
+            onClick={() => {
+              console.log('Publish button clicked');
+              console.log('Form valid:', form.formState.isValid);
+              console.log('Form errors:', form.formState.errors);
+              console.log('Form values:', form.getValues());
+            }}
           >
             {publishMutation.isPending ? (
               <>
