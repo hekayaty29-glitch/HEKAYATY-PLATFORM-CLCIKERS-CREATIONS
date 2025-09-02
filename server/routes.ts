@@ -127,7 +127,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/characters", requireAuth, async (req: Request, res: Response) => {
     try {
       const body = insertCharacterSchema.parse(req.body);
-      const created = await supabaseStorage.createCharacter(body);
+      
+      // Ensure required fields are present
+      if (!body.name || !body.description || !body.role || !body.image) {
+        return res.status(400).json({ message: "Missing required fields: name, description, role, image" });
+      }
+      
+      const created = await supabaseStorage.createCharacter({
+        name: body.name,
+        description: body.description,
+        role: body.role,
+        image: body.image,
+        backgroundStory: body.backgroundStory,
+        characterType: body.characterType,
+        associatedStories: body.associatedStories
+      });
       if (!created) {
         return res.status(500).json({ message: "Could not create character" });
       }
