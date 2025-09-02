@@ -267,11 +267,8 @@ Deno.serve(async (req) => {
         .insert({
           title: storyData.title,
           description: storyData.description,
-          cover_image: storyData.coverImage,
-          placement: storyData.placement,
-          author_name: storyData.authorName,
-          genre: storyData.genre,
-          collaborators: storyData.collaborators,
+          content: storyData.description, // Use description as initial content
+          cover_image_url: storyData.coverImage,
           is_premium: storyData.isPremium,
           is_published: storyData.isPublished,
           author_id: user.id,
