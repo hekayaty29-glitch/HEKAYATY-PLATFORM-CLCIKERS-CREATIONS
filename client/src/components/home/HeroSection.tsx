@@ -11,7 +11,7 @@ export default function HeroSection() {
   const [searchQuery, setSearchQuery] = useState("");
   
   const { data: genres } = useQuery<Genre[]>({
-    queryKey: ["/api/genres"],
+    queryKey: ["/genres"],
     staleTime: 1000 * 60 * 5, // 5 minutes
   });
   

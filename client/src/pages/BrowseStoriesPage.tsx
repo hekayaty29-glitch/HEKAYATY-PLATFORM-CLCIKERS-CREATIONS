@@ -46,7 +46,7 @@ export default function BrowseStoriesPage() {
   
   // Fetch genres and ensure "Historical" is available
   const { data: fetchedGenres } = useQuery<Genre[]>({
-    queryKey: ["/api/genres"],
+    queryKey: ["/genres"],
     staleTime: 1000 * 60 * 5, // 5 minutes
   });
 

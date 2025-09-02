@@ -58,7 +58,7 @@ export function PublishStoryForm({ isPremium }: PublishStoryFormProps) {
   
   // Fetch genres for selection
   const { data: genres, isLoading: genresLoading } = useQuery<Genre[]>({
-    queryKey: ["/api/genres"],
+    queryKey: ["/genres"],
     staleTime: 1000 * 60 * 5, // 5 minutes
   });
   

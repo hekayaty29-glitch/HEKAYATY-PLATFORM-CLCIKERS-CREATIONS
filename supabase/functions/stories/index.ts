@@ -16,6 +16,69 @@ Deno.serve(async (req) => {
     const method = req.method
     const pathSegments = url.pathname.split('/').filter(Boolean)
 
+    // GET /stories/special - Get special stories
+    if (method === 'GET' && pathSegments.length === 2 && pathSegments[1] === 'special') {
+      const { data, error } = await supabase
+        .from('stories')
+        .select(`
+          *,
+          profiles!stories_author_id_fkey(username, full_name, avatar_url),
+          genres(name, icon)
+        `)
+        .eq('is_published', true)
+        .eq('category', 'top')
+        .order('created_at', { ascending: false })
+        .limit(10)
+
+      if (error) throw error
+
+      return new Response(JSON.stringify(data || []), {
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+      })
+    }
+
+    // GET /stories/gems - Get gem stories
+    if (method === 'GET' && pathSegments.length === 2 && pathSegments[1] === 'gems') {
+      const { data, error } = await supabase
+        .from('stories')
+        .select(`
+          *,
+          profiles!stories_author_id_fkey(username, full_name, avatar_url),
+          genres(name, icon)
+        `)
+        .eq('is_published', true)
+        .eq('placement', 'gems')
+        .order('created_at', { ascending: false })
+        .limit(10)
+
+      if (error) throw error
+
+      return new Response(JSON.stringify(data || []), {
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+      })
+    }
+
+    // GET /stories/workshops - Get workshop stories
+    if (method === 'GET' && pathSegments.length === 2 && pathSegments[1] === 'workshops') {
+      const { data, error } = await supabase
+        .from('stories')
+        .select(`
+          *,
+          profiles!stories_author_id_fkey(username, full_name, avatar_url),
+          genres(name, icon)
+        `)
+        .eq('is_published', true)
+        .eq('placement', 'workshops')
+        .order('created_at', { ascending: false })
+        .limit(10)
+
+      if (error) throw error
+
+      return new Response(JSON.stringify(data || []), {
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+      })
+    }
+
     // GET /stories - List stories with filters
     if (method === 'GET' && pathSegments.length === 1) {
       const { searchParams } = url

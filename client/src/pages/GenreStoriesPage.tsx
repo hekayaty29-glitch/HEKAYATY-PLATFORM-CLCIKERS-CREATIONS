@@ -19,7 +19,7 @@ import { Search, SlidersHorizontal, AlertTriangle } from "lucide-react";
 import Container from "@/components/layout/Container";
 
 export default function GenreStoriesPage() {
-  const [, params] = useRoute("/genres/:id");
+  const [, params] = useRoute<{ id: string }>("/genres/:id");
   const genreId = params ? parseInt(params.id) : undefined;
   const [selectedGenreId, setSelectedGenreId] = useState<number | undefined>(genreId);
   const [searchQuery, setSearchQuery] = useState("");
@@ -27,13 +27,13 @@ export default function GenreStoriesPage() {
   
   // Fetch all genres
   const { data: genres, isLoading: genresLoading } = useQuery<Genre[]>({
-    queryKey: ["/api/genres"],
+    queryKey: ["/genres"],
     staleTime: 1000 * 60 * 5, // 5 minutes
   });
   
   // Fetch stories for the selected genre
   const { data: stories, isLoading: storiesLoading } = useQuery<StoryCardType[]>({
-    queryKey: [`/api/stories${selectedGenreId ? `?genreId=${selectedGenreId}` : ''}`],
+    queryKey: [`/stories${selectedGenreId ? `?genreId=${selectedGenreId}` : ''}`],
     enabled: true,
     staleTime: 1000 * 60,
   });
