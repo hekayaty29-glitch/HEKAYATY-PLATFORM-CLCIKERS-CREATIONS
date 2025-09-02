@@ -233,23 +233,17 @@ export default function StoryPage() {
 
   // Function to get story content - either from chapters or fallback to story.content
   const getStoryContent = () => {
-    console.log('Chapters data:', chaptersData); // Debug log
-    
-    if ((chaptersData as any)?.chapters && (chaptersData as any).chapters.length > 0) {
-      console.log('Found chapters:', (chaptersData as any).chapters.length); // Debug log
+    if (chaptersData?.chapters && chaptersData.chapters.length > 0) {
+      console.log('Chapters found:', chaptersData.chapters.length); // Debug log
+      console.log('Chapter data:', chaptersData.chapters); // Debug log
       
-      // Combine all chapters content
-      const combinedContent = (chaptersData as any).chapters
-        .sort((a: any, b: any) => a.chapter_order - b.chapter_order)
+      // Combine all chapter content, handling PDF URLs
+      const combinedContent = chaptersData.chapters
         .map((chapter: any) => {
-          console.log('Processing chapter:', chapter.title, 'Order:', chapter.chapter_order, 'Type:', chapter.file_type); // Debug log
-          
-          if (chapter.file_type === 'text' && chapter.content) {
-            return `# ${chapter.title}\n\n${chapter.content}`;
-          } else if (chapter.file_type === 'pdf' && chapter.file_url) {
-            return `# ${chapter.title}\n\n[PDF_CHAPTER:${chapter.file_url}]`;
-          } else if (chapter.file_type === 'audio' && chapter.file_url) {
-            return `# ${chapter.title}\n\n[AUDIO_CHAPTER:${chapter.file_url}]`;
+          // If chapter has a PDF file_url, create PDF chapter content
+          if (chapter.file_url) {
+            console.log('Found PDF chapter:', chapter.title, chapter.file_url);
+            return `# ${chapter.title || 'Chapter'}\n\n[PDF_CHAPTER:${chapter.file_url}]`;
           } else if (chapter.file_type === 'image' && chapter.file_url) {
             return `# ${chapter.title}\n\n[IMAGE_CHAPTER:${chapter.file_url}]`;
           }
