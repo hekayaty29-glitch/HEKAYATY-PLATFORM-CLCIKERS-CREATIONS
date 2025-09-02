@@ -86,6 +86,47 @@ Deno.serve(async (req) => {
       })
     }
 
+    // POST /auth/complete-profile
+    if (method === 'POST' && pathSegments[0] === 'complete-profile') {
+      const authHeader = req.headers.get('Authorization')
+      if (!authHeader) {
+        return new Response(JSON.stringify({ error: 'Unauthorized' }), {
+          status: 401,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        })
+      }
+
+      const token = authHeader.replace('Bearer ', '')
+      const { data: { user }, error: userError } = await supabase.auth.getUser(token)
+      
+      if (userError || !user) {
+        return new Response(JSON.stringify({ error: 'Unauthorized' }), {
+          status: 401,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        })
+      }
+
+      const { username, fullName } = await req.json()
+
+      // Update profile with username and full name
+      const { data: profile, error: profileError } = await supabase
+        .from('profiles')
+        .update({
+          username,
+          full_name: fullName,
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', user.id)
+        .select()
+        .single()
+
+      if (profileError) throw profileError
+
+      return new Response(JSON.stringify({ profile }), {
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+      })
+    }
+
     // POST /auth/google
     if (method === 'POST' && pathSegments[0] === 'google') {
       const { data, error } = await supabase.auth.signInWithOAuth({
