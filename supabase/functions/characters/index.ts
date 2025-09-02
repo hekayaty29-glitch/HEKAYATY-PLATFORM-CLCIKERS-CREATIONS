@@ -18,10 +18,19 @@ Deno.serve(async (req) => {
 
     // GET /characters - List all characters
     if (method === 'GET' && pathSegments.length === 1) {
-      // Return empty array since characters table doesn't exist yet
-      const data = []
+      const { data, error } = await supabase
+        .from('legendary_characters')
+        .select('*')
+        .order('created_at', { ascending: false })
 
-      return new Response(JSON.stringify(data), {
+      if (error) {
+        console.error('Error fetching characters:', error)
+        return new Response(JSON.stringify([]), {
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        })
+      }
+
+      return new Response(JSON.stringify(data || []), {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' }
       })
     }
@@ -31,12 +40,18 @@ Deno.serve(async (req) => {
       const characterId = pathSegments[1]
 
       const { data, error } = await supabase
-        .from('characters')
+        .from('legendary_characters')
         .select('*')
         .eq('id', characterId)
         .single()
 
-      if (error) throw error
+      if (error) {
+        console.error('Error fetching character:', error)
+        return new Response(JSON.stringify({ error: 'Character not found' }), {
+          status: 404,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        })
+      }
 
       return new Response(JSON.stringify(data), {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' }
