@@ -20,16 +20,18 @@ Deno.serve(async (req) => {
     if (method === 'GET' && pathSegments.length === 2 && pathSegments[1] === 'special') {
       const { data, error } = await supabase
         .from('stories')
-        .select(`
-          *,
-          profiles(username, full_name, avatar_url)
-        `)
+        .select('*')
         .eq('is_published', true)
-        // .eq('category', 'top') // Remove category filter to show all published stories
         .order('created_at', { ascending: false })
         .limit(10)
 
-      if (error) throw error
+      if (error) {
+        console.error('Stories/special error:', error)
+        return new Response(JSON.stringify({ error: error.message, data: [] }), {
+          status: 500,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        })
+      }
 
       return new Response(JSON.stringify(data || []), {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' }
@@ -40,10 +42,7 @@ Deno.serve(async (req) => {
     if (method === 'GET' && pathSegments.length === 2 && pathSegments[1] === 'gems') {
       const { data, error } = await supabase
         .from('stories')
-        .select(`
-          *,
-          profiles(username, full_name, avatar_url)
-        `)
+        .select('*')
         .eq('is_published', true)
         // .eq('placement', 'gems') // Remove placement filter to show all published stories
         .order('created_at', { ascending: false })
@@ -60,10 +59,7 @@ Deno.serve(async (req) => {
     if (method === 'GET' && pathSegments.length === 2 && pathSegments[1] === 'workshops') {
       const { data, error } = await supabase
         .from('stories')
-        .select(`
-          *,
-          profiles(username, full_name, avatar_url)
-        `)
+        .select('*')
         .eq('is_published', true)
         // .eq('placement', 'workshops') // Remove placement filter to show all published stories
         .order('created_at', { ascending: false })
@@ -88,10 +84,7 @@ Deno.serve(async (req) => {
 
       let query = supabase
         .from('stories')
-        .select(`
-          *,
-          profiles(username, full_name, avatar_url)
-        `)
+        .select('*')
         .eq('is_published', true)
         .order('created_at', { ascending: false })
         .range(offset, offset + limit - 1)
