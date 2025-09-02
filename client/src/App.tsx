@@ -104,6 +104,7 @@ function Router() {
       <Route path="/home" component={HomePage} />
       <Route path="/genre/:genre" component={GenrePage} />
       <Route path="/login" component={SignInPage} />
+      <Route path="/signin" component={SignInPage} />
       <Route path="/register" component={SignUpPage} />
       <Route path="/profile" component={NewUserProfilePage} />
       <Route path="/profile/:id" component={NewUserProfilePage} />
