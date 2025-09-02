@@ -103,6 +103,9 @@ export default function StoryPage() {
         }
         const storyData = await storyResponse.json();
         console.log('Story data found:', storyData);
+        console.log('Story content field:', storyData.content);
+        console.log('Story pdf_url field:', storyData.pdf_url);
+        console.log('Story file_url field:', storyData.file_url);
         return { ...storyData, contentType: 'story' };
       } catch (storyError) {
         console.log('Story fetch failed:', storyError);
