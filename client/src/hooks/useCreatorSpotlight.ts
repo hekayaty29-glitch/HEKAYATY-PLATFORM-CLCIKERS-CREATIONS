@@ -14,7 +14,7 @@ export function useCreatorSpotlight() {
   const { data: fetchedCreators = [], isLoading } = useQuery<Creator[]>({
     queryKey: ["top-creators"],
     queryFn: async () => {
-      const res = await apiRequest("GET", "/api/creators/top");
+      const res = await apiRequest("GET", "/creators/top");
       const raw = await res.json();
       return raw.map((c: any) => ({ id: c.id, username: c.username, avatar: c.avatar_url || `https://api.dicebear.com/7.x/initials/svg?seed=${c.username}` }));
     },

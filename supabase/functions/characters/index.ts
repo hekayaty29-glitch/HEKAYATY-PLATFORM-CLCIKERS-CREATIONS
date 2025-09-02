@@ -18,12 +18,8 @@ Deno.serve(async (req) => {
 
     // GET /characters - List all characters
     if (method === 'GET' && pathSegments.length === 1) {
-      const { data, error } = await supabase
-        .from('characters')
-        .select('*')
-        .order('created_at', { ascending: false })
-
-      if (error) throw error
+      // Return empty array since characters table doesn't exist yet
+      const data = []
 
       return new Response(JSON.stringify(data), {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' }

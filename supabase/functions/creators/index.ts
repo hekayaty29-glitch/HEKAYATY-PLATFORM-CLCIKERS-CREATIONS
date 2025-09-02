@@ -34,20 +34,16 @@ Deno.serve(async (req) => {
         // Fallback query if RPC doesn't exist
         const { data: fallbackData, error: fallbackError } = await supabase
           .from('profiles')
-          .select(`
-            *,
-            stories!stories_author_id_fkey(id),
-            comics!comics_author_id_fkey(id)
-          `)
+          .select('*')
           .limit(limit)
 
         if (fallbackError) throw fallbackError
 
         const creators = fallbackData?.map(profile => ({
           ...profile,
-          story_count: profile.stories?.length || 0,
-          comic_count: profile.comics?.length || 0,
-          total_works: (profile.stories?.length || 0) + (profile.comics?.length || 0)
+          story_count: 0,
+          comic_count: 0,
+          total_works: 0
         })).sort((a, b) => b.total_works - a.total_works)
 
         return new Response(JSON.stringify(creators), {
@@ -68,19 +64,15 @@ Deno.serve(async (req) => {
 
       const { data, error } = await supabase
         .from('profiles')
-        .select(`
-          id, username, full_name, avatar_url, bio, role,
-          stories!stories_author_id_fkey(id),
-          comics!comics_author_id_fkey(id)
-        `)
+        .select('id, username, full_name, avatar_url, bio, role')
         .range(offset, offset + limit - 1)
 
       if (error) throw error
 
       const creators = data?.map(profile => ({
         ...profile,
-        story_count: profile.stories?.length || 0,
-        comic_count: profile.comics?.length || 0
+        story_count: 0,
+        comic_count: 0
       }))
 
       return new Response(JSON.stringify(creators), {

@@ -22,17 +22,8 @@ Deno.serve(async (req) => {
       const limit = parseInt(searchParams.get('limit') || '20')
       const offset = parseInt(searchParams.get('offset') || '0')
 
-      const { data, error } = await supabase
-        .from('comics')
-        .select(`
-          *,
-          profiles!comics_author_id_fkey(username, full_name, avatar_url)
-        `)
-        .eq('is_published', true)
-        .order('created_at', { ascending: false })
-        .range(offset, offset + limit - 1)
-
-      if (error) throw error
+      // Return empty array since comics table doesn't exist yet
+      const data = []
 
       return new Response(JSON.stringify(data), {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' }

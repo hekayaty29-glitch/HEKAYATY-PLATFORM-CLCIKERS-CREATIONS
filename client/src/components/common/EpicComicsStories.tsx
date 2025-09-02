@@ -9,9 +9,9 @@ export default function EpicComicsStories() {
   const [searchQuery, setSearchQuery] = useState("");
   
   const { data: stories, isLoading } = useQuery({
-    queryKey: ["/api/comics"],
+    queryKey: ["/comics"],
     queryFn: async () => {
-      const res = await apiRequest("GET", "/api/comics");
+      const res = await apiRequest("GET", "/comics");
       return res.json();
     },
   });
