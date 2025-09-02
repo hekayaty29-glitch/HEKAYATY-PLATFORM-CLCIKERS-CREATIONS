@@ -8,19 +8,19 @@ import { createClient } from '@supabase/supabase-js';
 // Do NOT commit your service role key.
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || 'https://placeholder.supabase.co';
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON || 'placeholder-key';
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || 'placeholder-key';
 
 // Debug: Log environment variables to console
 console.log('Environment check:', {
   VITE_SUPABASE_URL: import.meta.env.VITE_SUPABASE_URL,
-  VITE_SUPABASE_ANON: import.meta.env.VITE_SUPABASE_ANON ? 'SET' : 'NOT SET',
+  VITE_SUPABASE_ANON_KEY: import.meta.env.VITE_SUPABASE_ANON_KEY ? 'SET' : 'NOT SET',
   supabaseUrl,
   supabaseAnonKey: supabaseAnonKey ? 'SET' : 'NOT SET'
 });
 
-if (!import.meta.env.VITE_SUPABASE_URL || !import.meta.env.VITE_SUPABASE_ANON) {
+if (!import.meta.env.VITE_SUPABASE_URL || !import.meta.env.VITE_SUPABASE_ANON_KEY) {
   // eslint-disable-next-line no-console
-  console.warn('[supabase] Missing VITE_SUPABASE_URL or VITE_SUPABASE_ANON env variables. Using placeholder values - app will not function properly until real values are set.');
+  console.warn('[supabase] Missing VITE_SUPABASE_URL or VITE_SUPABASE_ANON_KEY env variables. Using placeholder values - app will not function properly until real values are set.');
 }
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
