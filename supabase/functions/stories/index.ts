@@ -107,10 +107,21 @@ Deno.serve(async (req) => {
     if (method === 'GET' && pathSegments.length === 3 && pathSegments[2] === 'chapters') {
       const storyId = pathSegments[1]
       
-      // Return empty chapters array since table doesn't exist yet
-      const data = { chapters: [] }
+      // Fetch chapters from story_chapters table
+      const { data, error } = await supabase
+        .from('story_chapters')
+        .select('*')
+        .eq('story_id', storyId)
+        .order('chapter_order', { ascending: true })
 
-      return new Response(JSON.stringify(data), {
+      if (error) {
+        console.error('Error fetching chapters:', error)
+        return new Response(JSON.stringify({ chapters: [] }), {
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        })
+      }
+
+      return new Response(JSON.stringify({ chapters: data || [] }), {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' }
       })
     }
