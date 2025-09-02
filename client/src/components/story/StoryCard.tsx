@@ -36,10 +36,10 @@ export default function StoryCard({
   const bookmarkMutation = useMutation({
     mutationFn: async () => {
       if (bookmarked) {
-        const res = await apiRequest("DELETE", `/api/stories/${story.id}/bookmark`, {});
+        const res = await apiRequest("DELETE", `/stories/${story.id}/bookmark`, {});
         return res.json();
       } else {
-        const res = await apiRequest("POST", `/api/stories/${story.id}/bookmark`, {});
+        const res = await apiRequest("POST", `/stories/${story.id}/bookmark`, {});
         return res.json();
       }
     },

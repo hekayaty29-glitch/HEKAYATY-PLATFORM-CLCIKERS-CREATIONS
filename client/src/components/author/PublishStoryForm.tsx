@@ -105,11 +105,11 @@ export function PublishStoryForm({ isPremium }: PublishStoryFormProps) {
 
   const publishMutation = useMutation({
     mutationFn: async (data: StoryFormValues) => {
-      const res = await apiRequest("POST", "/api/stories", data);
+      const res = await apiRequest("POST", "/stories", data);
       return res.json();
     },
     onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ["/api/stories"] });
+      queryClient.invalidateQueries({ queryKey: ["/stories"] });
       toast({
         title: "Story published successfully!",
         description: form.getValues("isPublished") 
