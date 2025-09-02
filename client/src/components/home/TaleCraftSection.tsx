@@ -7,7 +7,7 @@ import { useState } from "react";
 // Fetch workshop stories
 const useWorkshopStories = () =>
   useQuery<any[]>({
-    queryKey: ["/api/stories/workshops"],
+    queryKey: ["/stories/workshops"],
     staleTime: 1000 * 60 * 5,
   });
 

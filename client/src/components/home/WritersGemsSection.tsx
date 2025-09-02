@@ -7,7 +7,7 @@ import { useState } from "react";
 // Fetch gem stories
 const useGemStories = () =>
   useQuery<any[]>({
-    queryKey: ["/api/stories/gems"],
+    queryKey: ["/stories/gems"],
     staleTime: 1000 * 60 * 5,
   });
 

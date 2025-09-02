@@ -16,7 +16,7 @@ interface Story {
 // Fetch special stories
 const useSpecialStories = () =>
   useQuery<Story[]>({
-    queryKey: ["/api/stories/special"],
+    queryKey: ["/stories/special"],
     staleTime: 1000 * 60 * 5,
   });
 

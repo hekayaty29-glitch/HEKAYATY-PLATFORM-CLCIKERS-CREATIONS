@@ -22,7 +22,7 @@ const genreIcons: Record<string, React.ReactNode> = {
 
 export default function GenreExplorer() {
   const { data: genres, isLoading } = useQuery<Genre[]>({
-    queryKey: ["/api/genres"],
+    queryKey: ["/genres"],
     staleTime: 1000 * 60 * 5, // 5 minutes
   });
   

@@ -8,7 +8,7 @@ import bgImg from "@/assets/d2c8245c-c591-4cc9-84d2-27252be8dffb.png";
 
 export default function AllStoriesSection() {
   const { data: stories, isLoading } = useQuery<StoryCardType[]>({
-    queryKey: ["/api/stories"],
+    queryKey: ["/stories"],
   });
 
   const [query, setQuery] = useState("");
