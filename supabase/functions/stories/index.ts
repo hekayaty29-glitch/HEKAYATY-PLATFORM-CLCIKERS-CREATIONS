@@ -138,11 +138,76 @@ Deno.serve(async (req) => {
       })
     }
 
-    // POST /stories/:id/chapters - Upload chapter
+    // POST /stories/:id/chapters - Upload chapters
     if (method === 'POST' && pathSegments.length === 3 && pathSegments[2] === 'chapters') {
+      const user = await requireAuth(req)
       const storyId = pathSegments[1]
       
-      return new Response(JSON.stringify({ success: true, message: 'Chapter upload not implemented yet' }), {
+      // Check ownership
+      const { data: story } = await supabase
+        .from('stories')
+        .select('author_id')
+        .eq('id', storyId)
+        .single()
+
+      if (story?.author_id !== user.id) {
+        return new Response(JSON.stringify({ error: 'Unauthorized' }), {
+          status: 403,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        })
+      }
+
+      const formData = await req.formData()
+      const chapters = formData.getAll('chapters') as File[]
+      const chapterNames = formData.getAll('chapterNames') as string[]
+      const chapterOrders = formData.getAll('chapterOrders') as string[]
+
+      // Upload each chapter file and create database entries
+      const uploadedChapters = []
+      
+      for (let i = 0; i < chapters.length; i++) {
+        const file = chapters[i]
+        const name = chapterNames[i]
+        const order = parseInt(chapterOrders[i])
+
+        // Upload file to Cloudinary via upload function
+        const uploadFormData = new FormData()
+        uploadFormData.append('file', file)
+        uploadFormData.append('folder', 'chapters')
+
+        const uploadResponse = await fetch(`${Deno.env.get('SUPABASE_URL')}/functions/v1/upload`, {
+          method: 'POST',
+          headers: {
+            'Authorization': req.headers.get('Authorization') || ''
+          },
+          body: uploadFormData
+        })
+
+        if (!uploadResponse.ok) {
+          throw new Error(`Failed to upload chapter ${name}`)
+        }
+
+        const uploadResult = await uploadResponse.json()
+        
+        // Create chapter record
+        const { data: chapter, error: chapterError } = await supabase
+          .from('story_chapters')
+          .insert({
+            story_id: storyId,
+            chapter_title: name,
+            chapter_order: order,
+            content_url: uploadResult.url,
+            content_type: file.type.includes('pdf') ? 'pdf' : 'text',
+            created_at: new Date().toISOString()
+          })
+          .select()
+          .single()
+
+        if (chapterError) throw chapterError
+        uploadedChapters.push(chapter)
+      }
+
+      return new Response(JSON.stringify({ chapters: uploadedChapters }), {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' }
       })
     }
@@ -182,6 +247,81 @@ Deno.serve(async (req) => {
         .from('stories')
         .select('*')
         .eq('id', storyId)
+        .single()
+
+      if (error) throw error
+
+      return new Response(JSON.stringify(data), {
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+      })
+    }
+
+    // POST /stories/create-with-chapters - Create story with chapters
+    if (method === 'POST' && pathSegments.length === 2 && pathSegments[1] === 'create-with-chapters') {
+      const user = await requireAuth(req)
+      const storyData = await req.json()
+
+      // Create the story first
+      const { data: story, error: storyError } = await supabase
+        .from('stories')
+        .insert({
+          title: storyData.title,
+          description: storyData.description,
+          cover_image: storyData.coverImage,
+          placement: storyData.placement,
+          author_name: storyData.authorName,
+          genre: storyData.genre,
+          collaborators: storyData.collaborators,
+          is_premium: storyData.isPremium,
+          is_published: storyData.isPublished,
+          author_id: user.id,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString()
+        })
+        .select()
+        .single()
+
+      if (storyError) throw storyError
+
+      return new Response(JSON.stringify({ storyId: story.id }), {
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+      })
+    }
+
+    // POST /stories/:id/publish - Publish story
+    if (method === 'PUT' && pathSegments.length === 3 && pathSegments[2] === 'publish') {
+      const user = await requireAuth(req)
+      const storyId = pathSegments[1]
+      const body = await req.json()
+
+      // Check ownership
+      const { data: story } = await supabase
+        .from('stories')
+        .select('author_id')
+        .eq('id', storyId)
+        .single()
+
+      if (story?.author_id !== user.id) {
+        return new Response(JSON.stringify({ error: 'Unauthorized' }), {
+          status: 403,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        })
+      }
+
+      const updateData: any = {
+        is_published: true,
+        updated_at: new Date().toISOString()
+      }
+
+      if (body.publish_at) {
+        updateData.publish_at = body.publish_at
+      }
+
+      const { data, error } = await supabase
+        .from('stories')
+        .update(updateData)
+        .eq('id', storyId)
+        .select()
         .single()
 
       if (error) throw error

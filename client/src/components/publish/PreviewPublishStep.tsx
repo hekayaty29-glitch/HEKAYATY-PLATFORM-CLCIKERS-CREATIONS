@@ -68,7 +68,7 @@ export default function PreviewPublishStep({ data, onUpdate, onPrevious, user }:
         isPublished: false // Will be set to true after chapters upload
       };
 
-      const response = await fetch('/api/stories/create-with-chapters', {
+      const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/stories/create-with-chapters`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -91,7 +91,7 @@ export default function PreviewPublishStep({ data, onUpdate, onPrevious, user }:
         formData.append(`chapterOrders`, index.toString());
       });
 
-      const chaptersResponse = await fetch(`/api/stories/${storyId}/chapters`, {
+      const chaptersResponse = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/stories/${storyId}/chapters`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`
@@ -106,7 +106,7 @@ export default function PreviewPublishStep({ data, onUpdate, onPrevious, user }:
       // Publish the story
       const publishPayload = scheduleEnabled ? { publish_at: publishAt } : {};
 
-      const publishResponse = await fetch(`/api/stories/${storyId}/publish`, {
+      const publishResponse = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/stories/${storyId}/publish`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
