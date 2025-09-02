@@ -36,6 +36,7 @@ export default function PreviewPublishStep({ data, onUpdate, onPrevious, user }:
   const [, navigate] = useLocation();
 
   const handlePublish = async () => {
+    console.log('Publish button clicked - starting publish process');
     setIsPublishing(true);
     // Get current access token
     const { data: { session } } = await supabase.auth.getSession();
@@ -68,6 +69,8 @@ export default function PreviewPublishStep({ data, onUpdate, onPrevious, user }:
         isPublished: false // Will be set to true after chapters upload
       };
 
+      console.log('Sending story creation request with payload:', storyPayload);
+      
       const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/stories/create-with-chapters`, {
         method: 'POST',
         headers: {
@@ -77,11 +80,22 @@ export default function PreviewPublishStep({ data, onUpdate, onPrevious, user }:
         body: JSON.stringify(storyPayload)
       });
 
+      console.log('Story creation response status:', response.status);
+      const responseText = await response.text();
+      console.log('Story creation response body:', responseText);
+
       if (!response.ok) {
-        throw new Error('Failed to create story');
+        throw new Error(`Failed to create story: ${response.status} ${responseText}`);
       }
 
-      const { storyId } = await response.json();
+      const responseData = JSON.parse(responseText);
+      console.log('Parsed response data:', responseData);
+      
+      if (!responseData.storyId) {
+        throw new Error('No story ID returned from server');
+      }
+
+      const { storyId } = responseData;
 
       // Upload chapters
       const formData = new FormData();

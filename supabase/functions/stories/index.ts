@@ -261,24 +261,34 @@ Deno.serve(async (req) => {
       const user = await requireAuth(req)
       const storyData = await req.json()
 
+      console.log('Creating story with data:', storyData)
+      console.log('User ID:', user.id)
+
       // Create the story first
       const { data: story, error: storyError } = await supabase
         .from('stories')
         .insert({
           title: storyData.title,
           description: storyData.description,
-          content: storyData.description, // Use description as initial content
-          cover_image_url: storyData.coverImage,
-          is_premium: storyData.isPremium,
-          is_published: storyData.isPublished,
-          author_id: user.id,
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString()
+          content: storyData.description || 'Story content will be added via chapters', // Use description as initial content
+          cover_image_url: storyData.coverImage || null,
+          is_premium: storyData.isPremium || false,
+          is_published: storyData.isPublished || false,
+          author_id: user.id
         })
         .select()
         .single()
 
-      if (storyError) throw storyError
+      console.log('Story creation result:', { data: story, error: storyError })
+
+      if (storyError) {
+        console.error('Story creation error:', storyError)
+        throw new Error(`Failed to create story: ${storyError.message}`)
+      }
+
+      if (!story) {
+        throw new Error('Story creation returned no data')
+      }
 
       return new Response(JSON.stringify({ storyId: story.id }), {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' }
