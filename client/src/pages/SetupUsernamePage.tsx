@@ -72,7 +72,7 @@ export default function SetupUsernamePage() {
     setIsLoading(true);
     setError("");
     try {
-      const res = await apiRequest("POST", "/api/auth/complete-profile", data);
+      const res = await apiRequest("POST", "/auth/complete-profile", data);
       const json = await res.json();
       if (!res.ok) throw new Error(json?.message || "Failed to complete profile");
       // update auth context so navbar shows new username immediately
