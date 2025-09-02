@@ -38,7 +38,7 @@ export default function AddStoryModal({ open, onClose }: Props) {
         headers: {
           "Content-Type": "application/json",
         },
-        credentials: "include",
+        // credentials: "include", // Removed to fix CORS
         body: JSON.stringify(body),
       });
       if (!res.ok) {

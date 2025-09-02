@@ -44,11 +44,10 @@ export async function apiRequest(
 
   const finalUrl = url.startsWith("http") ? url : `${API_BASE}${url}`;
 
-  const res = await fetch(finalUrl, {
+  const res = await fetch(url, {
     method,
     headers: hdrs,
     body: data ? (data instanceof FormData ? data : JSON.stringify(data)) : undefined,
-    credentials: "include",
   });
 
   await throwIfResNotOk(res);
@@ -70,7 +69,6 @@ export const getQueryFn: <T>(options: {
     }
     
     const res = await fetch(finalUrl, {
-      credentials: "include",
       headers: hdrs,
     });
 

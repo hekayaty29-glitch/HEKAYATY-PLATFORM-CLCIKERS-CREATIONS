@@ -50,7 +50,7 @@ export const secureApiRequest = async (
       'X-CSRF-Token': token,
       ...options.headers,
     },
-    credentials: 'include', // Include cookies for session management
+    // credentials: 'include', // Removed to fix CORS issues
   };
   
   return fetch(url, secureOptions);
