@@ -73,7 +73,7 @@ const UserProfile = () => {
       formData.append('file', file);
       formData.append('folder', 'avatars');
 
-      const resp = await fetch('/api/upload/file', {
+      const resp = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/upload`, {
         method: 'POST',
         headers: token ? { Authorization: `Bearer ${token}` } : {},
         body: formData,

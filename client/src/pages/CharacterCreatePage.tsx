@@ -70,7 +70,7 @@ export default function CharacterCreatePage() {
       const formData = new FormData();
       formData.append('file', file);
       
-      const response = await apiRequest("POST", "/api/upload/file", formData);
+      const response = await apiRequest("POST", "/upload", formData);
       const result = await response.json();
       
       setFormData(prev => ({ ...prev, image: result.url }));
