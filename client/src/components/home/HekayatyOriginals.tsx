@@ -75,6 +75,8 @@ export default function HekayatyOriginals({ stories, showSearch = false }: Props
   
   console.log('HekayatyOriginals - fetched data:', fetched);
   console.log('HekayatyOriginals - originals array:', originals);
+  console.log('HekayatyOriginals - originals.length:', originals.length);
+  console.log('HekayatyOriginals - first story structure:', originals[0]);
 
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedGenre, setSelectedGenre] = useState("all");
