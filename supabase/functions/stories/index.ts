@@ -89,8 +89,9 @@ Deno.serve(async (req) => {
         .order('created_at', { ascending: false })
         .range(offset, offset + limit - 1)
 
-      if (genre) query = query.eq('genres.name', genre)
-      if (author) query = query.eq('profiles.username', author)
+      // Remove broken filters that reference non-existent joins
+      // if (genre) query = query.eq('genres.name', genre)
+      // if (author) query = query.eq('profiles.username', author)
       if (premium) query = query.eq('is_premium', premium === 'true')
       if (shortStory) query = query.eq('is_short_story', shortStory === 'true')
 
