@@ -15,7 +15,7 @@ export default function AuthCallbackPage() {
         
         if (error) {
           console.error('Auth callback error:', error);
-          navigate('/login?error=auth_failed');
+          navigate('/signin?error=auth_failed');
           return;
         }
 
@@ -29,7 +29,7 @@ export default function AuthCallbackPage() {
 
           if (profileError && profileError.code !== 'PGRST116') {
             console.error('Profile check error:', profileError);
-            navigate('/login?error=profile_check_failed');
+            navigate('/signin?error=profile_check_failed');
             return;
           }
 
@@ -41,11 +41,11 @@ export default function AuthCallbackPage() {
             navigate('/profile');
           }
         } else {
-          navigate('/login?error=no_session');
+          navigate('/signin?error=no_session');
         }
       } catch (error) {
         console.error('Auth callback error:', error);
-        navigate('/login?error=callback_failed');
+        navigate('/signin?error=callback_failed');
       }
     };
 
