@@ -7,12 +7,12 @@ import { createClient } from '@supabase/supabase-js';
 //   VITE_SUPABASE_ANON=YOUR_PUBLIC_ANON_KEY
 // Do NOT commit your service role key.
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL as string;
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON as string;
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || 'https://placeholder.supabase.co';
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON || 'placeholder-key';
 
-if (!supabaseUrl || !supabaseAnonKey) {
+if (!import.meta.env.VITE_SUPABASE_URL || !import.meta.env.VITE_SUPABASE_ANON) {
   // eslint-disable-next-line no-console
-  console.warn('[supabase] Missing VITE_SUPABASE_URL or VITE_SUPABASE_ANON env variables. Supabase client will not work properly.');
+  console.warn('[supabase] Missing VITE_SUPABASE_URL or VITE_SUPABASE_ANON env variables. Using placeholder values - app will not function properly until real values are set.');
 }
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey, {

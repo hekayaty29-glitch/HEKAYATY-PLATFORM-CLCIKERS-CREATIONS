@@ -14,7 +14,7 @@ import {
   registerSchema,
   publishStorySchema,
   taleCraftPublishSchema
-} from "@shared/schema";
+} from "../shared/schema";
 import express from "express";
 import { z } from "zod";
 import { registerAdminAPI } from "./admin-api";
@@ -119,6 +119,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
     description: z.string().min(10),
     role: z.string().min(2),
     image: z.string().url(),
+    backgroundStory: z.string().optional(),
+    characterType: z.string().optional(),
+    associatedStories: z.array(z.number()).optional(),
   });
 
   app.post("/api/characters", requireAuth, async (req: Request, res: Response) => {
@@ -748,7 +751,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const chapterNames = req.body.chapterNames || [];
       const chapterOrders = req.body.chapterOrders || [];
       
-      const chapters = [];
+      const chapters: any[] = [];
       
       for (let i = 0; i < req.files.length; i++) {
         const file = req.files[i];
@@ -1584,20 +1587,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
       
       // Check if user already rated
-      const existingRating = await supabaseStorage.getRating(data.userId, data.storyId);
+      const existingRating = await supabaseStorage.getRating(String(data.userId), String(data.storyId));
       
       let rating;
       if (existingRating) {
-        rating = await supabaseStorage.updateRating(existingRating.id, {
+        rating = await supabaseStorage.updateRating(String(existingRating.id), {
           rating: data.rating,
-          review: data.review || ''
+          review: (req.body as any).review || ''
         });
       } else {
         rating = await supabaseStorage.createRating({
-          user_id: data.userId,
-          story_id: data.storyId,
+          user_id: String(data.userId),
+          story_id: String(data.storyId),
           rating: data.rating,
-          review: data.review || ''
+          review: (req.body as any).review || ''
         });
       }
       
