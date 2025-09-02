@@ -183,13 +183,45 @@ Deno.serve(async (req) => {
     // POST /stories - Create new story
     if (method === 'POST' && pathSegments.length === 1) {
       const user = await requireAuth(req)
-      const body = await req.json()
+      
+      // Handle both JSON and FormData
+      let storyData: any = {}
+      let pdfFile: File | null = null
+      
+      const contentType = req.headers.get('content-type')
+      
+      if (contentType?.includes('multipart/form-data')) {
+        const formData = await req.formData()
+        
+        storyData = {
+          title: formData.get('title'),
+          description: formData.get('description'),
+          content: formData.get('content'),
+          coverImage: formData.get('coverImage'),
+          isShortStory: formData.get('isShortStory') === 'true',
+          isPremium: formData.get('isPremium') === 'true',
+          genreIds: formData.get('genreIds')
+        }
+        
+        pdfFile = formData.get('pdfFile') as File
+      } else {
+        storyData = await req.json()
+      }
+
+      // If PDF file is provided, upload to Cloudinary and set content
+      let pdfUrl = null
+      if (pdfFile) {
+        // For now, just set a placeholder - you'll need to implement Cloudinary upload
+        pdfUrl = 'PDF_UPLOAD_PLACEHOLDER'
+        storyData.content = `[PDF_CHAPTER:${pdfUrl}]`
+      }
 
       const { data, error } = await supabase
         .from('stories')
         .insert({
-          ...body,
+          ...storyData,
           author_id: user.id,
+          pdf_url: pdfUrl,
           created_at: new Date().toISOString(),
           updated_at: new Date().toISOString()
         })

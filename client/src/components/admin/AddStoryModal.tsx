@@ -12,6 +12,7 @@ export default function AddStoryModal({ open, onClose }: Props) {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [content, setContent] = useState("");
+  const [pdfFile, setPdfFile] = useState<File | null>(null);
   const [genreIds, setGenreIds] = useState<string>("");
   const [coverImage, setCoverImage] = useState("");
   const [isShortStory, setIsShortStory] = useState(false);
@@ -21,25 +22,22 @@ export default function AddStoryModal({ open, onClose }: Props) {
 
   const { mutate, isPending } = useMutation({
     mutationFn: async () => {
-      const body = {
-        title,
-        description,
-        content,
-        coverImage,
-        isShortStory,
-        isPremium,
-        genreIds: genreIds
-          .split(/[, ]+/)
-          .map((g) => parseInt(g, 10))
-          .filter(Boolean),
-      };
-      const res = await fetch("/api/stories", {
+      const formData = new FormData();
+      formData.append('title', title);
+      formData.append('description', description);
+      formData.append('content', content);
+      formData.append('coverImage', coverImage);
+      formData.append('isShortStory', isShortStory.toString());
+      formData.append('isPremium', isPremium.toString());
+      formData.append('genreIds', genreIds);
+      
+      if (pdfFile) {
+        formData.append('pdfFile', pdfFile);
+      }
+
+      const res = await fetch("/stories", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        // credentials: "include", // Removed to fix CORS
-        body: JSON.stringify(body),
+        body: formData,
       });
       if (!res.ok) {
         const err = await res.json().catch(() => ({}));
@@ -83,7 +81,19 @@ export default function AddStoryModal({ open, onClose }: Props) {
             className="w-full mb-2 px-3 py-2 bg-amber-950/40 border border-amber-700 rounded h-40"
             value={content}
             onChange={(e) => setContent(e.target.value)}
+            placeholder="Enter story text content or leave empty if uploading PDF"
           />
+
+          <label className="block text-sm mb-1 mt-2">PDF File (Optional)</label>
+          <input
+            type="file"
+            accept=".pdf"
+            className="w-full mb-2 px-3 py-2 bg-amber-950/40 border border-amber-700 rounded text-amber-50"
+            onChange={(e) => setPdfFile(e.target.files?.[0] || null)}
+          />
+          {pdfFile && (
+            <p className="text-sm text-amber-300 mb-2">Selected: {pdfFile.name}</p>
+          )}
 
           <label className="block text-sm mb-1 mt-2">Genre IDs (comma separated)</label>
           <input

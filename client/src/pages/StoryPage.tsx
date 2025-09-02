@@ -267,6 +267,13 @@ export default function StoryPage() {
     console.log('Chapters error:', chaptersError); // Debug log
     
     // Fallback to story.content if no chapters
+    // If content is empty but we have a PDF URL, create PDF chapter content
+    const pdfUrl = (story as any)?.pdf_url || (story as any)?.file_url;
+    if (!(story as any)?.content && pdfUrl) {
+      console.log('Using PDF URL from story:', pdfUrl);
+      return `[PDF_CHAPTER:${pdfUrl}]`;
+    }
+    
     return (story as any)?.content || 'No content available.';
   };
 
