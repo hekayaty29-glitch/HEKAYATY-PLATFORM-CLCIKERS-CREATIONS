@@ -35,7 +35,7 @@ Deno.serve(async (req) => {
 
       // Get top authors
       const topAuthors = Object.entries(authorCounts)
-        .sort(([, a], [, b]) => b - a)
+        .sort(([, a], [, b]) => (b as number) - (a as number))
         .slice(0, limit)
 
       const writers = await Promise.all(

@@ -6,12 +6,9 @@
   "scripts": {
     "dev": "cd client && npm run dev",
     "dev:client": "cd client && npm run dev",
-    "dev:functions": "supabase functions serve",
     "build": "npm run build:client",
     "build:client": "cd client && npm run build",
     "deploy": "node deploy-serverless.js",
-    "deploy:functions": "supabase functions deploy",
-    "check": "tsc",
     "db:push": "drizzle-kit push"
   },
   "dependencies": {
