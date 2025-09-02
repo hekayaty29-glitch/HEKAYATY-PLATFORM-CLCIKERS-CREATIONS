@@ -21,8 +21,11 @@ export const apiRequest = async (
   
   console.log('Session debug:', { session: !!session, token: session?.access_token ? 'present' : 'missing' })
   
-  const headers: Record<string, string> = {
-    'Content-Type': 'application/json',
+  const headers: Record<string, string> = {}
+  
+  // Only set Content-Type for JSON data, not FormData
+  if (!(data instanceof FormData)) {
+    headers['Content-Type'] = 'application/json'
   }
   
   if (session?.access_token) {
@@ -36,7 +39,7 @@ export const apiRequest = async (
   }
 
   if (data && method !== 'GET') {
-    config.body = JSON.stringify(data)
+    config.body = data instanceof FormData ? data : JSON.stringify(data)
   }
 
   const url = `${SUPABASE_URL}/functions/v1${endpoint}`

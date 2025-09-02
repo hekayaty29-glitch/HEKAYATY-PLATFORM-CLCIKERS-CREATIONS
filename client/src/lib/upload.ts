@@ -24,7 +24,8 @@ export interface MultipleUploadResponse {
 // Upload user avatar
 export const uploadAvatar = async (file: File): Promise<UploadResponse> => {
   const formData = new FormData();
-  formData.append('avatar', file);
+  formData.append('file', file);
+  formData.append('folder', 'avatars');
 
   const response = await apiRequest('POST', '/upload', formData);
   return await response.json();
