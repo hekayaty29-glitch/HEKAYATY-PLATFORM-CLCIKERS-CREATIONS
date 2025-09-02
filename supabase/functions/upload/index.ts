@@ -22,7 +22,15 @@ Deno.serve(async (req) => {
     }
 
     const formData = await req.formData()
-    const file = formData.get('file') as File
+    
+    // Try different field names for file uploads
+    const file = formData.get('file') as File || 
+                 formData.get('avatar') as File ||
+                 formData.get('cover') as File ||
+                 formData.get('poster') as File ||
+                 formData.get('pdf') as File ||
+                 formData.get('images') as File
+    
     const folder = formData.get('folder') as string || 'general'
 
     if (!file) {

@@ -26,7 +26,7 @@ export const uploadAvatar = async (file: File): Promise<UploadResponse> => {
   const formData = new FormData();
   formData.append('avatar', file);
 
-  const response = await apiRequest('POST', '/api/upload/avatar', formData);
+  const response = await apiRequest('POST', '/upload', formData);
   return await response.json();
 };
 
@@ -38,7 +38,7 @@ export const uploadStoryCover = async (file: File, storyId?: string): Promise<Up
     formData.append('storyId', storyId);
   }
 
-  const response = await apiRequest('POST', '/api/upload/story-cover', formData);
+  const response = await apiRequest('POST', '/upload', formData);
   return await response.json();
 };
 
@@ -50,7 +50,7 @@ export const uploadStoryPoster = async (file: File, storyId?: string): Promise<U
     formData.append('storyId', storyId);
   }
 
-  const response = await apiRequest('POST', '/api/upload/story-poster', formData);
+  const response = await apiRequest('POST', '/upload', formData);
   return await response.json();
 };
 
@@ -62,7 +62,7 @@ export const uploadStoryPDF = async (file: File, storyId?: string): Promise<Uplo
     formData.append('storyId', storyId);
   }
 
-  const response = await apiRequest('POST', '/api/upload/story-pdf', formData);
+  const response = await apiRequest('POST', '/upload', formData);
   return await response.json();
 };
 
@@ -76,7 +76,7 @@ export const uploadStoryImages = async (files: File[], storyId?: string): Promis
     formData.append('storyId', storyId);
   }
 
-  const response = await apiRequest('POST', '/api/upload/story-images', formData);
+  const response = await apiRequest('POST', '/upload', formData);
   return await response.json();
 };
 
@@ -88,18 +88,18 @@ export const uploadFile = async (file: File, folder?: string): Promise<UploadRes
     formData.append('folder', folder);
   }
 
-  const response = await apiRequest('POST', '/api/upload/file', formData);
+  const response = await apiRequest('POST', '/upload', formData);
   return await response.json();
 };
 
 // Delete file from Cloudinary
 export const deleteFile = async (publicId: string, resourceType: 'image' | 'raw' | 'video' = 'image'): Promise<void> => {
-  await apiRequest('DELETE', `/api/upload/${encodeURIComponent(publicId)}?type=${resourceType}`);
+  await apiRequest('DELETE', `/upload/${encodeURIComponent(publicId)}?type=${resourceType}`);
 };
 
 // Get upload signature for direct frontend uploads
 export const getUploadSignature = async (folder?: string, publicId?: string) => {
-  const response = await apiRequest('POST', '/api/upload/signature', { folder, public_id: publicId });
+  const response = await apiRequest('POST', '/upload/signature', { folder, public_id: publicId });
   return await response.json();
 };
 
