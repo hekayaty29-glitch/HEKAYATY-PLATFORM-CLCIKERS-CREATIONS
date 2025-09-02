@@ -26,7 +26,7 @@ Deno.serve(async (req) => {
           genres(name, icon)
         `)
         .eq('is_published', true)
-        .eq('category', 'top')
+        // .eq('category', 'top') // Remove category filter to show all published stories
         .order('created_at', { ascending: false })
         .limit(10)
 
@@ -47,7 +47,7 @@ Deno.serve(async (req) => {
           genres(name, icon)
         `)
         .eq('is_published', true)
-        .eq('placement', 'gems')
+        // .eq('placement', 'gems') // Remove placement filter to show all published stories
         .order('created_at', { ascending: false })
         .limit(10)
 
@@ -68,7 +68,7 @@ Deno.serve(async (req) => {
           genres(name, icon)
         `)
         .eq('is_published', true)
-        .eq('placement', 'workshops')
+        // .eq('placement', 'workshops') // Remove placement filter to show all published stories
         .order('created_at', { ascending: false })
         .limit(10)
 
