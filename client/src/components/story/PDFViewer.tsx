@@ -3,8 +3,8 @@ import * as pdfjsLib from 'pdfjs-dist';
 import { Button } from '@/components/ui/button';
 import { ChevronLeft, ChevronRight, ZoomIn, ZoomOut, Download } from 'lucide-react';
 
-// Set worker source to a reliable CDN
-pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://unpkg.com/pdfjs-dist@4.4.168/build/pdf.worker.min.js';
+// Disable worker to avoid CORS issues - use main thread instead
+delete (pdfjsLib.GlobalWorkerOptions as any).workerSrc;
 
 interface PDFViewerProps {
   url: string;
