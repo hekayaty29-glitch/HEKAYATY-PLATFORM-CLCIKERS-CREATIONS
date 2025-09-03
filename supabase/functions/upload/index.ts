@@ -33,11 +33,10 @@ Deno.serve(async (req) => {
     console.log('Sending to Cloudinary...')
     const cloudName = Deno.env.get('CLOUDINARY_CLOUD_NAME')
     
-    // For PDFs, ensure public access without attachment flag for viewing
+    // For PDFs, use image resource type to avoid authentication issues
     if (file.type === 'application/pdf') {
-      cloudinaryFormData.append('resource_type', 'auto')
-      // Remove attachment flag to allow inline viewing
-      // cloudinaryFormData.append('flags', 'attachment')
+      cloudinaryFormData.append('resource_type', 'image')
+      cloudinaryFormData.append('format', 'pdf')
     }
 
     const response = await fetch(

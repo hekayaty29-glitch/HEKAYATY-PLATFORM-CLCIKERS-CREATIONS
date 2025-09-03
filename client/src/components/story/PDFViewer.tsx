@@ -26,12 +26,11 @@ export function PDFViewer({ url, title }: PDFViewerProps) {
         setLoading(true);
         setError(null);
         
-        // Try to load PDF with CORS mode
+        // Use PDF proxy to bypass CORS and authentication issues
+        const proxyUrl = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/pdf-proxy?url=${encodeURIComponent(url)}`;
+        
         const loadingTask = pdfjsLib.getDocument({
-          url: url,
-          httpHeaders: {
-            'Access-Control-Allow-Origin': '*'
-          },
+          url: proxyUrl,
           withCredentials: false
         });
         const pdfDoc = await loadingTask.promise;
