@@ -65,7 +65,7 @@ const ratingFormSchema = z.object({
 
 export default function StoryPage() {
   const [, params] = useRoute("/story/:id");
-  const storyId = params?.id ?? "";
+  const storyId = params ? params.id || "" : "";
   console.log('StoryPage params:', params);
   console.log('StoryPage storyId:', storyId);
   const { user, isAuthenticated } = useAuth();
