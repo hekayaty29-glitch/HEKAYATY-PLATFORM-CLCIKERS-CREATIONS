@@ -32,18 +32,21 @@ Deno.serve(async (req) => {
 
     // For PDFs, ensure they remain as PDFs and force download
     if (file.type === 'application/pdf') {
-      cloudinaryFormData.append('resource_type', 'auto')
+      cloudinaryFormData.append('resource_type', 'raw')
       cloudinaryFormData.append('flags', 'attachment')
     }
 
     console.log('Sending to Cloudinary...')
-    const response = await fetch(
-      `https://api.cloudinary.com/v1_1/${Deno.env.get('CLOUDINARY_CLOUD_NAME')}/upload`,
-      {
-        method: 'POST',
-        body: cloudinaryFormData
-      }
-    )
+    
+    // Use different endpoint for PDFs to preserve format
+    const cloudinaryUrl = file.type === 'application/pdf' 
+      ? `https://api.cloudinary.com/v1_1/${Deno.env.get('CLOUDINARY_CLOUD_NAME')}/raw/upload`
+      : `https://api.cloudinary.com/v1_1/${Deno.env.get('CLOUDINARY_CLOUD_NAME')}/upload`
+    
+    const response = await fetch(cloudinaryUrl, {
+      method: 'POST',
+      body: cloudinaryFormData
+    })
 
     const result = await response.json()
     console.log('Cloudinary response:', response.status, result)
