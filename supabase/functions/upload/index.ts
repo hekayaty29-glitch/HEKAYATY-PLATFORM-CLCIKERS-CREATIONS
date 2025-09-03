@@ -70,13 +70,22 @@ Deno.serve(async (req) => {
     // Upload to Cloudinary - TEST WITH UNSIGNED UPLOAD
     console.log('Testing Cloudinary upload without signature...')
     
-    // Try unsigned upload first to test basic connectivity
-    const cloudinaryUrl = `https://api.cloudinary.com/v1_1/${Deno.env.get('CLOUDINARY_CLOUD_NAME')}/upload`
+    // Use appropriate Cloudinary endpoint based on file type
+    const cloudinaryUrl = file.type === 'application/pdf' 
+      ? `https://api.cloudinary.com/v1_1/${Deno.env.get('CLOUDINARY_CLOUD_NAME')}/raw/upload`
+      : `https://api.cloudinary.com/v1_1/${Deno.env.get('CLOUDINARY_CLOUD_NAME')}/upload`
     
     const uploadFormData = new FormData()
     uploadFormData.append('file', file)
     uploadFormData.append('folder', `hekayaty/${folder}`)
-    uploadFormData.append('upload_preset', 'novelnexus_unsigned')
+    
+    // Use different upload preset for PDFs to preserve format
+    if (file.type === 'application/pdf') {
+      uploadFormData.append('upload_preset', 'novelnexus_unsigned')
+      uploadFormData.append('resource_type', 'raw') // Preserve PDF format
+    } else {
+      uploadFormData.append('upload_preset', 'novelnexus_unsigned')
+    }
     
     console.log('Cloudinary upload attempt:', {
       cloudName: Deno.env.get('CLOUDINARY_CLOUD_NAME'),
