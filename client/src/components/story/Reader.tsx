@@ -319,45 +319,18 @@ export function Reader({ title, author, content, storyId, onBookmark, isBookmark
                         View PDF
                       </button>
                       <button
-                        onClick={async () => {
-                          try {
-                            console.log('Download initiated for:', chapter.url);
-                            
-                            // Try fetch approach first for better browser compatibility
-                            const response = await fetch(chapter.url);
-                            if (response.ok) {
-                              const blob = await response.blob();
-                              const url = window.URL.createObjectURL(blob);
-                              
-                              const link = document.createElement('a');
-                              link.href = url;
-                              link.download = `${chapter.title}.pdf`;
-                              link.style.display = 'none';
-                              
-                              document.body.appendChild(link);
-                              link.click();
-                              document.body.removeChild(link);
-                              
-                              // Clean up
-                              window.URL.revokeObjectURL(url);
-                              console.log('Download completed successfully');
-                            } else {
-                              throw new Error('Fetch failed');
-                            }
-                          } catch (error) {
-                            console.log('Fetch failed, trying direct download:', error);
-                            
-                            // Fallback to direct download
-                            const link = document.createElement('a');
-                            link.href = chapter.url;
-                            link.download = `${chapter.title}.pdf`;
-                            link.target = '_blank';
-                            link.style.display = 'none';
-                            
-                            document.body.appendChild(link);
-                            link.click();
-                            document.body.removeChild(link);
-                          }
+                        onClick={() => {
+                          // Simple direct download - force download with proper headers
+                          const link = document.createElement('a');
+                          link.href = chapter.url;
+                          link.download = `${chapter.title}.pdf`;
+                          link.setAttribute('target', '_blank');
+                          link.setAttribute('rel', 'noopener noreferrer');
+                          
+                          // Trigger download
+                          document.body.appendChild(link);
+                          link.click();
+                          document.body.removeChild(link);
                         }}
                         className="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg font-medium transition-colors duration-200 flex items-center justify-center text-sm"
                       >
