@@ -48,16 +48,9 @@ Deno.serve(async (req) => {
         cloudinaryFormData.append('timestamp', timestamp.toString())
         cloudinaryFormData.append('api_key', apiKey)
         
-        // Create signature according to Cloudinary requirements
-        const params = {
-          folder: `hekayaty/${folder}`,
-          resource_type: 'raw',
-          timestamp: timestamp.toString()
-        }
-        
-        // Sort parameters alphabetically and create signature string
-        const sortedParams = Object.keys(params).sort().map(key => `${key}=${params[key]}`).join('&')
-        const signatureString = `${sortedParams}${apiSecret}`
+        // Create signature with only the parameters that will be signed
+        // Note: resource_type is sent in form data but not included in signature for raw uploads
+        const signatureString = `folder=hekayaty/${folder}&timestamp=${timestamp}${apiSecret}`
         
         const signature = await crypto.subtle.digest('SHA-1', new TextEncoder().encode(signatureString))
         const signatureHex = Array.from(new Uint8Array(signature)).map(b => b.toString(16).padStart(2, '0')).join('')
