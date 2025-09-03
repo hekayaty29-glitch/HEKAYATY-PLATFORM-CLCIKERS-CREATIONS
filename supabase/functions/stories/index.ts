@@ -162,6 +162,11 @@ Deno.serve(async (req) => {
       const chapterNames = formData.getAll('chapterNames') as string[]
       const chapterOrders = formData.getAll('chapterOrders') as string[]
 
+      console.log('Processing chapter upload for story:', storyId)
+      console.log('Chapters count:', chapters.length)
+      console.log('Chapter names:', chapterNames)
+      console.log('Chapter orders:', chapterOrders)
+
       // Upload each chapter file and create database entries
       const uploadedChapters = []
       
@@ -169,6 +174,8 @@ Deno.serve(async (req) => {
         const file = chapters[i]
         const name = chapterNames[i]
         const order = parseInt(chapterOrders[i])
+
+        console.log(`Processing chapter ${i + 1}: ${name}`)
 
         // Upload file to Cloudinary via upload function
         const uploadFormData = new FormData()
@@ -183,27 +190,43 @@ Deno.serve(async (req) => {
           body: uploadFormData
         })
 
+        console.log(`Upload response status for ${name}:`, uploadResponse.status)
+
         if (!uploadResponse.ok) {
-          throw new Error(`Failed to upload chapter ${name}`)
+          const errorText = await uploadResponse.text()
+          console.error(`Upload failed for ${name}:`, errorText)
+          throw new Error(`Failed to upload chapter ${name}: ${errorText}`)
         }
 
         const uploadResult = await uploadResponse.json()
+        console.log(`Upload result for ${name}:`, uploadResult)
         
         // Create chapter record
+        const chapterData = {
+          story_id: storyId,
+          title: name,
+          chapter_order: order,
+          file_url: uploadResult.url,
+          file_type: file.type.includes('pdf') ? 'pdf' : 'text',
+          is_published: true,
+          created_at: new Date().toISOString()
+        }
+
+        console.log('Inserting chapter data:', chapterData)
+
         const { data: chapter, error: chapterError } = await supabase
           .from('story_chapters')
-          .insert({
-            story_id: storyId,
-            chapter_title: name,
-            chapter_order: order,
-            content_url: uploadResult.url,
-            content_type: file.type.includes('pdf') ? 'pdf' : 'text',
-            created_at: new Date().toISOString()
-          })
+          .insert(chapterData)
           .select()
           .single()
 
-        if (chapterError) throw chapterError
+        console.log('Chapter insert result:', { data: chapter, error: chapterError })
+
+        if (chapterError) {
+          console.error('Chapter creation error:', chapterError)
+          throw new Error(`Failed to create chapter record: ${chapterError.message}`)
+        }
+        
         uploadedChapters.push(chapter)
       }
 
