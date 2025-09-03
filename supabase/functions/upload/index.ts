@@ -12,7 +12,10 @@ Deno.serve(async (req) => {
   if (corsResponse) return corsResponse
 
   try {
+    console.log('Upload function called')
+    
     const user = await requireAuth(req)
+    console.log('User authenticated:', user.id)
     
     if (req.method !== 'POST') {
       return new Response(JSON.stringify({ error: 'Method not allowed' }), {
@@ -21,7 +24,9 @@ Deno.serve(async (req) => {
       })
     }
 
+    console.log('Parsing form data...')
     const formData = await req.formData()
+    console.log('Form data parsed successfully')
     
     // Try different field names for file uploads
     const file = formData.get('file') as File || 
@@ -33,7 +38,11 @@ Deno.serve(async (req) => {
     
     const folder = formData.get('folder') as string || 'general'
 
+    console.log('File found:', file ? file.name : 'No file')
+    console.log('Folder:', folder)
+    
     if (!file) {
+      console.error('No file provided in form data')
       return new Response(JSON.stringify({ error: 'No file provided' }), {
         status: 400,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' }
@@ -141,7 +150,12 @@ Deno.serve(async (req) => {
     })
 
   } catch (error) {
-    return new Response(JSON.stringify({ error: error.message }), {
+    console.error('Upload function error:', error)
+    console.error('Error stack:', error.stack)
+    return new Response(JSON.stringify({ 
+      error: error.message,
+      details: error.stack 
+    }), {
       status: 500,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' }
     })
