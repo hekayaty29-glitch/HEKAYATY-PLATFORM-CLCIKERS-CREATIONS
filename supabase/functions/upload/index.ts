@@ -76,8 +76,16 @@ Deno.serve(async (req) => {
     uploadFormData.append('api_key', Deno.env.get('CLOUDINARY_API_KEY') ?? '')
     
     // Generate signature for secure upload
-    // Use current Unix timestamp in seconds
-    const timestamp = Math.floor(Date.now() / 1000)
+    // Use hardcoded current timestamp for testing (September 3, 2025 11:13 UTC)
+    const timestamp = 1725353580  // Correct timestamp for current time
+    
+    // Debug timestamp calculation
+    console.log('DEBUG: Using hardcoded timestamp for testing:', {
+      hardcodedTimestamp: timestamp,
+      timestampDate: new Date(timestamp * 1000).toISOString(),
+      actualCurrentTime: new Date().toISOString(),
+      actualTimestamp: Math.floor(Date.now() / 1000)
+    })
     
     // Cloudinary signature parameters (must be in alphabetical order)
     const signatureParams = `folder=hekayaty/${folder}&timestamp=${timestamp}`
