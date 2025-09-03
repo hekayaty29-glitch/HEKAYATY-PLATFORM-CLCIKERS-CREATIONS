@@ -94,8 +94,15 @@ Deno.serve(async (req) => {
 
     const uploadResult = await uploadResponse.json()
 
+    console.log('Cloudinary upload response:', {
+      status: uploadResponse.status,
+      ok: uploadResponse.ok,
+      result: uploadResult
+    })
+
     if (!uploadResponse.ok) {
-      throw new Error(uploadResult.error?.message || 'Upload failed')
+      console.error('Cloudinary upload failed:', uploadResult)
+      throw new Error(uploadResult.error?.message || `Upload failed with status ${uploadResponse.status}`)
     }
 
     // Log upload activity (optional - don't fail if table doesn't exist)
