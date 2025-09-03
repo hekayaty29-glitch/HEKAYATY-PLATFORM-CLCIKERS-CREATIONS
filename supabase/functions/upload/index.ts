@@ -67,64 +67,25 @@ Deno.serve(async (req) => {
       })
     }
 
-    // Upload to Cloudinary
-    const cloudinaryUrl = `https://api.cloudinary.com/v1_1/${Deno.env.get('CLOUDINARY_CLOUD_NAME')}/auto/upload`
+    // Upload to Cloudinary - TEST WITH UNSIGNED UPLOAD
+    console.log('Testing Cloudinary upload without signature...')
+    
+    // Try unsigned upload first to test basic connectivity
+    const cloudinaryUrl = `https://api.cloudinary.com/v1_1/${Deno.env.get('CLOUDINARY_CLOUD_NAME')}/upload`
     
     const uploadFormData = new FormData()
     uploadFormData.append('file', file)
     uploadFormData.append('folder', `hekayaty/${folder}`)
-    uploadFormData.append('api_key', Deno.env.get('CLOUDINARY_API_KEY') ?? '')
+    uploadFormData.append('upload_preset', 'novelnexus_unsigned')
     
-    // Generate signature for secure upload
-    // Use hardcoded current timestamp for testing (September 3, 2025 11:13 UTC)
-    const timestamp = 1725353580  // Correct timestamp for current time
-    
-    // Debug timestamp calculation
-    console.log('DEBUG: Using hardcoded timestamp for testing:', {
-      hardcodedTimestamp: timestamp,
-      timestampDate: new Date(timestamp * 1000).toISOString(),
-      actualCurrentTime: new Date().toISOString(),
-      actualTimestamp: Math.floor(Date.now() / 1000)
-    })
-    
-    // Cloudinary signature parameters (must be in alphabetical order)
-    const signatureParams = `folder=hekayaty/${folder}&timestamp=${timestamp}`
-    
-    console.log('Cloudinary signature generation:', { 
-      folder: `hekayaty/${folder}`, 
-      timestamp, 
-      currentTime: new Date().toISOString(),
-      signatureParams,
+    console.log('Cloudinary upload attempt:', {
       cloudName: Deno.env.get('CLOUDINARY_CLOUD_NAME'),
-      apiKey: Deno.env.get('CLOUDINARY_API_KEY')?.substring(0, 6) + '...'
+      folder: `hekayaty/${folder}`,
+      fileName: file.name,
+      fileSize: file.size,
+      fileType: file.type,
+      url: cloudinaryUrl
     })
-    
-    // Create HMAC-SHA1 signature using Web Crypto API
-    const encoder = new TextEncoder()
-    const keyData = encoder.encode(Deno.env.get('CLOUDINARY_API_SECRET') ?? '')
-    const messageData = encoder.encode(signatureParams)
-    
-    const cryptoKey = await crypto.subtle.importKey(
-      'raw',
-      keyData,
-      { name: 'HMAC', hash: 'SHA-1' },
-      false,
-      ['sign']
-    )
-    
-    const signatureBuffer = await crypto.subtle.sign('HMAC', cryptoKey, messageData)
-    const signature = Array.from(new Uint8Array(signatureBuffer))
-      .map(b => b.toString(16).padStart(2, '0'))
-      .join('')
-
-    console.log('Generated signature details:', { 
-      signature, 
-      signatureLength: signature.length,
-      stringToSign: signatureParams
-    })
-
-    uploadFormData.append('timestamp', timestamp.toString())
-    uploadFormData.append('signature', signature)
 
     const uploadResponse = await fetch(cloudinaryUrl, {
       method: 'POST',
