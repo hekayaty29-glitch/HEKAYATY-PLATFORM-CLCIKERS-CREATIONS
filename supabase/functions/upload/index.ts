@@ -70,8 +70,10 @@ Deno.serve(async (req) => {
     // Upload to Cloudinary - TEST WITH UNSIGNED UPLOAD
     console.log('Testing Cloudinary upload without signature...')
     
-    // Use regular upload endpoint for all files
-    const cloudinaryUrl = `https://api.cloudinary.com/v1_1/${Deno.env.get('CLOUDINARY_CLOUD_NAME')}/upload`
+    // Use appropriate Cloudinary endpoint based on file type
+    const cloudinaryUrl = file.type === 'application/pdf' 
+      ? `https://api.cloudinary.com/v1_1/${Deno.env.get('CLOUDINARY_CLOUD_NAME')}/raw/upload`
+      : `https://api.cloudinary.com/v1_1/${Deno.env.get('CLOUDINARY_CLOUD_NAME')}/upload`
     
     const uploadFormData = new FormData()
     uploadFormData.append('file', file)
@@ -80,8 +82,10 @@ Deno.serve(async (req) => {
     // Use same upload preset for all files
     uploadFormData.append('upload_preset', 'novelnexus_unsigned')
     
-    // For PDFs, don't specify resource_type to use default image handling
-    // This ensures PDFs get proper public URLs that work with Google Docs viewer
+    // For PDFs, use raw resource type and ensure public access
+    if (file.type === 'application/pdf') {
+      uploadFormData.append('resource_type', 'raw')
+    }
     
     console.log('Cloudinary upload attempt:', {
       cloudName: Deno.env.get('CLOUDINARY_CLOUD_NAME'),
