@@ -33,10 +33,9 @@ Deno.serve(async (req) => {
     console.log('Sending to Cloudinary...')
     const cloudName = Deno.env.get('CLOUDINARY_CLOUD_NAME')
     
-    // For PDFs, use image resource type to avoid authentication issues
+    // For PDFs, use auto resource type (no format parameter allowed with unsigned upload)
     if (file.type === 'application/pdf') {
-      cloudinaryFormData.append('resource_type', 'image')
-      cloudinaryFormData.append('format', 'pdf')
+      cloudinaryFormData.append('resource_type', 'auto')
     }
 
     const response = await fetch(
