@@ -27,21 +27,43 @@ Deno.serve(async (req) => {
     // Upload to Cloudinary
     const cloudinaryFormData = new FormData()
     cloudinaryFormData.append('file', file)
-    cloudinaryFormData.append('upload_preset', 'novelnexus_unsigned')
     cloudinaryFormData.append('folder', `hekayaty/${folder}`)
 
     console.log('Sending to Cloudinary...')
     const cloudName = Deno.env.get('CLOUDINARY_CLOUD_NAME')
     
-    // For PDFs, use raw resource type to preserve PDF format
+    let uploadUrl = `https://api.cloudinary.com/v1_1/${cloudName}/upload`
+    
+    // For PDFs, use signed upload with API credentials
     if (file.type === 'application/pdf') {
       cloudinaryFormData.append('resource_type', 'raw')
-    }
-
-    // Use different endpoint for raw uploads
-    let uploadUrl = `https://api.cloudinary.com/v1_1/${cloudName}/upload`
-    if (file.type === 'application/pdf') {
-      uploadUrl = `https://api.cloudinary.com/v1_1/${cloudName}/raw/upload`
+      
+      // Add API credentials for signed upload
+      const apiKey = Deno.env.get('CLOUDINARY_API_KEY')
+      const apiSecret = Deno.env.get('CLOUDINARY_API_SECRET')
+      
+      if (apiKey && apiSecret) {
+        // Generate timestamp for signature
+        const timestamp = Math.round(Date.now() / 1000)
+        cloudinaryFormData.append('timestamp', timestamp.toString())
+        cloudinaryFormData.append('api_key', apiKey)
+        
+        // Create signature (simplified - in production use proper crypto)
+        const signatureString = `folder=hekayaty/${folder}&resource_type=raw&timestamp=${timestamp}${apiSecret}`
+        const signature = await crypto.subtle.digest('SHA-1', new TextEncoder().encode(signatureString))
+        const signatureHex = Array.from(new Uint8Array(signature)).map(b => b.toString(16).padStart(2, '0')).join('')
+        cloudinaryFormData.append('signature', signatureHex)
+        
+        uploadUrl = `https://api.cloudinary.com/v1_1/${cloudName}/raw/upload`
+      } else {
+        // Fallback to unsigned upload with auto resource type
+        cloudinaryFormData.append('upload_preset', 'novelnexus_unsigned')
+        cloudinaryFormData.delete('resource_type')
+        console.log('No API credentials found, using unsigned upload')
+      }
+    } else {
+      // For non-PDF files, use unsigned upload
+      cloudinaryFormData.append('upload_preset', 'novelnexus_unsigned')
     }
 
     const response = await fetch(uploadUrl, {
