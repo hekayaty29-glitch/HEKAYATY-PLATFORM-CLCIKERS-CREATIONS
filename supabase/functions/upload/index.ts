@@ -30,9 +30,9 @@ Deno.serve(async (req) => {
     cloudinaryFormData.append('upload_preset', 'novelnexus_unsigned')
     cloudinaryFormData.append('folder', `hekayaty/${folder}`)
 
-    // For PDFs, ensure they upload successfully and force download
+    // For PDFs, preserve original format and force download
     if (file.type === 'application/pdf') {
-      cloudinaryFormData.append('resource_type', 'auto')
+      cloudinaryFormData.append('resource_type', 'raw')
       cloudinaryFormData.append('flags', 'attachment')
     }
 
