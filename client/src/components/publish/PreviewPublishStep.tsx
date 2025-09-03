@@ -56,11 +56,44 @@ export default function PreviewPublishStep({ data, onUpdate, onPrevious, user }:
           throw new Error("Publish date must be in the future");
         }
       }
+
+      // Upload cover image first if it's a base64 data URL
+      let coverImageUrl = data.coverImage;
+      if (data.coverImage && data.coverImage.startsWith('data:')) {
+        console.log('Uploading cover image to Cloudinary...');
+        
+        // Convert base64 to blob
+        const response = await fetch(data.coverImage);
+        const blob = await response.blob();
+        
+        // Create form data for cover image upload
+        const coverFormData = new FormData();
+        coverFormData.append('file', blob, 'cover-image.jpg');
+        coverFormData.append('folder', 'covers');
+        
+        // Upload to Cloudinary via upload function
+        const uploadResponse = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/upload`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${token}`
+          },
+          body: coverFormData
+        });
+
+        if (!uploadResponse.ok) {
+          throw new Error('Failed to upload cover image');
+        }
+
+        const uploadResult = await uploadResponse.json();
+        coverImageUrl = uploadResult.secure_url;
+        console.log('Cover image uploaded successfully:', coverImageUrl);
+      }
+
       // First, create the story
       const storyPayload = {
         title: data.title,
         description: data.description,
-        coverImage: data.coverImage,
+        coverImage: coverImageUrl,
         placement: data.placement,
         authorName: data.authorName,
         genre: data.genre,
