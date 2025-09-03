@@ -296,7 +296,7 @@ Deno.serve(async (req) => {
           title: storyData.title,
           description: storyData.description,
           content: storyData.description || 'Story content will be added via chapters', // Use description as initial content
-          cover_image_url: storyData.coverImage || null,
+          cover_url: storyData.coverImage || null,
           is_premium: storyData.isPremium || false,
           is_published: storyData.isPublished || false,
           author_id: user.id
