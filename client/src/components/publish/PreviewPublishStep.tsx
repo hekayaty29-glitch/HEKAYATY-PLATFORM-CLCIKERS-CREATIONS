@@ -37,6 +37,7 @@ export default function PreviewPublishStep({ data, onUpdate, onPrevious, user }:
 
   const handlePublish = async () => {
     console.log('Publish button clicked - starting publish process');
+    console.log('Story data:', data);
     setIsPublishing(true);
     // Get current access token
     const { data: { session } } = await supabase.auth.getSession();
