@@ -78,7 +78,7 @@ const OriginalPdfViewer: React.FC<OriginalPdfViewerProps> = ({ title, author, pd
                   />
                 ) : (
                   <iframe 
-                    src={`https://docs.google.com/viewer?url=${encodeURIComponent(pdfUrl)}&embedded=true`}
+                    src={pdfUrl}
                     width="100%" 
                     height="600px"
                     className="border-0 rounded"
