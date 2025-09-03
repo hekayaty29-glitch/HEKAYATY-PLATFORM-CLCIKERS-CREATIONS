@@ -76,20 +76,25 @@ Deno.serve(async (req) => {
     uploadFormData.append('api_key', Deno.env.get('CLOUDINARY_API_KEY') ?? '')
     
     // Generate signature for secure upload
+    // Use current Unix timestamp in seconds
     const timestamp = Math.floor(Date.now() / 1000)
-    const paramsToSign = `folder=hekayaty/${folder}&timestamp=${timestamp}`
     
-    console.log('Cloudinary upload params:', { 
+    // Cloudinary signature parameters (must be in alphabetical order)
+    const signatureParams = `folder=hekayaty/${folder}&timestamp=${timestamp}`
+    
+    console.log('Cloudinary signature generation:', { 
       folder: `hekayaty/${folder}`, 
       timestamp, 
       currentTime: new Date().toISOString(),
-      paramsToSign 
+      signatureParams,
+      cloudName: Deno.env.get('CLOUDINARY_CLOUD_NAME'),
+      apiKey: Deno.env.get('CLOUDINARY_API_KEY')?.substring(0, 6) + '...'
     })
     
-    // Create HMAC-SHA1 signature
+    // Create HMAC-SHA1 signature using Web Crypto API
     const encoder = new TextEncoder()
     const keyData = encoder.encode(Deno.env.get('CLOUDINARY_API_SECRET') ?? '')
-    const messageData = encoder.encode(paramsToSign)
+    const messageData = encoder.encode(signatureParams)
     
     const cryptoKey = await crypto.subtle.importKey(
       'raw',
@@ -104,7 +109,11 @@ Deno.serve(async (req) => {
       .map(b => b.toString(16).padStart(2, '0'))
       .join('')
 
-    console.log('Generated signature:', signature)
+    console.log('Generated signature details:', { 
+      signature, 
+      signatureLength: signature.length,
+      stringToSign: signatureParams
+    })
 
     uploadFormData.append('timestamp', timestamp.toString())
     uploadFormData.append('signature', signature)
