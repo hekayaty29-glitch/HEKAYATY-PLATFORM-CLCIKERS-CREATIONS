@@ -34,8 +34,6 @@ Deno.serve(async (req) => {
     if (file.type === 'application/pdf') {
       cloudinaryFormData.append('resource_type', 'raw')
       cloudinaryFormData.append('flags', 'attachment')
-      cloudinaryFormData.append('format', 'pdf')
-      cloudinaryFormData.append('type', 'upload')
     }
 
     console.log('Sending to Cloudinary...')
