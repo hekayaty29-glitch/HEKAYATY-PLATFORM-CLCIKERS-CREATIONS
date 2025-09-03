@@ -33,7 +33,6 @@ Deno.serve(async (req) => {
     // For PDFs, ensure they remain as PDFs and are publicly accessible
     if (file.type === 'application/pdf') {
       cloudinaryFormData.append('resource_type', 'auto')
-      cloudinaryFormData.append('flags', 'attachment')
     }
 
     console.log('Sending to Cloudinary...')
