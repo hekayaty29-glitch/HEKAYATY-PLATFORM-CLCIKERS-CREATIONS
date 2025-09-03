@@ -70,13 +70,21 @@ Deno.serve(async (req) => {
     // Upload to Cloudinary - TEST WITH UNSIGNED UPLOAD
     console.log('Testing Cloudinary upload without signature...')
     
-    // Use regular upload endpoint for all files to ensure public access
-    const cloudinaryUrl = `https://api.cloudinary.com/v1_1/${Deno.env.get('CLOUDINARY_CLOUD_NAME')}/upload`
+    // Use appropriate endpoint - raw for PDFs to preserve format, regular for images
+    const cloudinaryUrl = file.type === 'application/pdf' 
+      ? `https://api.cloudinary.com/v1_1/${Deno.env.get('CLOUDINARY_CLOUD_NAME')}/raw/upload`
+      : `https://api.cloudinary.com/v1_1/${Deno.env.get('CLOUDINARY_CLOUD_NAME')}/upload`
     
     const uploadFormData = new FormData()
     uploadFormData.append('file', file)
     uploadFormData.append('folder', `hekayaty/${folder}`)
     uploadFormData.append('upload_preset', 'novelnexus_unsigned')
+    
+    // For PDFs, MUST use resource_type: "raw" to preserve PDF format
+    if (file.type === 'application/pdf') {
+      uploadFormData.append('resource_type', 'raw')
+      uploadFormData.append('type', 'upload') // Ensure public delivery
+    }
     
     console.log('Cloudinary upload attempt:', {
       cloudName: Deno.env.get('CLOUDINARY_CLOUD_NAME'),
@@ -94,15 +102,8 @@ Deno.serve(async (req) => {
 
     const uploadResult = await uploadResponse.json()
 
-    console.log('Cloudinary upload response:', {
-      status: uploadResponse.status,
-      ok: uploadResponse.ok,
-      result: uploadResult
-    })
-
     if (!uploadResponse.ok) {
-      console.error('Cloudinary upload failed:', uploadResult)
-      throw new Error(uploadResult.error?.message || `Upload failed with status ${uploadResponse.status}`)
+      throw new Error(uploadResult.error?.message || 'Upload failed')
     }
 
     // Log upload activity (optional - don't fail if table doesn't exist)
