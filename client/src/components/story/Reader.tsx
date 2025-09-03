@@ -310,18 +310,7 @@ export function Reader({ title, author, content, storyId, onBookmark, isBookmark
                     <div className="flex flex-col gap-2">
                       <button
                         onClick={() => {
-                          // Google Docs viewer for better multi-page display
-                          const googleDocsUrl = `https://docs.google.com/viewer?url=${encodeURIComponent(chapter.url)}&embedded=true`;
-                          window.open(googleDocsUrl, '_blank');
-                        }}
-                        className="bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-lg font-medium transition-colors duration-200 flex items-center justify-center text-sm"
-                      >
-                        <Eye className="mr-2 h-4 w-4" />
-                        View PDF
-                      </button>
-                      <button
-                        onClick={() => {
-                          // Simple direct download - force download with proper headers
+                          // Direct download - attachment flag ensures download to device
                           const link = document.createElement('a');
                           link.href = chapter.url;
                           link.download = `${chapter.title}.pdf`;
@@ -333,11 +322,14 @@ export function Reader({ title, author, content, storyId, onBookmark, isBookmark
                           link.click();
                           document.body.removeChild(link);
                         }}
-                        className="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg font-medium transition-colors duration-200 flex items-center justify-center text-sm"
+                        className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors duration-200 flex items-center justify-center text-sm"
                       >
                         <Download className="mr-2 h-4 w-4" />
-                        Download
+                        Download PDF
                       </button>
+                      <p className="text-xs text-gray-500 text-center mt-1">
+                        Download to read the full PDF chapter
+                      </p>
                     </div>
                   </div>
                 </div>
