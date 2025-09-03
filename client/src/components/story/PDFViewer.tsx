@@ -26,7 +26,14 @@ export function PDFViewer({ url, title }: PDFViewerProps) {
         setLoading(true);
         setError(null);
         
-        const loadingTask = pdfjsLib.getDocument(url);
+        // Try to load PDF with CORS mode
+        const loadingTask = pdfjsLib.getDocument({
+          url: url,
+          httpHeaders: {
+            'Access-Control-Allow-Origin': '*'
+          },
+          withCredentials: false
+        });
         const pdfDoc = await loadingTask.promise;
         
         setPdf(pdfDoc);
@@ -34,6 +41,7 @@ export function PDFViewer({ url, title }: PDFViewerProps) {
         setCurrentPage(1);
       } catch (err) {
         console.error('Error loading PDF:', err);
+        console.error('PDF URL:', url);
         setError('Failed to load PDF. Please try downloading instead.');
       } finally {
         setLoading(false);
@@ -121,10 +129,23 @@ export function PDFViewer({ url, title }: PDFViewerProps) {
       <div className="flex flex-col items-center justify-center h-96 bg-gray-50 rounded-lg">
         <div className="text-center">
           <p className="text-red-600 mb-4">{error}</p>
-          <Button onClick={downloadPDF} className="flex items-center gap-2">
-            <Download className="h-4 w-4" />
-            Download PDF
-          </Button>
+          <div className="flex gap-2 flex-wrap justify-center">
+            <Button 
+              onClick={() => window.open(url, '_blank')} 
+              className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700"
+            >
+              <Download className="h-4 w-4" />
+              Open PDF
+            </Button>
+            <Button 
+              onClick={downloadPDF} 
+              variant="outline"
+              className="flex items-center gap-2"
+            >
+              <Download className="h-4 w-4" />
+              Download PDF
+            </Button>
+          </div>
         </div>
       </div>
     );
