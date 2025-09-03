@@ -17,8 +17,12 @@ Deno.serve(async (req) => {
       })
     }
 
-    // Fetch the PDF from Cloudinary
-    const response = await fetch(pdfUrl)
+    // Fetch the PDF from Cloudinary with proper headers
+    const response = await fetch(pdfUrl, {
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+      }
+    })
     
     if (!response.ok) {
       return new Response('Failed to fetch PDF', { 
