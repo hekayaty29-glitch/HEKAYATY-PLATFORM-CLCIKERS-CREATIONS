@@ -310,11 +310,9 @@ export function Reader({ title, author, content, storyId, onBookmark, isBookmark
                     <div className="flex flex-col gap-2">
                       <button
                         onClick={() => {
-                          // For raw Cloudinary URLs, we need to use a direct approach
-                          let pdfUrl = chapter.url;
-                          
-                          // Try direct PDF access first
-                          window.open(pdfUrl, '_blank');
+                          // Use Google Docs viewer for better PDF compatibility
+                          const googleDocsUrl = `https://docs.google.com/viewer?url=${encodeURIComponent(chapter.url)}&embedded=true`;
+                          window.open(googleDocsUrl, '_blank');
                         }}
                         className="bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-lg font-medium transition-colors duration-200 flex items-center justify-center text-sm"
                       >
