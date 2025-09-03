@@ -310,9 +310,9 @@ export function Reader({ title, author, content, storyId, onBookmark, isBookmark
                     <div className="flex flex-col gap-2">
                       <button
                         onClick={() => {
-                          // Use PDF proxy for reliable access
-                          const proxyUrl = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/pdf-proxy?url=${encodeURIComponent(chapter.url)}`;
-                          window.open(proxyUrl, '_blank');
+                          // Use Google Docs viewer for PDF compatibility
+                          const googleDocsUrl = `https://docs.google.com/viewer?url=${encodeURIComponent(chapter.url)}&embedded=true`;
+                          window.open(googleDocsUrl, '_blank');
                         }}
                         className="bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-lg font-medium transition-colors duration-200 flex items-center justify-center text-sm"
                       >
