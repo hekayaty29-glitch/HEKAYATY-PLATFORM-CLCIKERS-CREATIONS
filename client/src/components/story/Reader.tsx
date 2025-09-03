@@ -310,16 +310,11 @@ export function Reader({ title, author, content, storyId, onBookmark, isBookmark
                     <div className="flex flex-col gap-2">
                       <button
                         onClick={() => {
-                          // Convert Cloudinary raw URL to public URL format for Google Docs viewer
+                          // For raw Cloudinary URLs, we need to use a direct approach
                           let pdfUrl = chapter.url;
                           
-                          // If it's a Cloudinary raw URL, convert to public format
-                          if (pdfUrl.includes('/raw/upload/')) {
-                            pdfUrl = pdfUrl.replace('/raw/upload/', '/image/upload/');
-                          }
-                          
-                          const googleDocsUrl = `https://docs.google.com/viewer?url=${encodeURIComponent(pdfUrl)}&embedded=true`;
-                          window.open(googleDocsUrl, '_blank');
+                          // Try direct PDF access first
+                          window.open(pdfUrl, '_blank');
                         }}
                         className="bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-lg font-medium transition-colors duration-200 flex items-center justify-center text-sm"
                       >
