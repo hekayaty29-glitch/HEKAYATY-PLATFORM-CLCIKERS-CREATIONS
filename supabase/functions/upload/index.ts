@@ -33,18 +33,21 @@ Deno.serve(async (req) => {
     console.log('Sending to Cloudinary...')
     const cloudName = Deno.env.get('CLOUDINARY_CLOUD_NAME')
     
-    // For PDFs, use auto resource type (no format parameter allowed with unsigned upload)
+    // For PDFs, use raw resource type to preserve PDF format
     if (file.type === 'application/pdf') {
-      cloudinaryFormData.append('resource_type', 'auto')
+      cloudinaryFormData.append('resource_type', 'raw')
     }
 
-    const response = await fetch(
-      `https://api.cloudinary.com/v1_1/${cloudName}/upload`,
-      {
-        method: 'POST',
-        body: cloudinaryFormData
-      }
-    )
+    // Use different endpoint for raw uploads
+    let uploadUrl = `https://api.cloudinary.com/v1_1/${cloudName}/upload`
+    if (file.type === 'application/pdf') {
+      uploadUrl = `https://api.cloudinary.com/v1_1/${cloudName}/raw/upload`
+    }
+
+    const response = await fetch(uploadUrl, {
+      method: 'POST',
+      body: cloudinaryFormData
+    })
 
     const result = await response.json()
     console.log('Cloudinary response:', response.status, result)
