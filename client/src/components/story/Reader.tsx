@@ -310,9 +310,8 @@ export function Reader({ title, author, content, storyId, onBookmark, isBookmark
                     <div className="flex flex-col gap-2">
                       <button
                         onClick={() => {
-                          // Use Google Docs viewer for PDF compatibility
-                          const googleDocsUrl = `https://docs.google.com/viewer?url=${encodeURIComponent(chapter.url)}&embedded=true`;
-                          window.open(googleDocsUrl, '_blank');
+                          // Direct PDF viewing in browser
+                          window.open(chapter.url, '_blank');
                         }}
                         className="bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-lg font-medium transition-colors duration-200 flex items-center justify-center text-sm"
                       >

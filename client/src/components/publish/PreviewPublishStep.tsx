@@ -79,7 +79,7 @@ export default function PreviewPublishStep({ data, onUpdate, onPrevious, user }:
           console.log('Uploading to:', `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/upload`);
           
           // Upload to Cloudinary via upload function
-          const uploadResponse = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/upload`, {
+          const uploadResponse = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/file-upload`, {
             method: 'POST',
             headers: {
               'Authorization': `Bearer ${token}`
