@@ -59,34 +59,51 @@ export default function PreviewPublishStep({ data, onUpdate, onPrevious, user }:
 
       // Upload cover image first if it's a base64 data URL
       let coverImageUrl = data.coverImage;
+      console.log('Cover image data:', data.coverImage ? data.coverImage.substring(0, 50) + '...' : 'No cover image');
+      
       if (data.coverImage && data.coverImage.startsWith('data:')) {
         console.log('Uploading cover image to Cloudinary...');
         
-        // Convert base64 to blob
-        const response = await fetch(data.coverImage);
-        const blob = await response.blob();
-        
-        // Create form data for cover image upload
-        const coverFormData = new FormData();
-        coverFormData.append('file', blob, 'cover-image.jpg');
-        coverFormData.append('folder', 'covers');
-        
-        // Upload to Cloudinary via upload function
-        const uploadResponse = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/upload`, {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${token}`
-          },
-          body: coverFormData
-        });
+        try {
+          // Convert base64 to blob
+          const response = await fetch(data.coverImage);
+          const blob = await response.blob();
+          console.log('Blob created:', blob.size, 'bytes');
+          
+          // Create form data for cover image upload
+          const coverFormData = new FormData();
+          coverFormData.append('file', blob, 'cover-image.jpg');
+          coverFormData.append('folder', 'covers');
+          
+          console.log('Uploading to:', `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/upload`);
+          
+          // Upload to Cloudinary via upload function
+          const uploadResponse = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/upload`, {
+            method: 'POST',
+            headers: {
+              'Authorization': `Bearer ${token}`
+            },
+            body: coverFormData
+          });
 
-        if (!uploadResponse.ok) {
-          throw new Error('Failed to upload cover image');
+          console.log('Upload response status:', uploadResponse.status);
+          const responseText = await uploadResponse.text();
+          console.log('Upload response body:', responseText);
+
+          if (!uploadResponse.ok) {
+            throw new Error(`Failed to upload cover image: ${uploadResponse.status} ${responseText}`);
+          }
+
+          const uploadResult = JSON.parse(responseText);
+          coverImageUrl = uploadResult.secure_url;
+          console.log('Cover image uploaded successfully:', coverImageUrl);
+        } catch (error) {
+          console.error('Cover image upload error:', error);
+          alert(`Failed to upload cover image: ${error.message}`);
+          throw error;
         }
-
-        const uploadResult = await uploadResponse.json();
-        coverImageUrl = uploadResult.secure_url;
-        console.log('Cover image uploaded successfully:', coverImageUrl);
+      } else {
+        console.log('No base64 cover image to upload, using existing URL:', coverImageUrl);
       }
 
       // First, create the story
