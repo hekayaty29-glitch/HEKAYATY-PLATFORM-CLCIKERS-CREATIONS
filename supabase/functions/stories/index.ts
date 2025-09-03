@@ -214,6 +214,7 @@ Deno.serve(async (req) => {
 
         console.log('Inserting chapter data:', chapterData)
 
+        // Use service role to bypass RLS for chapter creation
         const { data: chapter, error: chapterError } = await supabase
           .from('story_chapters')
           .insert(chapterData)
@@ -224,7 +225,8 @@ Deno.serve(async (req) => {
 
         if (chapterError) {
           console.error('Chapter creation error:', chapterError)
-          throw new Error(`Failed to create chapter record: ${chapterError.message}`)
+          console.error('Chapter error details:', JSON.stringify(chapterError, null, 2))
+          throw new Error(`Failed to create chapter record: ${chapterError.message} - Details: ${JSON.stringify(chapterError)}`)
         }
         
         uploadedChapters.push(chapter)
