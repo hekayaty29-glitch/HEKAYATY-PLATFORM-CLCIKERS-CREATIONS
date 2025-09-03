@@ -96,7 +96,7 @@ export default function PreviewPublishStep({ data, onUpdate, onPrevious, user }:
           }
 
           const uploadResult = JSON.parse(responseText);
-          coverImageUrl = uploadResult.secure_url;
+          coverImageUrl = uploadResult.url || uploadResult.secure_url;
           console.log('Cover image uploaded successfully:', coverImageUrl);
         } catch (error) {
           console.error('Cover image upload error:', error);
