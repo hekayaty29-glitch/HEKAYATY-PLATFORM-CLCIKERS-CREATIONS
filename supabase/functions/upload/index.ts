@@ -78,10 +78,7 @@ Deno.serve(async (req) => {
     uploadFormData.append('folder', `hekayaty/${folder}`)
     uploadFormData.append('upload_preset', 'novelnexus_unsigned')
     
-    // For PDFs, use resource_type auto to let Cloudinary handle properly
-    if (file.type === 'application/pdf') {
-      uploadFormData.append('resource_type', 'auto')
-    }
+    // Don't specify resource_type for PDFs - let them upload as regular files for public access
     
     console.log('Cloudinary upload attempt:', {
       cloudName: Deno.env.get('CLOUDINARY_CLOUD_NAME'),
