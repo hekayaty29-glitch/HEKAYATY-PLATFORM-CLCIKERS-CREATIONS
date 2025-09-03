@@ -30,15 +30,16 @@ Deno.serve(async (req) => {
     cloudinaryFormData.append('upload_preset', 'novelnexus_unsigned')
     cloudinaryFormData.append('folder', `hekayaty/${folder}`)
 
-    // For PDFs, ensure they remain as PDFs and force download
+    // For PDFs, ensure they upload successfully and force download
     if (file.type === 'application/pdf') {
-      cloudinaryFormData.append('resource_type', 'raw')
+      cloudinaryFormData.append('resource_type', 'auto')
       cloudinaryFormData.append('flags', 'attachment')
     }
 
     console.log('Sending to Cloudinary...')
+    const cloudName = Deno.env.get('CLOUDINARY_CLOUD_NAME')
     const response = await fetch(
-      `https://api.cloudinary.com/v1_1/${Deno.env.get('CLOUDINARY_CLOUD_NAME')}/upload`,
+      `https://api.cloudinary.com/v1_1/${cloudName}/upload`,
       {
         method: 'POST',
         body: cloudinaryFormData
