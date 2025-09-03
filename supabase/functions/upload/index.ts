@@ -67,36 +67,24 @@ Deno.serve(async (req) => {
       })
     }
 
-    // Upload to Cloudinary - TEST WITH UNSIGNED UPLOAD
-    console.log('Testing Cloudinary upload without signature...')
-    
-    // Use regular upload endpoint for all files
-    const cloudinaryUrl = `https://api.cloudinary.com/v1_1/${Deno.env.get('CLOUDINARY_CLOUD_NAME')}/upload`
-    
+    // Simple direct upload to Cloudinary
     const uploadFormData = new FormData()
     uploadFormData.append('file', file)
-    uploadFormData.append('folder', `hekayaty/${folder}`)
     uploadFormData.append('upload_preset', 'novelnexus_unsigned')
     
-    console.log('Cloudinary upload attempt:', {
-      cloudName: Deno.env.get('CLOUDINARY_CLOUD_NAME'),
-      folder: `hekayaty/${folder}`,
-      fileName: file.name,
-      fileSize: file.size,
-      fileType: file.type,
-      url: cloudinaryUrl
-    })
+    const cloudinaryUrl = `https://api.cloudinary.com/v1_1/${Deno.env.get('CLOUDINARY_CLOUD_NAME')}/upload`
 
     const uploadResponse = await fetch(cloudinaryUrl, {
       method: 'POST',
       body: uploadFormData
     })
 
-    const uploadResult = await uploadResponse.json()
-
     if (!uploadResponse.ok) {
-      throw new Error(uploadResult.error?.message || 'Upload failed')
+      const errorText = await uploadResponse.text()
+      throw new Error(`Cloudinary upload failed: ${uploadResponse.status} - ${errorText}`)
     }
+
+    const uploadResult = await uploadResponse.json()
 
     // Log upload activity (optional - don't fail if table doesn't exist)
     try {
@@ -130,8 +118,14 @@ Deno.serve(async (req) => {
   } catch (error) {
     console.error('Upload function error:', error)
     console.error('Error stack:', error.stack)
+    console.error('Error details:', {
+      message: error.message,
+      name: error.name,
+      cause: error.cause
+    })
     return new Response(JSON.stringify({ 
-      error: error.message,
+      error: `Upload failed: ${error.message}`,
+      type: error.name,
       details: error.stack 
     }), {
       status: 500,
