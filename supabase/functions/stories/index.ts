@@ -340,9 +340,33 @@ Deno.serve(async (req) => {
         })
       }
 
+      // Fetch chapters and generate content from them
+      const { data: chapters } = await supabase
+        .from('story_chapters')
+        .select('*')
+        .eq('story_id', storyId)
+        .order('chapter_order', { ascending: true })
+
+      let generatedContent = ''
+      if (chapters && chapters.length > 0) {
+        // Generate content with PDF_CHAPTER markers for each chapter
+        generatedContent = chapters.map(chapter => {
+          const title = chapter.title || chapter.name || 'Chapter'
+          if (chapter.file_url) {
+            return `# ${title}\n\n[PDF_CHAPTER:${chapter.file_url}]`
+          }
+          return `# ${title}\n\n${chapter.content || 'Chapter content'}`
+        }).join('\n\n---\n\n')
+      }
+
       const updateData: any = {
         is_published: true,
         updated_at: new Date().toISOString()
+      }
+
+      // Update content if chapters exist
+      if (generatedContent) {
+        updateData.content = generatedContent
       }
 
       if (body.publish_at) {
