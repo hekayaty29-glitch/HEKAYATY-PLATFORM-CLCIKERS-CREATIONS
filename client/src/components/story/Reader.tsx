@@ -14,6 +14,7 @@ import {
   Eye,
   Download
 } from "lucide-react";
+import PDFViewer from "./PDFViewer";
 
 interface ReaderProps {
   title: string;
@@ -308,39 +309,7 @@ export function Reader({ title, author, content, storyId, onBookmark, isBookmark
                     <p className="text-sm text-gray-600 mb-4">Chapter {chapter.chapterNumber}</p>
                     
                     <div className="flex flex-col gap-2">
-                      <button
-                        onClick={() => {
-                          // Open PDF in Google Docs viewer for online preview
-                          const docsUrl = `https://docs.google.com/viewer?url=${encodeURIComponent(chapter.url)}&embedded=true`;
-                          window.open(docsUrl, '_blank', 'noopener,noreferrer');
-                        }}
-                        className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-medium transition-colors duration-200 flex items-center justify-center text-sm"
-                      >
-                        <Eye className="mr-2 h-4 w-4" />
-                        Preview Online
-                      </button>
-                      <button
-                        onClick={() => {
-                          // Direct download - attachment flag ensures download to device
-                          const link = document.createElement('a');
-                          link.href = chapter.url;
-                          link.download = `${chapter.title}.pdf`;
-                          link.setAttribute('target', '_blank');
-                          link.setAttribute('rel', 'noopener noreferrer');
-                          
-                          // Trigger download
-                          document.body.appendChild(link);
-                          link.click();
-                          document.body.removeChild(link);
-                        }}
-                        className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors duration-200 flex items-center justify-center text-sm"
-                      >
-                        <Download className="mr-2 h-4 w-4" />
-                        Download PDF
-                      </button>
-                      <p className="text-xs text-gray-500 text-center mt-1">
-                        Preview online or download to read offline
-                      </p>
+                      <PDFViewer url={chapter.url} title={chapter.title} />
                     </div>
                   </div>
                 </div>
