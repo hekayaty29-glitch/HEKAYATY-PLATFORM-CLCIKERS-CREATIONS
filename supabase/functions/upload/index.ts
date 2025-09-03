@@ -80,10 +80,8 @@ Deno.serve(async (req) => {
     // Use same upload preset for all files
     uploadFormData.append('upload_preset', 'novelnexus_unsigned')
     
-    // For PDFs, use resource_type auto to let Cloudinary handle it
-    if (file.type === 'application/pdf') {
-      uploadFormData.append('resource_type', 'auto')
-    }
+    // For PDFs, don't specify resource_type to use default image handling
+    // This ensures PDFs get proper public URLs that work with Google Docs viewer
     
     console.log('Cloudinary upload attempt:', {
       cloudName: Deno.env.get('CLOUDINARY_CLOUD_NAME'),
