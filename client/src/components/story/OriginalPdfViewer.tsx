@@ -59,24 +59,32 @@ const OriginalPdfViewer: React.FC<OriginalPdfViewerProps> = ({ title, author, pd
                     const blobUrl = URL.createObjectURL(blob);
                     window.open(blobUrl, '_blank');
                   } else {
-                    // For regular URLs, open directly
+                    // For Cloudinary URLs, open directly without Google Viewer
                     window.open(pdfUrl, '_blank');
                   }
                 }}
                 className="w-full bg-blue-600 hover:bg-blue-700 text-white"
               >
                 <Eye className="h-4 w-4 mr-2" />
-                View PDF
+                Open PDF in New Tab
               </Button>
               
               <div className="border rounded-lg p-4">
-                <iframe 
-                  src={pdfUrl}
-                  width="100%" 
-                  height="600px"
-                  className="border-0 rounded"
-                  title="PDF Viewer"
-                />
+                {pdfUrl.includes('.png') || pdfUrl.includes('.jpg') || pdfUrl.includes('.jpeg') ? (
+                  <img 
+                    src={pdfUrl}
+                    alt="Chapter content"
+                    className="w-full h-auto rounded"
+                  />
+                ) : (
+                  <iframe 
+                    src={`https://docs.google.com/viewer?url=${encodeURIComponent(pdfUrl)}&embedded=true`}
+                    width="100%" 
+                    height="600px"
+                    className="border-0 rounded"
+                    title="PDF Viewer"
+                  />
+                )}
               </div>
             </div>
           </div>
