@@ -729,17 +729,12 @@ export default function StoryPage() {
                       <p className="text-gray-700 mb-4">{story.description}</p>
                     )}
                   </div>
-                  {story.pdf_url ? (
-                    <OriginalPdfViewer 
-                      title={story.title}
-                      author={story.author?.fullName || "Unknown Author"}
-                      pdfUrl={story.pdf_url} 
-                    />
-                  ) : (
-                    <div className="text-center py-8 text-gray-500">
-                      No PDF available for this comic.
-                    </div>
-                  )}
+                  <Reader 
+                    title={story.title}
+                    author={story.author?.fullName || "Unknown Author"}
+                    content={getStoryContent()}
+                    storyId={parseInt(storyId)}
+                  />
                 </div>
               ) : (
                 /* Story Reader Component */
