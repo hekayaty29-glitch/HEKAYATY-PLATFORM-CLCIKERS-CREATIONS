@@ -12,7 +12,8 @@ import {
   Music,
   FileText,
   Eye,
-  Download
+  Download,
+  ExternalLink
 } from "lucide-react";
 import PDFViewer from "./PDFViewer";
 
