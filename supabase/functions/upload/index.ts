@@ -24,48 +24,53 @@ Deno.serve(async (req) => {
 
     console.log(`Uploading file: ${file.name}, type: ${file.type}, size: ${file.size}`)
 
-    // Upload to Cloudinary
+    // Upload to Cloudinary - use different accounts for different file types
     const cloudinaryFormData = new FormData()
     cloudinaryFormData.append('file', file)
-    cloudinaryFormData.append('folder', `hekayaty/${folder}`)
 
     console.log('Sending to Cloudinary...')
-    const cloudName = Deno.env.get('CLOUDINARY_CLOUD_NAME')
     
-    let uploadUrl = `https://api.cloudinary.com/v1_1/${cloudName}/upload`
+    let uploadUrl, cloudName
     
-    // For PDFs, use signed upload with API credentials
+    // For PDFs, use dedicated PDF Cloudinary account with signed upload
     if (file.type === 'application/pdf') {
-      cloudinaryFormData.append('resource_type', 'raw')
+      cloudName = Deno.env.get('PDF_CLOUDINARY_CLOUD_NAME')
+      const apiKey = Deno.env.get('PDF_CLOUDINARY_API_KEY')
+      const apiSecret = Deno.env.get('PDF_CLOUDINARY_API_SECRET')
       
-      // Add API credentials for signed upload
-      const apiKey = Deno.env.get('CLOUDINARY_API_KEY')
-      const apiSecret = Deno.env.get('CLOUDINARY_API_SECRET')
-      
-      if (apiKey && apiSecret) {
+      if (cloudName && apiKey && apiSecret) {
+        cloudinaryFormData.append('resource_type', 'raw')
+        cloudinaryFormData.append('folder', `documents/${folder}`)
+        
         // Generate timestamp for signature
         const timestamp = Math.round(Date.now() / 1000)
         cloudinaryFormData.append('timestamp', timestamp.toString())
         cloudinaryFormData.append('api_key', apiKey)
         
-        // Create signature with only the parameters that will be signed
-        // Note: resource_type is sent in form data but not included in signature for raw uploads
-        const signatureString = `folder=hekayaty/${folder}&timestamp=${timestamp}${apiSecret}`
-        
+        // Create signature for signed upload
+        const signatureString = `folder=documents/${folder}&resource_type=raw&timestamp=${timestamp}${apiSecret}`
         const signature = await crypto.subtle.digest('SHA-1', new TextEncoder().encode(signatureString))
         const signatureHex = Array.from(new Uint8Array(signature)).map(b => b.toString(16).padStart(2, '0')).join('')
         cloudinaryFormData.append('signature', signatureHex)
         
         uploadUrl = `https://api.cloudinary.com/v1_1/${cloudName}/raw/upload`
+        console.log('Using PDF Cloudinary account for raw upload')
       } else {
-        // Fallback to unsigned upload with auto resource type
-        cloudinaryFormData.append('upload_preset', 'novelnexus_unsigned')
-        cloudinaryFormData.delete('resource_type')
-        console.log('No API credentials found, using unsigned upload')
+        console.error('PDF Cloudinary credentials not found')
+        return new Response(JSON.stringify({ 
+          error: 'PDF upload configuration missing' 
+        }), {
+          status: 500,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        })
       }
     } else {
-      // For non-PDF files, use unsigned upload
+      // For images/other files, use existing account with unsigned upload
+      cloudName = Deno.env.get('CLOUDINARY_CLOUD_NAME')
       cloudinaryFormData.append('upload_preset', 'novelnexus_unsigned')
+      cloudinaryFormData.append('folder', `hekayaty/${folder}`)
+      uploadUrl = `https://api.cloudinary.com/v1_1/${cloudName}/upload`
+      console.log('Using main Cloudinary account for image upload')
     }
 
     const response = await fetch(uploadUrl, {
