@@ -309,7 +309,27 @@ export function Reader({ title, author, content, storyId, onBookmark, isBookmark
                     <p className="text-sm text-gray-600 mb-4">Chapter {chapter.chapterNumber}</p>
                     
                     <div className="flex flex-col gap-2">
-                      <PDFViewer url={chapter.url} title={chapter.title} />
+                      <div className="bg-gray-50 p-4 rounded-lg border-2 border-dashed border-gray-300">
+                        <div className="text-center">
+                          <FileText className="mx-auto h-12 w-12 text-gray-400 mb-4" />
+                          <h3 className="text-lg font-medium text-gray-900 mb-2">PDF Chapter</h3>
+                          <p className="text-gray-600 mb-4">Click below to view this chapter</p>
+                          <button
+                            onClick={() => window.open(`https://docs.google.com/viewer?url=${encodeURIComponent(chapter.url)}&embedded=true`, '_blank')}
+                            className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors mr-2"
+                          >
+                            <ExternalLink className="w-4 h-4 mr-2" />
+                            Open PDF
+                          </button>
+                          <button
+                            onClick={() => window.open(chapter.url, '_blank')}
+                            className="inline-flex items-center px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
+                          >
+                            <Download className="w-4 h-4 mr-2" />
+                            Download
+                          </button>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
