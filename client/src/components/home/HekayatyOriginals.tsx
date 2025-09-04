@@ -212,17 +212,6 @@ export default function HekayatyOriginals({ stories, showSearch = false }: Props
                     {story.title}
                   </h3>
                   
-                  {/* Author Info */}
-                  <div className="flex items-center gap-2 mb-3">
-                    <img
-                      src={typeof story.author === 'object' && story.author?.avatarUrl ? story.author.avatarUrl : "https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-1.2.1&auto=format&fit=crop&w=100&q=80"}
-                      alt="Author avatar"
-                      className="w-6 h-6 rounded-full object-cover"
-                    />
-                    <span className="text-amber-200 text-sm">
-                      {typeof story.author === 'string' ? story.author : story.author?.fullName || story.author?.username || 'Unknown Author'}
-                    </span>
-                  </div>
                   
                   {/* Synopsis */}
                   <p className="text-amber-50/80 text-sm leading-relaxed line-clamp-3">
