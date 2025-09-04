@@ -1,7 +1,7 @@
 import { Link } from "wouter";
 import { motion } from "framer-motion";
 import { Sparkles } from "lucide-react";
-import bannerImg from "@/assets/tales-banner.png";
+import bannerImg from "@/assets/ChatGPT Image 3 سبتمبر 2025، 03_32_03 م.png";
 
 import { useQuery } from '@tanstack/react-query';
 import { apiRequest } from '@/lib/queryClient';

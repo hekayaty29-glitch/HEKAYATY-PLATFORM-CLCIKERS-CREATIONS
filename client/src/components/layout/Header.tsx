@@ -164,9 +164,6 @@ export default function Header() {
               <Star className="h-5 w-5" />
             </Link>
           )}
-          <Button variant="ghost" aria-label="switch-language" className="hidden md:inline-flex p-0 h-8 w-8 text-amber-50 hover:text-amber-500" onClick={handleLanguageSwitch}>
-            <Globe className="h-5 w-5" />
-          </Button>
           {isAuthenticated && (
              <Link href="/notifications" className="relative hidden md:inline-flex text-amber-50 hover:text-amber-500">
                <Bell className="h-5 w-5" />
