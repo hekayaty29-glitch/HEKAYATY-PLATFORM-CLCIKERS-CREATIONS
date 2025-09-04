@@ -64,7 +64,7 @@ Deno.serve(async (req) => {
       const body = await req.json()
 
       const { data, error } = await supabase
-        .from('characters')
+        .from('legendary_characters')
         .insert({
           ...body,
           created_at: new Date().toISOString()
@@ -86,7 +86,7 @@ Deno.serve(async (req) => {
       const body = await req.json()
 
       const { data, error } = await supabase
-        .from('characters')
+        .from('legendary_characters')
         .update({
           ...body,
           updated_at: new Date().toISOString()
@@ -108,7 +108,7 @@ Deno.serve(async (req) => {
       const characterId = pathSegments[1]
 
       const { error } = await supabase
-        .from('characters')
+        .from('legendary_characters')
         .delete()
         .eq('id', characterId)
 
