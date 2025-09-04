@@ -301,36 +301,32 @@ export function Reader({ title, author, content, storyId, onBookmark, isBookmark
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {pdfChapters.map((chapter, index) => (
-                <div key={index} className="bg-gradient-to-br from-red-50 to-red-100 border-2 border-red-200 rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow duration-300">
-                  <div className="text-center">
-                    <div className="bg-red-100 p-3 rounded-full mb-4 inline-block">
-                      <FileText className="h-8 w-8 text-red-600" />
-                    </div>
-                    <h4 className="text-lg font-semibold text-gray-800 mb-2">{chapter.title}</h4>
-                    <p className="text-sm text-gray-600 mb-4">Chapter {chapter.chapterNumber}</p>
-                    
-                    <div className="flex flex-col gap-2">
-                      <div className="bg-gray-50 p-4 rounded-lg border-2 border-dashed border-gray-300">
-                        <div className="text-center">
-                          <FileText className="mx-auto h-12 w-12 text-gray-400 mb-4" />
-                          <h3 className="text-lg font-medium text-gray-900 mb-2">PDF Chapter</h3>
-                          <p className="text-gray-600 mb-4">Click below to view this chapter</p>
-                          <button
-                            onClick={() => window.open(`https://docs.google.com/viewer?url=${encodeURIComponent(chapter.url)}&embedded=true`, '_blank')}
-                            className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors mr-2"
-                          >
-                            <ExternalLink className="w-4 h-4 mr-2" />
-                            Open PDF
-                          </button>
-                          <button
-                            onClick={() => window.open(chapter.url, '_blank')}
-                            className="inline-flex items-center px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
-                          >
-                            <Download className="w-4 h-4 mr-2" />
-                            Download
-                          </button>
-                        </div>
+                <div key={index} className="bg-white border border-gray-200 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow duration-200">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-3">
+                      <div className="bg-red-50 p-2 rounded-lg">
+                        <FileText className="h-5 w-5 text-red-600" />
                       </div>
+                      <div>
+                        <h4 className="font-medium text-gray-900">{chapter.title}</h4>
+                        <p className="text-sm text-gray-500">Chapter {chapter.chapterNumber}</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <button
+                        onClick={() => window.open(`https://docs.google.com/viewer?url=${encodeURIComponent(chapter.url)}&embedded=true`, '_blank')}
+                        className="inline-flex items-center px-3 py-1.5 text-sm bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+                      >
+                        <ExternalLink className="w-3 h-3 mr-1" />
+                        Open
+                      </button>
+                      <button
+                        onClick={() => window.open(chapter.url, '_blank')}
+                        className="inline-flex items-center px-3 py-1.5 text-sm bg-gray-600 text-white rounded-md hover:bg-gray-700 transition-colors"
+                      >
+                        <Download className="w-3 h-3 mr-1" />
+                        Download
+                      </button>
                     </div>
                   </div>
                 </div>
