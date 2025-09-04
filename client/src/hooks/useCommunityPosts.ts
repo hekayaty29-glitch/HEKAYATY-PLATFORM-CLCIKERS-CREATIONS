@@ -26,16 +26,8 @@ export function useCommunityPosts() {
   return useQuery({
     queryKey: ["community", "posts"],
     queryFn: async () => {
-      // Get auth token from Supabase
-      const { supabase } = await import('@/lib/supabase');
-      const { data: { session } } = await supabase.auth.getSession();
-      
-      const headers: Record<string, string> = {};
-      if (session?.access_token) {
-        headers.Authorization = `Bearer ${session.access_token}`;
-      }
-      
-      const res = await fetch("/api/community/posts", { headers });
+      const { apiRequest } = await import('@/lib/queryClient');
+      const res = await apiRequest("GET", "/community/posts", {});
       if (!res.ok) throw new Error("Failed to load posts");
       return res.json();
     },
@@ -47,20 +39,8 @@ export function useCreatePost() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (payload: { title: string; body: string; tags: string[] }) => {
-      // Get auth token from Supabase
-      const { supabase } = await import('@/lib/supabase');
-      const { data: { session } } = await supabase.auth.getSession();
-      
-      const headers: Record<string, string> = { "Content-Type": "application/json" };
-      if (session?.access_token) {
-        headers.Authorization = `Bearer ${session.access_token}`;
-      }
-      
-      const res = await fetch("/api/community/posts", {
-        method: "POST",
-        headers,
-        body: JSON.stringify(payload),
-      });
+      const { apiRequest } = await import('@/lib/queryClient');
+      const res = await apiRequest("POST", "/community/posts", payload);
       if (!res.ok) throw new Error("Failed to create post");
       return res.json();
     },
@@ -75,20 +55,9 @@ export function useLikePost() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (postId: string) => {
-      // Get auth token from Supabase
-      const { supabase } = await import('@/lib/supabase');
-      const { data: { session } } = await supabase.auth.getSession();
-      
-      const headers: Record<string, string> = { "Content-Type": "application/json" };
-      if (session?.access_token) {
-        headers.Authorization = `Bearer ${session.access_token}`;
-      }
-      
-      const res = await fetch(`/api/community/posts/${postId}/like`, {
-        method: "POST",
-        headers,
-      });
-      if (!res.ok) throw new Error("Failed to toggle like");
+      const { apiRequest } = await import('@/lib/queryClient');
+      const res = await apiRequest("POST", `/community/posts/${postId}/like`, {});
+      if (!res.ok) throw new Error("Failed to like post");
       return res.json();
     },
     onSuccess: () => {
