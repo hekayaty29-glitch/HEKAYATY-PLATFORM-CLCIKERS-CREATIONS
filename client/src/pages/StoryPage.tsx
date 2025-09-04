@@ -506,23 +506,6 @@ export default function StoryPage() {
               
               <p className="text-white/90 mb-5 drop-shadow-sm">{story.description}</p>
               
-              <Link href={`/author/${story.author?.id}`}>
-                <div className="flex items-center group mb-5">
-                  <img 
-                    src={story.author?.avatar_url || story.author?.avatarUrl || story.author?.avatar || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-1.2.1&auto=format&fit=crop&w=100&q=80"} 
-                    className="w-10 h-10 rounded-full object-cover" 
-                    alt={`${story.author?.fullName}'s avatar`} 
-                  />
-                  <div className="ml-3">
-                    <span className="block text-white font-medium drop-shadow-sm group-hover:text-amber-300">
-                      {story.author?.fullName}
-                    </span>
-                    <span className="text-sm text-white/70">
-                      Author
-                    </span>
-                  </div>
-                </div>
-              </Link>
               
               <div className="flex flex-wrap items-center text-white/80 text-sm gap-4 mb-6">
                 <div className="flex items-center">

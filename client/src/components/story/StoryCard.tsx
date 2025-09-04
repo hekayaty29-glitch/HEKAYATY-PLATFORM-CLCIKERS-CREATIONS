@@ -129,23 +129,9 @@ export default function StoryCard({
           
           <div className="flex items-center justify-between mt-auto">
             <div className="flex items-center">
-              <Link href={`/profile/${story.author?.id}`}>
-                <a className="flex items-center group">
-                  <img 
-                    src={story.author?.avatarUrl || ""} 
-                    className="w-8 h-8 rounded-full object-cover" 
-                    alt={`${story.author?.fullName}'s avatar`} 
-                  />
-                  <div className="ml-2">
-                    <span className="block text-sm font-medium group-hover:text-amber-700">
-                      {story.author?.fullName}
-                    </span>
-                    <span className="text-xs text-gray-500">
-                      {formatDate(story.createdAt)}
-                    </span>
-                  </div>
-                </a>
-              </Link>
+              <span className="text-xs text-gray-500">
+                {formatDate(story.createdAt)}
+              </span>
             </div>
             
             <div className="flex items-center gap-2">
@@ -205,8 +191,6 @@ export default function StoryCard({
           </Link>
           
           <div className="flex items-center text-xs text-gray-500">
-            <span>{story.author?.fullName}</span>
-            <span className="mx-1">•</span>
             <div className="flex items-center text-amber-500">
               <Star className="h-3 w-3 fill-current" />
               <span className="ml-0.5">{story.averageRating.toFixed(1)}</span>
@@ -302,19 +286,9 @@ export default function StoryCard({
         </p>
         
         <div className="flex justify-between items-center mt-auto">
-          <Link 
-            href={`/profile/${story.author?.id}`}
-            className="flex items-center group"
-          >
-            <img 
-              src={story.author?.avatarUrl || ""} 
-              className="w-8 h-8 rounded-full object-cover" 
-              alt={`${story.author?.fullName}'s avatar`} 
-            />
-            <span className="ml-2 text-sm font-medium group-hover:text-amber-700">
-              {story.author?.fullName}
-            </span>
-          </Link>
+          <span className="text-xs text-gray-500">
+            {formatDate(story.createdAt)}
+          </span>
           
           <Button 
             variant="ghost" 

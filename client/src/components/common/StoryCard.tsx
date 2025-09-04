@@ -175,19 +175,6 @@ export default function StoryCard({ story, showAuthor = true, className = "", on
                 {story.description}
               </p>
 
-              {/* Author */}
-              {showAuthor && story.author && (
-                <div className="flex items-center mb-3">
-                  <img
-                    src={story.author.avatarUrl || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-1.2.1&auto=format&fit=crop&w=100&q=80"}
-                    alt={`${story.author.fullName}'s avatar`}
-                    className="w-6 h-6 rounded-full object-cover mr-2"
-                  />
-                  <span className="text-sm text-gray-700 font-medium">
-                    {story.author.fullName}
-                  </span>
-                </div>
-              )}
 
               {/* Stats */}
               <div className="flex items-center justify-between text-xs text-gray-500">
