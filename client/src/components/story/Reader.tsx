@@ -299,34 +299,39 @@ export function Reader({ title, author, content, storyId, onBookmark, isBookmark
               <FileText className="mr-3 h-6 w-6 text-red-600" />
               PDF Chapters
             </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {pdfChapters.map((chapter, index) => (
-                <div key={index} className="bg-white border border-gray-200 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow duration-200">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-3">
-                      <div className="bg-red-50 p-2 rounded-lg">
-                        <FileText className="h-5 w-5 text-red-600" />
+                <div key={index} className="bg-white border border-gray-200 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group">
+                  <div className="flex flex-col h-full">
+                    {/* Header with PDF icon */}
+                    <div className="bg-gradient-to-r from-red-50 to-red-100 p-4 border-b border-red-100">
+                      <div className="flex justify-center mb-3">
+                        <div className="bg-red-500 p-3 rounded-full shadow-md group-hover:scale-110 transition-transform duration-300">
+                          <FileText className="h-8 w-8 text-white" />
+                        </div>
                       </div>
-                      <div>
-                        <h4 className="font-medium text-gray-900">{chapter.title}</h4>
-                        <p className="text-sm text-gray-500">Chapter {chapter.chapterNumber}</p>
-                      </div>
+                      <h4 className="text-lg font-bold text-gray-800 text-center mb-1 line-clamp-2">{chapter.title}</h4>
+                      <p className="text-sm text-red-600 text-center font-medium">Chapter {chapter.chapterNumber}</p>
                     </div>
-                    <div className="flex items-center space-x-1 flex-shrink-0">
-                      <button
-                        onClick={() => window.open(`https://docs.google.com/viewer?url=${encodeURIComponent(chapter.url)}&embedded=true`, '_blank')}
-                        className="inline-flex items-center px-2 py-1 text-xs bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
-                      >
-                        <ExternalLink className="w-3 h-3 mr-1" />
-                        Open
-                      </button>
-                      <button
-                        onClick={() => window.open(chapter.url, '_blank')}
-                        className="inline-flex items-center px-2 py-1 text-xs bg-gray-600 text-white rounded hover:bg-gray-700 transition-colors"
-                      >
-                        <Download className="w-3 h-3 mr-1" />
-                        DL
-                      </button>
+                    
+                    {/* Content area */}
+                    <div className="flex-1 p-4 flex flex-col justify-end">
+                      <div className="space-y-3">
+                        <button
+                          onClick={() => window.open(`https://docs.google.com/viewer?url=${encodeURIComponent(chapter.url)}&embedded=true`, '_blank')}
+                          className="w-full bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white font-semibold py-3 px-4 rounded-lg transition-all duration-200 flex items-center justify-center gap-2 shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
+                        >
+                          <Eye className="w-4 h-4" />
+                          View PDF
+                        </button>
+                        <button
+                          onClick={() => window.open(chapter.url, '_blank')}
+                          className="w-full bg-gradient-to-r from-gray-600 to-gray-700 hover:from-gray-700 hover:to-gray-800 text-white font-semibold py-3 px-4 rounded-lg transition-all duration-200 flex items-center justify-center gap-2 shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
+                        >
+                          <Download className="w-4 h-4" />
+                          Download
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
