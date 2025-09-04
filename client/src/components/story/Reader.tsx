@@ -312,20 +312,20 @@ export function Reader({ title, author, content, storyId, onBookmark, isBookmark
                         <p className="text-sm text-gray-500">Chapter {chapter.chapterNumber}</p>
                       </div>
                     </div>
-                    <div className="flex items-center space-x-2">
+                    <div className="flex items-center space-x-1 flex-shrink-0">
                       <button
                         onClick={() => window.open(`https://docs.google.com/viewer?url=${encodeURIComponent(chapter.url)}&embedded=true`, '_blank')}
-                        className="inline-flex items-center px-3 py-1.5 text-sm bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+                        className="inline-flex items-center px-2 py-1 text-xs bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
                       >
                         <ExternalLink className="w-3 h-3 mr-1" />
                         Open
                       </button>
                       <button
                         onClick={() => window.open(chapter.url, '_blank')}
-                        className="inline-flex items-center px-3 py-1.5 text-sm bg-gray-600 text-white rounded-md hover:bg-gray-700 transition-colors"
+                        className="inline-flex items-center px-2 py-1 text-xs bg-gray-600 text-white rounded hover:bg-gray-700 transition-colors"
                       >
                         <Download className="w-3 h-3 mr-1" />
-                        Download
+                        DL
                       </button>
                     </div>
                   </div>
