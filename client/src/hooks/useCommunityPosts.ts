@@ -26,8 +26,16 @@ export function useCommunityPosts() {
   return useQuery({
     queryKey: ["community", "posts"],
     queryFn: async () => {
-      const { apiRequest } = await import('@/lib/queryClient');
-      const res = await apiRequest("GET", "/community/posts", {});
+      // Get auth token from Supabase
+      const { supabase } = await import('@/lib/supabase');
+      const { data: { session } } = await supabase.auth.getSession();
+      
+      const headers: Record<string, string> = { "Content-Type": "application/json" };
+      if (session?.access_token) {
+        headers.Authorization = `Bearer ${session.access_token}`;
+      }
+      
+      const res = await fetch("/api/community/posts", { headers });
       if (!res.ok) throw new Error("Failed to load posts");
       return res.json();
     },
@@ -39,9 +47,24 @@ export function useCreatePost() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (payload: { title: string; body: string; tags: string[] }) => {
-      const { apiRequest } = await import('@/lib/queryClient');
-      const res = await apiRequest("POST", "/community/posts", payload);
-      if (!res.ok) throw new Error("Failed to create post");
+      // Get auth token from Supabase
+      const { supabase } = await import('@/lib/supabase');
+      const { data: { session } } = await supabase.auth.getSession();
+      
+      const headers: Record<string, string> = { "Content-Type": "application/json" };
+      if (session?.access_token) {
+        headers.Authorization = `Bearer ${session.access_token}`;
+      }
+      
+      const res = await fetch("/api/community/posts", {
+        method: "POST",
+        headers,
+        body: JSON.stringify(payload),
+      });
+      if (!res.ok) {
+        const errorText = await res.text();
+        throw new Error(`Failed to create post: ${errorText}`);
+      }
       return res.json();
     },
     onSuccess: () => {
@@ -55,8 +78,19 @@ export function useLikePost() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (postId: string) => {
-      const { apiRequest } = await import('@/lib/queryClient');
-      const res = await apiRequest("POST", `/community/posts/${postId}/like`, {});
+      // Get auth token from Supabase
+      const { supabase } = await import('@/lib/supabase');
+      const { data: { session } } = await supabase.auth.getSession();
+      
+      const headers: Record<string, string> = { "Content-Type": "application/json" };
+      if (session?.access_token) {
+        headers.Authorization = `Bearer ${session.access_token}`;
+      }
+      
+      const res = await fetch(`/api/community/posts/${postId}/like`, {
+        method: "POST",
+        headers,
+      });
       if (!res.ok) throw new Error("Failed to like post");
       return res.json();
     },
