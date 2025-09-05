@@ -11,9 +11,9 @@ export default function HekayatyOriginalStoriesPage() {
   const [searchQuery, setSearchQuery] = useState("");
   
   const { data: stories, isLoading } = useQuery({
-    queryKey: ["/api/stories", { placement: "Hekayaty Originals" }],
+    queryKey: ["/stories", { placement: "Hekayaty Originals" }],
     queryFn: async () => {
-      const res = await apiRequest("GET", "/api/stories?placement=" + encodeURIComponent("Hekayaty Originals"));
+      const res = await apiRequest("GET", "/stories?placement=" + encodeURIComponent("Hekayaty Originals"));
       return res.json();
     },
   });
