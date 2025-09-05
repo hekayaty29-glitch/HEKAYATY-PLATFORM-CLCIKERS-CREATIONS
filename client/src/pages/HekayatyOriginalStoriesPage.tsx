@@ -2,20 +2,20 @@ import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Helmet } from "react-helmet";
 import { apiRequest } from "@/lib/queryClient";
-import StoryCard from "@/components/common/StoryCard";
 import { Input } from "@/components/ui/input";
 import { Search, BookOpen } from "lucide-react";
+import { Link } from "wouter";
 import fantasyBackground from "@/assets/afe886e1-be42-446e-8d67-2019ebe6c8fd_13-58-27.png";
 
 export default function HekayatyOriginalStoriesPage() {
   const [searchQuery, setSearchQuery] = useState("");
   
   const { data: stories, isLoading } = useQuery({
-    queryKey: ["/stories/special"],
+    queryKey: ["/stories"],
     queryFn: async () => {
-      const res = await apiRequest("GET", "/stories/special");
+      const res = await apiRequest("GET", "/stories?is_published=true");
       const data = await res.json();
-      console.log('Stories/special response:', data);
+      console.log('Stories response:', data);
       // Ensure data is an array and filter out any invalid entries
       return Array.isArray(data) ? data.filter(story => story && story.id) : [];
     },
@@ -24,8 +24,7 @@ export default function HekayatyOriginalStoriesPage() {
   const filteredStories = stories?.filter((story: any) =>
     story && story.title && (
       story.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      (story.description && story.description.toLowerCase().includes(searchQuery.toLowerCase())) ||
-      (story.author?.fullName && story.author.fullName.toLowerCase().includes(searchQuery.toLowerCase()))
+      (story.description && story.description.toLowerCase().includes(searchQuery.toLowerCase()))
     )
   ) || [];
 
@@ -80,16 +79,56 @@ export default function HekayatyOriginalStoriesPage() {
           ) : filteredStories.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {filteredStories.map((story: any) => (
-                <StoryCard key={story.id} story={story} />
+                <Link key={story.id} href={`/story/${story.id}`}>
+                  <div className="story-card bg-amber-50 bg-opacity-10 backdrop-filter backdrop-blur-sm rounded-lg overflow-hidden border border-amber-500 hover:shadow-xl hover:scale-105 transition-all duration-300 cursor-pointer group">
+                    {/* Story Cover Image */}
+                    <div className="relative h-48 overflow-hidden">
+                      <img
+                        src={story.cover_url || story.poster_url || "https://images.unsplash.com/photo-1481627834876-b7833e8f5570?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80"}
+                        alt={story.title}
+                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-brown-dark/60 to-transparent" />
+                      
+                      {/* Genre Badge */}
+                      {story.genre && (
+                        <div className="absolute top-3 right-3">
+                          <span className="bg-amber-500/90 text-amber-50 text-xs font-medium px-2 py-1 rounded-full">
+                            {story.genre}
+                          </span>
+                        </div>
+                      )}
+                    </div>
+                    
+                    {/* Card Content */}
+                    <div className="p-4">
+                      <h3 className="font-cinzel text-lg font-bold mb-2 text-amber-100 group-hover:text-amber-300 transition-colors line-clamp-2">
+                        {story.title}
+                      </h3>
+                      
+                      {/* Description */}
+                      <p className="text-amber-50/80 text-sm leading-relaxed line-clamp-3 mb-3">
+                        {story.description || story.synopsis}
+                      </p>
+
+                      {/* Date */}
+                      {story.created_at && (
+                        <div className="text-amber-200/60 text-xs">
+                          {new Date(story.created_at).toLocaleDateString()}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </Link>
               ))}
             </div>
           ) : (
             <div className="text-center py-12">
               <BookOpen className="h-16 w-16 text-amber-500 mx-auto mb-4" />
-              <h3 className="text-xl font-cinzel font-bold text-brown-dark mb-2">
+              <h3 className="text-xl font-cinzel font-bold text-white mb-2">
                 {searchQuery ? "No stories found" : "No stories yet"}
               </h3>
-              <p className="text-gray-600">
+              <p className="text-amber-200">
                 {searchQuery 
                   ? "Try adjusting your search terms" 
                   : "Be the first to publish a Hekayaty Original story!"}
