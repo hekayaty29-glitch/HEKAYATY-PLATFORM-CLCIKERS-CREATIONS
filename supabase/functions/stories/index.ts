@@ -79,6 +79,7 @@ Deno.serve(async (req) => {
       const author = searchParams.get('author')
       const premium = searchParams.get('premium')
       const shortStory = searchParams.get('shortStory')
+      const placement = searchParams.get('placement')
       const limit = parseInt(searchParams.get('limit') || '20')
       const offset = parseInt(searchParams.get('offset') || '0')
 
@@ -94,6 +95,7 @@ Deno.serve(async (req) => {
       // if (author) query = query.eq('profiles.username', author)
       if (premium) query = query.eq('is_premium', premium === 'true')
       if (shortStory) query = query.eq('is_short_story', shortStory === 'true')
+      if (placement) query = query.eq('placement', placement)
 
       const { data, error } = await query
       if (error) throw error
