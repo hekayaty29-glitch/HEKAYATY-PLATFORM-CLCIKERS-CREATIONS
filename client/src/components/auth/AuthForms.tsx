@@ -24,26 +24,17 @@ const loginSchema = z.object({
 });
 
 export function LoginForm() {
-  const { login, loginWithGoogle } = useAuth();
+  const { loginWithGoogle } = useAuth();
   const [, navigate] = useLocation();
   const [isLoading, setIsLoading] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   
-  const form = useForm<z.infer<typeof loginSchema>>({
-    resolver: zodResolver(loginSchema),
-    defaultValues: {
-      username: "",
-      password: "",
-    },
-  });
-  
-  const onSubmit = async (data: z.infer<typeof loginSchema>) => {
+  const handleGoogleLogin = async () => {
     setIsLoading(true);
     setError("");
     
     try {
-      await login(data.username, data.password);
+      await loginWithGoogle();
       navigate("/profile");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Login failed. Please try again.");
@@ -53,92 +44,26 @@ export function LoginForm() {
   };
   
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-        {error && (
-          <div className="bg-red-50 text-red-900 p-3 rounded-md flex items-start text-sm">
-            <CircleAlert className="h-5 w-5 text-red-500 mr-2 flex-shrink-0 mt-0.5" />
-            <span>{error}</span>
-          </div>
-        )}
-        
-        {/* Google login */}
-        <Button type="button" variant="outline" className="w-full flex items-center justify-center gap-2" onClick={() => loginWithGoogle()}>
-          <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" className="h-5 w-5" />
-          Continue with Google
-        </Button>
-        {/* Divider */}
-        <div className="flex items-center my-2">
-          <span className="flex-grow border-t border-amber-300" />
-          <span className="px-2 text-sm text-amber-600">or</span>
-          <span className="flex-grow border-t border-amber-300" />
+    <div className="space-y-4">
+      {error && (
+        <div className="bg-red-50 text-red-900 p-3 rounded-md flex items-start text-sm">
+          <CircleAlert className="h-5 w-5 text-red-500 mr-2 flex-shrink-0 mt-0.5" />
+          <span>{error}</span>
         </div>
-        <FormField
-          control={form.control}
-          name="username"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel className="font-cinzel text-amber-600">Username</FormLabel>
-              <FormControl>
-                <Input 
-                  placeholder="Enter your username" 
-                  className="border-amber-500/50 focus:border-amber-500"
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        
-        <FormField
-          control={form.control}
-          name="password"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel className="font-cinzel text-amber-500">Password</FormLabel>
-              <FormControl>
-                <div className="relative">
-                  <Input 
-                    type={showPassword ? "text" : "password"}
-                    placeholder="Enter your password" 
-                    className="border-amber-500/50 focus:border-amber-500 pr-10"
-                    {...field}
-                  />
-                  <button
-                    type="button"
-                    className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-amber-500"
-                    onClick={() => setShowPassword(!showPassword)}
-                  >
-                    {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
-                  </button>
-                </div>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        
-        <div className="flex items-center justify-between">
-          <div className="flex items-center">
-            <Checkbox id="remember" className="border-amber-500 data-[state=checked]:bg-amber-500" />
-            <label htmlFor="remember" className="ml-2 text-sm text-gray-600">
-              Remember me
-            </label>
-          </div>
-          
-          <Link href="/forgot-password" className="text-amber-500 hover:text-amber-700 text-sm">Forgot password?</Link>
-        </div>
-        
-        <Button 
-          type="submit" 
-          className="w-full bg-amber-500 hover:bg-amber-600 text-white font-cinzel"
-          disabled={isLoading}
-        >
-          {isLoading ? "Signing in..." : "Sign In"}
-        </Button>
-      </form>
-    </Form>
+      )}
+      
+      {/* Google login */}
+      <Button 
+        type="button" 
+        variant="outline" 
+        className="w-full flex items-center justify-center gap-2" 
+        onClick={handleGoogleLogin}
+        disabled={isLoading}
+      >
+        <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" className="h-5 w-5" />
+        {isLoading ? "Signing in..." : "Continue with Google"}
+      </Button>
+    </div>
   );
 }
 
@@ -169,48 +94,26 @@ interface RegisterFormProps {
 }
 
 export function RegisterForm({ isPremium = false }: RegisterFormProps) {
-  const { register, login, loginWithGoogle } = useAuth();
+  const { loginWithGoogle } = useAuth();
   const [, navigate] = useLocation();
   const [isLoading, setIsLoading] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [error, setError] = useState("");
+  const [agreeTerms, setAgreeTerms] = useState(false);
   
-  const form = useForm<z.infer<typeof registerSchema>>({
-    resolver: zodResolver(registerSchema),
-    defaultValues: {
-      username: "",
-      email: "",
-      fullName: "",
-      password: "",
-      confirmPassword: "",
-      agreeTerms: false,
-      isPremium: isPremium
-    },
-  });
-  
-  const onSubmit = async (data: z.infer<typeof registerSchema>) => {
+  const handleGoogleSignUp = async () => {
+    if (!agreeTerms) {
+      setError("You must agree to the Terms of Service and Privacy Policy to continue.");
+      return;
+    }
+    
     setIsLoading(true);
     setError("");
     
     try {
-      // Register user
-      await register({
-        username: data.username,
-        email: data.email,
-        fullName: data.fullName,
-        password: data.password,
-        confirmPassword: data.confirmPassword,
-      });
-
-      // Supabase signUp already creates a session when email confirmation is disabled.
-      // Only attempt sign-in if no session was returned (edge case)
-      try {
-        await login(data.username, data.password);
-      } catch {}
-
+      await loginWithGoogle();
+      
       // If registration specified premium, handle upgrade
-      if (data.isPremium) {
+      if (isPremium) {
         navigate("/upgrade");
       } else {
         // Small delay to ensure auth state is established
@@ -226,169 +129,39 @@ export function RegisterForm({ isPremium = false }: RegisterFormProps) {
   };
   
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-        {error && (
-          <div className="bg-red-50 text-red-900 p-3 rounded-md flex items-start text-sm">
-            <CircleAlert className="h-5 w-5 text-red-500 mr-2 flex-shrink-0 mt-0.5" />
-            <span>{error}</span>
-          </div>
-        )}
-        
-        {/* Google sign up */}
-        <Button type="button" variant="outline" className="w-full flex items-center justify-center gap-2" onClick={() => loginWithGoogle()}>
-          <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" className="h-5 w-5" />
-          Continue with Google
-        </Button>
-        {/* Divider */}
-        <div className="flex items-center my-2">
-          <span className="flex-grow border-t border-amber-300" />
-          <span className="px-2 text-sm text-amber-600">or</span>
-          <span className="flex-grow border-t border-amber-300" />
+    <div className="space-y-4">
+      {error && (
+        <div className="bg-red-50 text-red-900 p-3 rounded-md flex items-start text-sm">
+          <CircleAlert className="h-5 w-5 text-red-500 mr-2 flex-shrink-0 mt-0.5" />
+          <span>{error}</span>
         </div>
-        <FormField
-          control={form.control}
-          name="fullName"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel className="font-cinzel text-amber-400">Full Name</FormLabel>
-              <FormControl>
-                <Input 
-                  placeholder="Enter your full name" 
-                  className="border-amber-500/50 focus:border-amber-500"
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
+      )}
+      
+      {/* Google sign up */}
+      <Button 
+        type="button" 
+        variant="outline" 
+        className="w-full flex items-center justify-center gap-2" 
+        onClick={handleGoogleSignUp}
+        disabled={isLoading}
+      >
+        <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" className="h-5 w-5" />
+        {isLoading ? "Creating Account..." : "Continue with Google"}
+      </Button>
+      
+      {/* Terms and Privacy Policy */}
+      <div className="flex flex-row items-start space-x-3 space-y-0">
+        <Checkbox 
+          checked={agreeTerms}
+          onCheckedChange={(checked) => setAgreeTerms(checked === true)}
+          className="border-amber-500 data-[state=checked]:bg-amber-500"
         />
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <FormField
-            control={form.control}
-            name="username"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="font-cinzel text-amber-400">Username</FormLabel>
-                <FormControl>
-                  <Input 
-                    placeholder="Choose a username" 
-                    className="border-amber-500/50 focus:border-amber-500"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          
-          <FormField
-            control={form.control}
-            name="email"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="font-cinzel text-amber-400">Email</FormLabel>
-                <FormControl>
-                  <Input 
-                    type="email"
-                    placeholder="Enter your email" 
-                    className="border-amber-500/50 focus:border-amber-500"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+        <div className="space-y-1 leading-none">
+          <label className="text-sm text-gray-600">
+            I agree to the <a href="/terms" className="text-amber-500 hover:text-amber-700">Terms of Service</a> and <a href="/privacy" className="text-amber-500 hover:text-amber-700">Privacy Policy</a>
+          </label>
         </div>
-        
-        <FormField
-          control={form.control}
-          name="password"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel className="font-cinzel text-amber-500">Password</FormLabel>
-              <FormControl>
-                <div className="relative">
-                  <Input 
-                    type={showPassword ? "text" : "password"}
-                    placeholder="Create a password" 
-                    className="border-amber-500/50 focus:border-amber-500 pr-10"
-                    {...field}
-                  />
-                  <button
-                    type="button"
-                    className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-amber-500"
-                    onClick={() => setShowPassword(!showPassword)}
-                  >
-                    {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
-                  </button>
-                </div>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        
-        <FormField
-          control={form.control}
-          name="confirmPassword"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel className="font-cinzel text-amber-500">Confirm Password</FormLabel>
-              <FormControl>
-                <div className="relative">
-                  <Input 
-                    type={showConfirmPassword ? "text" : "password"}
-                    placeholder="Confirm your password" 
-                    className="border-amber-500/50 focus:border-amber-500 pr-10"
-                    {...field}
-                  />
-                  <button
-                    type="button"
-                    className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-amber-500"
-                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                  >
-                    {showConfirmPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
-                  </button>
-                </div>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        
-        <FormField
-          control={form.control}
-          name="agreeTerms"
-          render={({ field }) => (
-            <FormItem className="flex flex-row items-start space-x-3 space-y-0">
-              <FormControl>
-                <Checkbox 
-                  checked={field.value}
-                  onCheckedChange={field.onChange}
-                  className="border-amber-500 data-[state=checked]:bg-amber-500"
-                />
-              </FormControl>
-              <div className="space-y-1 leading-none">
-                <FormLabel className="text-sm text-gray-600">
-                  I agree to the <a href="/terms" className="text-amber-500 hover:text-amber-700">Terms of Service</a> and <a href="/privacy" className="text-amber-500 hover:text-amber-700">Privacy Policy</a>
-                </FormLabel>
-                <FormMessage />
-              </div>
-            </FormItem>
-          )}
-        />
-        
-        <Button 
-          type="submit" 
-          className={`w-full text-white font-cinzel ${isPremium ? 'bg-gold-rich hover:bg-amber-600' : 'bg-amber-500 hover:bg-amber-600'}`}
-          disabled={isLoading}
-        >
-          {isLoading ? "Creating Account..." : (isPremium ? "Sign Up for Premium" : "Create Account")}
-        </Button>
-      </form>
-    </Form>
+      </div>
+    </div>
   );
 }
