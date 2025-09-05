@@ -14,14 +14,19 @@ export default function HekayatyOriginalStoriesPage() {
     queryKey: ["/stories/special"],
     queryFn: async () => {
       const res = await apiRequest("GET", "/stories/special");
-      return res.json();
+      const data = await res.json();
+      console.log('Stories/special response:', data);
+      // Ensure data is an array and filter out any invalid entries
+      return Array.isArray(data) ? data.filter(story => story && story.id) : [];
     },
   });
 
   const filteredStories = stories?.filter((story: any) =>
-    story.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    story.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    story.author?.fullName.toLowerCase().includes(searchQuery.toLowerCase())
+    story && story.title && (
+      story.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (story.description && story.description.toLowerCase().includes(searchQuery.toLowerCase())) ||
+      (story.author?.fullName && story.author.fullName.toLowerCase().includes(searchQuery.toLowerCase()))
+    )
   ) || [];
 
   return (
