@@ -241,27 +241,149 @@ Deno.serve(async (req) => {
 
     // POST /stories/:id/rate - Rate story
     if (method === 'POST' && pathSegments.length === 3 && pathSegments[2] === 'rate') {
+      const user = await requireAuth(req)
       const storyId = pathSegments[1]
+      const { rating, review } = await req.json()
       
-      return new Response(JSON.stringify({ success: true, message: 'Rating not implemented yet' }), {
+      if (!rating || rating < 1 || rating > 5) {
+        return new Response(JSON.stringify({ error: 'Rating must be between 1 and 5' }), {
+          status: 400,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        })
+      }
+      
+      // Check if rating exists
+      const { data: existingRating } = await supabase
+        .from('ratings')
+        .select('id')
+        .eq('user_id', user.id)
+        .eq('story_id', storyId)
+        .single()
+      
+      let data, error
+      
+      if (existingRating) {
+        // Update existing rating
+        const result = await supabase
+          .from('ratings')
+          .update({ rating, review, updated_at: new Date().toISOString() })
+          .eq('id', existingRating.id)
+          .select()
+          .single()
+        data = result.data
+        error = result.error
+      } else {
+        // Create new rating
+        const result = await supabase
+          .from('ratings')
+          .insert({
+            user_id: user.id,
+            story_id: storyId,
+            rating,
+            review: review || '',
+            created_at: new Date().toISOString()
+          })
+          .select()
+          .single()
+        data = result.data
+        error = result.error
+      }
+      
+      if (error) {
+        console.error('Rating error:', error)
+        return new Response(JSON.stringify({ error: error.message }), {
+          status: 500,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        })
+      }
+      
+      // Update story's average rating and rating count
+      const { data: allRatings } = await supabase
+        .from('ratings')
+        .select('rating')
+        .eq('story_id', storyId)
+      
+      if (allRatings && allRatings.length > 0) {
+        const avgRating = allRatings.reduce((sum, r) => sum + r.rating, 0) / allRatings.length
+        const ratingCount = allRatings.length
+        
+        await supabase
+          .from('stories')
+          .update({ 
+            average_rating: avgRating,
+            rating_count: ratingCount
+          })
+          .eq('id', storyId)
+      }
+      
+      return new Response(JSON.stringify(data), {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' }
       })
     }
 
     // POST /stories/:id/bookmark - Bookmark story
     if (method === 'POST' && pathSegments.length === 3 && pathSegments[2] === 'bookmark') {
+      const user = await requireAuth(req)
       const storyId = pathSegments[1]
       
-      return new Response(JSON.stringify({ success: true, message: 'Bookmark not implemented yet' }), {
+      // Check if bookmark exists
+      const { data: existingBookmark } = await supabase
+        .from('bookmarks')
+        .select('id')
+        .eq('user_id', user.id)
+        .eq('story_id', storyId)
+        .single()
+      
+      if (existingBookmark) {
+        return new Response(JSON.stringify({ error: 'Story already bookmarked' }), {
+          status: 400,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        })
+      }
+      
+      const { data, error } = await supabase
+        .from('bookmarks')
+        .insert({
+          user_id: user.id,
+          story_id: storyId,
+          created_at: new Date().toISOString()
+        })
+        .select()
+        .single()
+      
+      if (error) {
+        console.error('Bookmark error:', error)
+        return new Response(JSON.stringify({ error: error.message }), {
+          status: 500,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        })
+      }
+      
+      return new Response(JSON.stringify(data), {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' }
       })
     }
-
+    
     // DELETE /stories/:id/bookmark - Remove bookmark
     if (method === 'DELETE' && pathSegments.length === 3 && pathSegments[2] === 'bookmark') {
+      const user = await requireAuth(req)
       const storyId = pathSegments[1]
       
-      return new Response(JSON.stringify({ success: true, message: 'Bookmark removal not implemented yet' }), {
+      const { error } = await supabase
+        .from('bookmarks')
+        .delete()
+        .eq('user_id', user.id)
+        .eq('story_id', storyId)
+      
+      if (error) {
+        console.error('Bookmark removal error:', error)
+        return new Response(JSON.stringify({ error: error.message }), {
+          status: 500,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        })
+      }
+      
+      return new Response(JSON.stringify({ success: true }), {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' }
       })
     }
