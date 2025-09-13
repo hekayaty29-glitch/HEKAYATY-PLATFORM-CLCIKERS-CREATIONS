@@ -58,36 +58,36 @@ export default function Header() {
   }, [unreadCount]);
 
   return (
-    <header className="text-amber-50 shadow-lg" style={{ backgroundColor: '#151008' }}>
-      <div className="container mx-auto px-4 py-3 flex justify-between items-center">
+    <header className="text-amber-50 shadow-lg sticky top-0 z-50" style={{ backgroundColor: '#151008' }}>
+      <div className="container mx-auto px-3 sm:px-4 py-2 sm:py-3 flex justify-between items-center">
         <div className="flex items-center">
-          <Link href="/" className="text-2xl md:text-3xl font-cinzel font-bold">
+          <Link href="/" className="text-xl sm:text-2xl md:text-3xl font-cinzel font-bold">
             <span className="text-amber-500">Heka</span>yaty
           </Link>
         </div>
         
         {/* Navigation for desktop */}
-        <nav className="hidden md:flex items-center space-x-6">
-          <Link href="/home" className="font-cinzel text-sm hover:text-amber-500 transition-colors flex items-center gap-1">
-            <Home className="h-4 w-4" />
-            <span>Home</span>
+        <nav className="hidden lg:flex items-center space-x-4 xl:space-x-6">
+          <Link href="/home" className="font-cinzel text-xs xl:text-sm hover:text-amber-500 transition-colors flex items-center gap-1">
+            <Home className="h-3 w-3 xl:h-4 xl:w-4" />
+            <span className="hidden xl:inline">Home</span>
           </Link>
-          <Link href="/originals" className="font-cinzel text-sm hover:text-amber-500 transition-colors flex items-center gap-1">
-            <BookOpen className="h-4 w-4" />
-            <span>Discover</span>
+          <Link href="/originals" className="font-cinzel text-xs xl:text-sm hover:text-amber-500 transition-colors flex items-center gap-1">
+            <BookOpen className="h-3 w-3 xl:h-4 xl:w-4" />
+            <span className="hidden xl:inline">Discover</span>
           </Link>
 
-          <Link href="/subscribe" className="font-cinzel text-sm hover:text-amber-500 transition-colors flex items-center gap-1">
-            <Star className="h-4 w-4" />
-            <span>Get Code</span>
+          <Link href="/subscribe" className="font-cinzel text-xs xl:text-sm hover:text-amber-500 transition-colors flex items-center gap-1">
+            <Star className="h-3 w-3 xl:h-4 xl:w-4" />
+            <span className="hidden xl:inline">Get Code</span>
           </Link>
           
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="link" className="font-cinzel text-sm text-amber-50 hover:text-amber-500 p-0 flex items-center gap-1">
-                <Award className="h-4 w-4" />
-                <span>Genres</span>
-                <ChevronDown className="h-3 w-3" />
+              <Button variant="link" className="font-cinzel text-xs xl:text-sm text-amber-50 hover:text-amber-500 p-0 flex items-center gap-1">
+                <Award className="h-3 w-3 xl:h-4 xl:w-4" />
+                <span className="hidden xl:inline">Genres</span>
+                <ChevronDown className="h-2 w-2 xl:h-3 xl:w-3" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="center" className="bg-midnight-blue border-amber-500">
@@ -116,60 +116,60 @@ export default function Header() {
             </DropdownMenuContent>
           </DropdownMenu>
           
-          <Link href="/top-rated" className="font-cinzel text-sm hover:text-amber-500 transition-colors flex items-center gap-1">
-            <Award className="h-4 w-4" />
-            <span>Rankings</span>
+          <Link href="/top-rated" className="font-cinzel text-xs xl:text-sm hover:text-amber-500 transition-colors flex items-center gap-1">
+            <Award className="h-3 w-3 xl:h-4 xl:w-4" />
+            <span className="hidden xl:inline">Rankings</span>
           </Link>
           
-          <Link href="/talecraft" className="font-cinzel text-sm hover:text-amber-500 transition-colors flex items-center gap-1">
-            <Hammer className="h-4 w-4" />
-            <span>TaleCraft</span>
+          <Link href="/talecraft" className="font-cinzel text-xs xl:text-sm hover:text-amber-500 transition-colors flex items-center gap-1">
+            <Hammer className="h-3 w-3 xl:h-4 xl:w-4" />
+            <span className="hidden xl:inline">TaleCraft</span>
           </Link>
           
-          <Link href="/news" className="font-cinzel text-sm hover:text-amber-500 transition-colors flex items-center gap-1">
-            <Megaphone className="h-4 w-4" />
-            <span>Hekayaty</span>
+          <Link href="/news" className="font-cinzel text-xs xl:text-sm hover:text-amber-500 transition-colors flex items-center gap-1">
+            <Megaphone className="h-3 w-3 xl:h-4 xl:w-4" />
+            <span className="hidden xl:inline">Hekayaty</span>
           </Link>
           
           {showRecs && (
-             <Link href="/recommendations" className="font-cinzel text-sm hover:text-amber-500 transition-colors flex items-center gap-1">
-               <Award className="h-4 w-4" />
-               <span>For You</span>
+             <Link href="/recommendations" className="font-cinzel text-xs xl:text-sm hover:text-amber-500 transition-colors flex items-center gap-1">
+               <Award className="h-3 w-3 xl:h-4 xl:w-4" />
+               <span className="hidden xl:inline">For You</span>
              </Link>
            )}
            {isAuthenticated && (
-             <Link href="/talecraft" className="font-cinzel text-sm hover:text-amber-500 transition-colors flex items-center gap-1">
-              <PenSquare className="h-4 w-4" />
-              <span>Write</span>
+             <Link href="/talecraft" className="font-cinzel text-xs xl:text-sm hover:text-amber-500 transition-colors flex items-center gap-1">
+              <PenSquare className="h-3 w-3 xl:h-4 xl:w-4" />
+              <span className="hidden xl:inline">Write</span>
             </Link>
           )}
           
           {isAuthenticated && isAdmin && (
-            <Link href="/admin" className="font-cinzel text-sm hover:text-amber-500 transition-colors flex items-center gap-1">
-              <Shield className="h-4 w-4" />
-              <span>Admin</span>
+            <Link href="/admin" className="font-cinzel text-xs xl:text-sm hover:text-amber-500 transition-colors flex items-center gap-1">
+              <Shield className="h-3 w-3 xl:h-4 xl:w-4" />
+              <span className="hidden xl:inline">Admin</span>
             </Link>
           )}
           
-          <Link href="/community" className="font-cinzel text-sm hover:text-amber-500 transition-colors flex items-center gap-1">
-            <Users className="h-4 w-4" />
-            <span>Community</span>
+          <Link href="/community" className="font-cinzel text-xs xl:text-sm hover:text-amber-500 transition-colors flex items-center gap-1">
+            <Users className="h-3 w-3 xl:h-4 xl:w-4" />
+            <span className="hidden xl:inline">Community</span>
           </Link>
         </nav>
         
-        <div className="flex items-center space-x-4">
+        <div className="flex items-center space-x-2 sm:space-x-3 md:space-x-4">
           {/* utility icons */}
           {isAuthenticated && !isVip && (
-            <Link href="/subscribe" className="hidden md:inline-flex text-amber-50 hover:text-amber-500">
-              <Star className="h-5 w-5" />
+            <Link href="/subscribe" className="hidden lg:inline-flex text-amber-50 hover:text-amber-500">
+              <Star className="h-4 w-4 lg:h-5 lg:w-5" />
             </Link>
           )}
           {isAuthenticated && (
-             <Link href="/notifications" className="relative hidden md:inline-flex text-amber-50 hover:text-amber-500">
-               <Bell className="h-5 w-5" />
+             <Link href="/notifications" className="relative hidden lg:inline-flex text-amber-50 hover:text-amber-500">
+               <Bell className="h-4 w-4 lg:h-5 lg:w-5" />
                {unreadCount > 0 && (
-                 <span className="absolute -top-1 -right-1 bg-red-600 text-[10px] px-1 rounded-full">
-                   {unreadCount}
+                 <span className="absolute -top-1 -right-1 bg-red-600 text-[9px] lg:text-[10px] px-1 rounded-full min-w-[16px] h-4 flex items-center justify-center">
+                   {unreadCount > 99 ? '99+' : unreadCount}
                  </span>
                )}
              </Link>
@@ -177,8 +177,8 @@ export default function Header() {
           {isAuthenticated ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="relative h-8 w-8 rounded-full">
-                  <Avatar className="h-8 w-8">
+                <Button variant="ghost" className="relative h-7 w-7 sm:h-8 sm:w-8 rounded-full">
+                  <Avatar className="h-7 w-7 sm:h-8 sm:w-8">
                     <AvatarImage src={user?.avatar} alt={user?.fullName} />
                     <AvatarFallback className="bg-amber-500 text-brown-dark">
                       {user?.fullName?.charAt(0)}
@@ -219,10 +219,10 @@ export default function Header() {
             </DropdownMenu>
           ) : (
             <>
-              <Button asChild variant="ghost" className="hidden md:inline-flex text-amber-50 hover:text-amber-500 hover:bg-transparent border border-amber-500">
+              <Button asChild variant="ghost" className="hidden lg:inline-flex text-amber-50 hover:text-amber-500 hover:bg-transparent border border-amber-500 text-xs lg:text-sm px-2 lg:px-4">
                 <Link href="/login">Sign In</Link>
               </Button>
-              <Button asChild className="hidden md:inline-flex bg-amber-500 hover:bg-amber-600 text-brown-dark border-none">
+              <Button asChild className="hidden lg:inline-flex bg-amber-500 hover:bg-amber-600 text-brown-dark border-none text-xs lg:text-sm px-2 lg:px-4">
                 <Link href="/register">Sign Up</Link>
               </Button>
             </>
@@ -231,14 +231,14 @@ export default function Header() {
           {/* Mobile menu button */}
           <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
             <SheetTrigger asChild>
-              <Button variant="ghost" className="md:hidden p-0 h-9 w-9 rounded-full">
-                <Menu className="h-5 w-5 text-amber-50" />
+              <Button variant="ghost" className="lg:hidden p-0 h-8 w-8 sm:h-9 sm:w-9 rounded-full">
+                <Menu className="h-4 w-4 sm:h-5 sm:w-5 text-amber-50" />
               </Button>
             </SheetTrigger>
-            <SheetContent className="bg-midnight-blue text-amber-50 border-amber-500">
+            <SheetContent className="bg-midnight-blue text-amber-50 border-amber-500 w-[280px] sm:w-[320px]">
               <SheetHeader>
                 <SheetTitle className="text-amber-50">
-                  <Link href="/" onClick={closeMobileMenu} className="inline-flex items-center text-2xl font-cinzel font-bold mb-6">
+                  <Link href="/" onClick={closeMobileMenu} className="inline-flex items-center text-xl sm:text-2xl font-cinzel font-bold mb-4 sm:mb-6">
                     <span className="text-amber-500">Heka</span>yaty
                   </Link>
                 </SheetTitle>
@@ -246,22 +246,22 @@ export default function Header() {
                   Explore magical worlds of stories
                 </SheetDescription>
               </SheetHeader>
-              <div className="py-6 space-y-4">
-                <Link href="/home" onClick={closeMobileMenu} className="flex items-center py-2 px-1 rounded-md hover:bg-amber-900 transition-colors">
-                  <Home className="mr-2 h-5 w-5" />
-                  <span>Home</span>
+              <div className="py-4 sm:py-6 space-y-3 sm:space-y-4 max-h-[calc(100vh-200px)] overflow-y-auto">
+                <Link href="/home" onClick={closeMobileMenu} className="flex items-center py-3 px-3 rounded-md hover:bg-amber-900 transition-colors touch-manipulation">
+                  <Home className="mr-3 h-5 w-5" />
+                  <span className="text-base">Home</span>
                 </Link>
                 {isAuthenticated && user && (
-                  <div className="flex items-center space-x-3 mb-6">
-                    <Avatar>
+                  <div className="flex items-center space-x-3 mb-4 sm:mb-6 p-3 bg-amber-900/20 rounded-lg">
+                    <Avatar className="h-10 w-10 sm:h-12 sm:w-12">
                       <AvatarImage src={user.avatar} alt={user.fullName || 'User'} />
-                      <AvatarFallback className="bg-amber-500 text-brown-dark">
+                      <AvatarFallback className="bg-amber-500 text-brown-dark text-sm sm:text-base">
                         {user.fullName?.charAt(0) || 'U'}
                       </AvatarFallback>
                     </Avatar>
-                    <div>
-                      <p className="font-medium">{user.fullName || 'User'}</p>
-                      <p className="text-sm text-amber-300">@{user.username}</p>
+                    <div className="min-w-0 flex-1">
+                      <p className="font-medium text-sm sm:text-base truncate">{user.fullName || 'User'}</p>
+                      <p className="text-xs sm:text-sm text-amber-300 truncate">@{user.username}</p>
                     </div>
                   </div>
                 )}

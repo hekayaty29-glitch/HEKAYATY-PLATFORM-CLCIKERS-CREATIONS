@@ -151,35 +151,36 @@ export default function BrowseStoriesPage() {
         <meta name="description" content={pageDescription} />
       </Helmet>
       
-      <div className="pt-8 pb-16" style={{ backgroundColor: '#151008' }}>
+      <div className="pt-4 sm:pt-6 lg:pt-8 pb-12 sm:pb-16" style={{ backgroundColor: '#151008' }}>
         <Container>
-          <div className="flex flex-col md:flex-row justify-between items-center mb-8">
-            <div>
-              <h1 className="font-cinzel text-3xl font-bold text-white text-center md:text-left">{pageTitle}</h1>
-              <p className="text-white mt-2 text-center md:text-left">{pageDescription}</p>
+          <div className="flex flex-col lg:flex-row justify-between items-center mb-6 sm:mb-8">
+            <div className="text-center lg:text-left">
+              <h1 className="font-cinzel text-2xl sm:text-3xl lg:text-4xl font-bold text-white">{pageTitle}</h1>
+              <p className="text-white/90 mt-2 text-sm sm:text-base">{pageDescription}</p>
             </div>
           </div>
           
           {/* Filters */}
-          <Card className="border-amber-500/30 bg-amber-50/80 mb-8">
-            <CardContent className="p-4">
-              <div className="flex flex-col md:flex-row gap-4">
+          <Card className="border-amber-500/30 bg-amber-50/80 mb-6 sm:mb-8">
+            <CardContent className="p-3 sm:p-4">
+              <div className="flex flex-col lg:flex-row gap-3 sm:gap-4">
                 <div className="relative flex-grow">
                   <Input
-                    placeholder="Search stories by title, description, or author..."
+                    placeholder="Search stories, authors..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="pr-10 border-amber-500/50 focus:border-amber-500"
+                    className="pr-10 border-amber-500/50 focus:border-amber-500 text-sm sm:text-base"
                   />
-                  <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                  <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
                 </div>
                 
-                <div className="flex flex-wrap items-center gap-2">
+                <div className="flex flex-wrap items-center gap-2 sm:gap-3">
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                      <Button variant="outline" className="border-amber-500/50 text-white">
-                        <BookOpen className="mr-2 h-4 w-4" />
-                        {storyType === "all" ? "All Types" : storyType === "novels" ? "Novels" : "Short Stories"}
+                      <Button variant="outline" className="border-amber-500/50 text-white text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-2 touch-manipulation">
+                        <BookOpen className="mr-1 sm:mr-2 h-3 w-3 sm:h-4 sm:w-4" />
+                        <span className="hidden sm:inline">{storyType === "all" ? "All Types" : storyType === "novels" ? "Novels" : "Short Stories"}</span>
+                        <span className="sm:hidden">{storyType === "all" ? "All" : storyType === "novels" ? "Novels" : "Short"}</span>
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent className="bg-brown-dark/95 border-brown-dark/50 text-white">
@@ -211,9 +212,10 @@ export default function BrowseStoriesPage() {
                   
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                      <Button variant="outline" className="border-amber-500/50 text-white">
-                        <SlidersHorizontal className="mr-2 h-4 w-4" />
-                        Genres
+                      <Button variant="outline" className="border-amber-500/50 text-white text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-2 touch-manipulation">
+                        <SlidersHorizontal className="mr-1 sm:mr-2 h-3 w-3 sm:h-4 sm:w-4" />
+                        <span className="hidden sm:inline">Genres</span>
+                        <span className="sm:hidden">Genre</span>
                         {selectedGenres.length > 0 && ` (${selectedGenres.length})`}
                       </Button>
                     </DropdownMenuTrigger>
@@ -237,8 +239,8 @@ export default function BrowseStoriesPage() {
                     value={sortBy}
                     onValueChange={setSortBy}
                   >
-                    <SelectTrigger className="w-[180px] border-amber-500/50 focus:border-amber-500">
-                      <SelectValue placeholder="Sort by" />
+                    <SelectTrigger className="w-[120px] sm:w-[160px] lg:w-[180px] border-amber-500/50 focus:border-amber-500 text-xs sm:text-sm touch-manipulation">
+                      <SelectValue placeholder="Sort" />
                     </SelectTrigger>
                     <SelectContent className="bg-brown-dark/95 border-amber-500/50 text-white">
                       <SelectItem value="newest">Newest First</SelectItem>
@@ -249,10 +251,10 @@ export default function BrowseStoriesPage() {
                   
                   <Button 
                     variant="ghost" 
-                    className="text-white hover:text-amber-200"
+                    className="text-white hover:text-amber-200 p-2 touch-manipulation"
                     onClick={resetFilters}
                   >
-                    <FilterX className="h-4 w-4" />
+                    <FilterX className="h-3 w-3 sm:h-4 sm:w-4" />
                   </Button>
                 </div>
               </div>
@@ -261,13 +263,13 @@ export default function BrowseStoriesPage() {
           
           {/* Stories */}
           {isLoading ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
-              {Array(6).fill(0).map((_, i) => (
-                <div key={i} className="animate-pulse bg-white rounded-lg h-80"></div>
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-4 lg:gap-6">
+              {Array(12).fill(0).map((_, i) => (
+                <div key={i} className="animate-pulse bg-white rounded-lg h-64 sm:h-72 lg:h-80"></div>
               ))}
             </div>
           ) : sortedStories.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-4 lg:gap-6">
               {sortedStories.map(story => (
                 <StoryCard 
                   key={story.id} 
@@ -277,12 +279,12 @@ export default function BrowseStoriesPage() {
               ))}
             </div>
           ) : (
-            <div className="text-center py-16 bg-amber-50/10 rounded-lg border border-amber-500/20">
-              <AlertTriangle className="h-12 w-12 text-amber-500 mx-auto mb-4" />
-              <h3 className="font-cinzel text-xl text-white mb-2">
+            <div className="text-center py-12 sm:py-16 bg-amber-50/10 rounded-lg border border-amber-500/20 mx-3 sm:mx-0">
+              <AlertTriangle className="h-10 w-10 sm:h-12 sm:w-12 text-amber-500 mx-auto mb-3 sm:mb-4" />
+              <h3 className="font-cinzel text-lg sm:text-xl text-white mb-2">
                 {isBookmarks ? "Your Library is Empty" : "No Stories Found"}
               </h3>
-              <p className="text-white/80 max-w-md mx-auto">
+              <p className="text-white/80 max-w-md mx-auto text-sm sm:text-base px-4">
                 {isBookmarks 
                   ? "You haven't bookmarked any stories yet. Start exploring to add stories to your library."
                   : searchQuery || selectedGenres.length > 0 || storyType !== "all"
@@ -291,7 +293,7 @@ export default function BrowseStoriesPage() {
               </p>
               
               {isBookmarks && (
-                <Button asChild className="mt-6 bg-amber-500 hover:bg-amber-600">
+                <Button asChild className="mt-4 sm:mt-6 bg-amber-500 hover:bg-amber-600 touch-manipulation">
                   <a href="/stories">
                     <BookOpen className="mr-2 h-4 w-4" />
                     Browse Stories
@@ -304,21 +306,21 @@ export default function BrowseStoriesPage() {
           {/* Comics section */}
           {!isTopRated && !isBookmarks && (
             <>
-              <h2 className="font-cinzel text-2xl font-bold text-white mt-16 mb-6">Comics</h2>
+              <h2 className="font-cinzel text-xl sm:text-2xl font-bold text-white mt-12 sm:mt-16 mb-4 sm:mb-6">Comics</h2>
               {isLoadingComics ? (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
-                  {Array(6).fill(0).map((_, i) => (
-                    <div key={i} className="animate-pulse bg-white rounded-lg h-80"></div>
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-4 lg:gap-6">
+                  {Array(8).fill(0).map((_, i) => (
+                    <div key={i} className="animate-pulse bg-white rounded-lg h-64 sm:h-72 lg:h-80"></div>
                   ))}
                 </div>
               ) : comics && comics.length > 0 ? (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-4 lg:gap-6">
                   {comics.map((comic) => (
                     <ComicCard key={comic.id} comic={{ id: comic.id, title: comic.title, cover: comic.cover_image || comic.pdf_url }} />
                   ))}
                 </div>
               ) : (
-                <p className="text-white/80">No comics found.</p>
+                <p className="text-white/80 text-center text-sm sm:text-base">No comics found.</p>
               )}
             </>
           )}

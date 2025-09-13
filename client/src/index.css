@@ -165,6 +165,15 @@
   background-attachment: fixed;
 }
 
+/* Mobile optimization for hero */
+@media (max-width: 768px) {
+  .hero-section {
+    background-attachment: scroll;
+    min-height: 100vh;
+    background-position: center top;
+  }
+}
+
 /* Card hover effects */
 .story-card {
   transition: transform 0.3s ease;
@@ -174,14 +183,43 @@
   transform: translateY(-5px);
 }
 
+/* Touch-friendly card interactions */
+@media (hover: none) and (pointer: coarse) {
+  .story-card:hover {
+    transform: none;
+  }
+  
+  .story-card:active {
+    transform: scale(0.98);
+    transition: transform 0.1s ease;
+  }
+}
+
 /* Genre badge styling */
 .genre-badge {
   background-color: rgba(214, 140, 71, 0.9);
   transition: all 0.3s ease;
+  min-height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .genre-badge:hover {
   background-color: rgba(141, 85, 36, 1);
+}
+
+/* Touch-friendly genre badges */
+@media (hover: none) and (pointer: coarse) {
+  .genre-badge {
+    min-height: 44px;
+    padding: 0.75rem 1rem;
+  }
+  
+  .genre-badge:active {
+    background-color: rgba(141, 85, 36, 1);
+    transform: scale(0.95);
+  }
 }
 
 /* Reading container */
@@ -303,6 +341,105 @@
 /* Smooth Scrolling */
 html {
   scroll-behavior: smooth;
+}
+
+/* Mobile-first responsive utilities */
+@media (max-width: 640px) {
+  .hero-section {
+    background-attachment: scroll; /* Fixed backgrounds can cause performance issues on mobile */
+  }
+  
+  .reading-container {
+    padding: 0 1rem;
+    font-size: 1rem;
+    line-height: 1.7;
+  }
+  
+  .reader-wrapper {
+    padding: 1.5rem 1rem;
+    margin: 0 0.5rem;
+  }
+}
+
+/* Touch-friendly interactions */
+.touch-manipulation {
+  touch-action: manipulation;
+}
+
+/* Improved button touch targets */
+@media (max-width: 768px) {
+  button, .btn, [role="button"] {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  /* Larger tap targets for mobile */
+  a, button {
+    padding: 0.75rem;
+  }
+}
+
+/* Responsive text scaling */
+@media (max-width: 480px) {
+  .font-cinzel {
+    letter-spacing: -0.02em; /* Tighter spacing on small screens */
+  }
+  
+  .text-shadow {
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.6); /* Stronger shadow for readability */
+  }
+}
+
+/* Prevent horizontal scroll */
+body {
+  overflow-x: hidden;
+}
+
+/* Optimize images for mobile */
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Mobile navigation improvements */
+@media (max-width: 1024px) {
+  .mobile-menu {
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+/* Focus styles for accessibility */
+*:focus-visible {
+  outline: 2px solid #D68C47;
+  outline-offset: 2px;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .text-amber-500 {
+    color: #FFB000;
+  }
+  
+  .bg-amber-500 {
+    background-color: #FFB000;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  
+  .story-card {
+    transform: none !important;
+  }
+  
+  .hero-section {
+    background-attachment: scroll;
+  }
 }
 
 /* Text reader styling */

@@ -97,14 +97,14 @@ export default function GenreStoriesPage() {
         />
       </Helmet>
       
-      <div className="pt-8 pb-16 text-amber-50" style={{ backgroundColor: '#151008' }}>
+      <div className="pt-6 sm:pt-8 pb-12 sm:pb-16 text-amber-50" style={{ backgroundColor: '#151008' }}>
         <Container>
           {/* Header */}
-          <div className="text-center mb-8">
-            <h1 className="font-cinzel text-3xl font-bold text-brown-dark">
+          <div className="text-center mb-6 sm:mb-8 px-2 sm:px-4">
+            <h1 className="font-cinzel text-xl sm:text-2xl md:text-3xl font-bold text-brown-dark leading-tight">
               {selectedGenre ? `${selectedGenre.name} Stories` : "Explore by Genre"}
             </h1>
-            <p className="text-gray-600 mt-2 max-w-2xl mx-auto">
+            <p className="text-gray-600 mt-2 max-w-2xl mx-auto text-sm sm:text-base leading-relaxed">
               {selectedGenre 
                 ? selectedGenre.description
                 : "Discover stories across different genres. Find your next favorite read from our collection."}
@@ -113,11 +113,11 @@ export default function GenreStoriesPage() {
           
           {/* Genre Tabs */}
           {!genreId && genres && (
-            <Tabs defaultValue="all" className="w-full mb-8">
-              <TabsList className="bg-amber-50/90 border border-amber-500/30 w-full h-auto flex flex-wrap justify-start shadow-sm">
+            <Tabs defaultValue="all" className="w-full mb-6 sm:mb-8">
+              <TabsList className="bg-amber-50/90 border border-amber-500/30 w-full h-auto flex flex-wrap justify-start shadow-sm gap-1 p-2">
                 <TabsTrigger 
                   value="all" 
-                  className="font-cinzel font-medium text-brown-dark data-[state=active]:bg-amber-600 data-[state=active]:text-white data-[state=active]:font-bold data-[state=active]:shadow-md"
+                  className="font-cinzel font-medium text-brown-dark data-[state=active]:bg-amber-600 data-[state=active]:text-white data-[state=active]:font-bold data-[state=active]:shadow-md min-h-[44px] px-3 sm:px-4 text-xs sm:text-sm touch-manipulation"
                   onClick={() => setSelectedGenreId(undefined)}
                 >
                   All Genres
@@ -127,7 +127,7 @@ export default function GenreStoriesPage() {
                   <TabsTrigger 
                     key={genre.id}
                     value={genre.name.toLowerCase().replace(/\s+/g, '-')} 
-                    className="font-cinzel font-medium text-brown-dark data-[state=active]:bg-amber-600 data-[state=active]:text-white data-[state=active]:font-bold data-[state=active]:shadow-md"
+                    className="font-cinzel font-medium text-brown-dark data-[state=active]:bg-amber-600 data-[state=active]:text-white data-[state=active]:font-bold data-[state=active]:shadow-md min-h-[44px] px-3 sm:px-4 text-xs sm:text-sm touch-manipulation"
                     onClick={() => setSelectedGenreId(genre.id)}
                   >
                     {genre.name}
@@ -139,11 +139,11 @@ export default function GenreStoriesPage() {
           
           {/* Genre Cards */}
           {!selectedGenreId && genres && (
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mb-10">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 mb-8 sm:mb-10 px-2 sm:px-0">
               {genres.map(genre => (
                 <Link key={genre.id} href={`/genres/${genre.id}`}>
-                  <a className="block">
-                    <Card className="border-amber-500/30 hover:border-amber-600 transition-all hover:shadow-md bg-amber-50/70">
+                  <a className="block touch-manipulation">
+                    <Card className="border-amber-500/30 hover:border-amber-600 transition-all hover:shadow-md bg-amber-50/70 h-full">
                       <CardHeader className="pb-2">
                         <CardTitle className="font-cinzel text-brown-dark font-bold flex items-center justify-between">
                           {genre.name}
@@ -155,7 +155,7 @@ export default function GenreStoriesPage() {
                       </CardHeader>
                       <CardContent>
                         <Button 
-                          className="w-full bg-amber-800 hover:bg-amber-600 text-white font-medium shadow-sm hover:shadow-md transition-all"
+                          className="w-full bg-amber-800 hover:bg-amber-600 text-white font-medium shadow-sm hover:shadow-md transition-all min-h-[44px] touch-manipulation"
                         >
                           Browse Stories
                         </Button>
@@ -170,9 +170,9 @@ export default function GenreStoriesPage() {
           {/* Stories Section */}
           {(selectedGenreId || genreId === undefined) && (
             <>
-              <Card className="border-amber-500/30 bg-amber-50/90 mb-8 shadow-sm">
-                <CardContent className="p-4">
-                  <div className="flex flex-col md:flex-row gap-4">
+              <Card className="border-amber-500/30 bg-amber-50/90 mb-6 sm:mb-8 shadow-sm mx-2 sm:mx-0">
+                <CardContent className="p-3 sm:p-4">
+                  <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
                     <div className="relative flex-grow">
                       <Input
                         placeholder="Search stories by title, description, or author..."
@@ -184,12 +184,12 @@ export default function GenreStoriesPage() {
                     </div>
                     
                     <div className="flex items-center gap-2">
-                      <SlidersHorizontal className="text-amber-800 h-5 w-5" />
+                      <SlidersHorizontal className="text-amber-800 h-4 w-4 sm:h-5 sm:w-5" />
                       <Select
                         value={sortBy}
                         onValueChange={setSortBy}
                       >
-                        <SelectTrigger className="w-[180px] border-amber-500/50 focus:border-amber-600 text-gray-800 font-medium">
+                        <SelectTrigger className="w-full sm:w-[180px] border-amber-500/50 focus:border-amber-600 text-gray-800 font-medium min-h-[44px] touch-manipulation">
                           <SelectValue placeholder="Sort by" />
                         </SelectTrigger>
                         <SelectContent className="bg-amber-50 border-amber-500/50">
@@ -204,22 +204,22 @@ export default function GenreStoriesPage() {
               </Card>
               
               {storiesLoading ? (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4 sm:gap-6 px-2 sm:px-0">
                   {Array(6).fill(0).map((_, i) => (
                     <div key={i} className="animate-pulse bg-amber-50/80 rounded-lg h-80 border border-amber-500/20 shadow-sm"></div>
                   ))}
                 </div>
               ) : sortedStories.length > 0 ? (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4 sm:gap-6 px-2 sm:px-0">
                   {sortedStories.map(story => (
                     <StoryCard key={story.id} story={story} />
                   ))}
                 </div>
               ) : (
-                <div className="text-center py-16 bg-amber-50/60 rounded-lg border border-amber-500/30 shadow-sm">
+                <div className="text-center py-12 sm:py-16 bg-amber-50/60 rounded-lg border border-amber-500/30 shadow-sm mx-2 sm:mx-0">
                   <AlertTriangle className="h-12 w-12 text-amber-600 mx-auto mb-4" />
-                  <h3 className="font-cinzel text-xl text-brown-dark font-bold mb-3">No Stories Found</h3>
-                  <p className="text-gray-800 font-medium max-w-md mx-auto">
+                  <h3 className="font-cinzel text-lg sm:text-xl text-brown-dark font-bold mb-3">No Stories Found</h3>
+                  <p className="text-gray-800 font-medium max-w-md mx-auto text-sm sm:text-base px-4">
                     {searchQuery 
                       ? "No stories match your search criteria. Try a different search term."
                       : `There are no stories available in ${selectedGenre ? `the ${selectedGenre.name} genre` : 'this category'} yet.`}
