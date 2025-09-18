@@ -41,6 +41,34 @@ Deno.serve(async (req) => {
       const user = await requireAuth(req)
       const { storyId, rating, review } = await req.json()
 
+      // Ensure user profile exists
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('id')
+        .eq('id', user.id)
+        .single()
+      
+      if (!profile) {
+        // Create profile if it doesn't exist
+        const { error: profileError } = await supabase
+          .from('profiles')
+          .insert({
+            id: user.id,
+            username: user.email?.split('@')[0] || 'user',
+            full_name: user.user_metadata?.full_name || user.email?.split('@')[0] || 'User',
+            avatar_url: user.user_metadata?.avatar_url || null,
+            created_at: new Date().toISOString()
+          })
+        
+        if (profileError) {
+          console.error('Profile creation error:', profileError)
+          return new Response(JSON.stringify({ error: 'Failed to create user profile' }), {
+            status: 500,
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+          })
+        }
+      }
+
       // Check if rating exists
       const { data: existingRating } = await supabase
         .from('ratings')
