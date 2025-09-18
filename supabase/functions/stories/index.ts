@@ -20,7 +20,7 @@ Deno.serve(async (req) => {
     if (method === 'GET' && pathSegments.length === 2 && pathSegments[1] === 'special') {
       const { data, error } = await supabase
         .from('stories')
-        .select('*')
+        .select('*, author_name')
         .eq('is_published', true)
         .order('created_at', { ascending: false })
         .limit(10)
@@ -42,7 +42,7 @@ Deno.serve(async (req) => {
     if (method === 'GET' && pathSegments.length === 2 && pathSegments[1] === 'gems') {
       const { data, error } = await supabase
         .from('stories')
-        .select('*')
+        .select('*, author_name')
         .eq('is_published', true)
         // .eq('placement', 'gems') // Remove placement filter to show all published stories
         .order('created_at', { ascending: false })
@@ -59,7 +59,7 @@ Deno.serve(async (req) => {
     if (method === 'GET' && pathSegments.length === 2 && pathSegments[1] === 'workshops') {
       const { data, error } = await supabase
         .from('stories')
-        .select('*')
+        .select('*, author_name')
         .eq('is_published', true)
         // .eq('placement', 'workshops') // Remove placement filter to show all published stories
         .order('created_at', { ascending: false })
@@ -85,7 +85,7 @@ Deno.serve(async (req) => {
 
       let query = supabase
         .from('stories')
-        .select('*')
+        .select('*, author_name')
         .eq('is_published', true)
         .order('created_at', { ascending: false })
         .range(offset, offset + limit - 1)
@@ -580,6 +580,7 @@ Deno.serve(async (req) => {
         .insert({
           ...storyData,
           author_id: user.id,
+          author_name: storyData.authorName || user.user_metadata?.full_name || user.email?.split('@')[0] || 'Unknown Author',
           pdf_url: pdfUrl,
           created_at: new Date().toISOString(),
           updated_at: new Date().toISOString()

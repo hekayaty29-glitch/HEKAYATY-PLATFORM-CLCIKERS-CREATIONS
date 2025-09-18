@@ -28,12 +28,13 @@ interface StoryCardProps {
     description: string;
     coverImage?: string;
     cover_url?: string;
-    author: {
+    author?: {
       id: string;
       fullName: string;
       avatarUrl?: string;
     };
     author_id?: string;
+    author_name?: string;
     genres?: { id: number; name: string }[];
     averageRating: number;
     ratingCount: number;
@@ -175,6 +176,12 @@ export default function StoryCard({ story, showAuthor = true, className = "", on
                 {story.description}
               </p>
 
+              {/* Author */}
+              {showAuthor && (story.author_name || story.author) && (
+                <p className="text-amber-700 text-sm font-medium mb-2 italic">
+                  Written by {story.author_name || story.author?.fullName || "Unknown Author"}
+                </p>
+              )}
 
               {/* Stats */}
               <div className="flex items-center justify-between text-xs text-gray-500">
