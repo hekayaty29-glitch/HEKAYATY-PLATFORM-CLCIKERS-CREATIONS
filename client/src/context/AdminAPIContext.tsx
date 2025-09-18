@@ -222,6 +222,7 @@ const adminAPI = {
     title: string;
     content: string;
     type?: string;
+    cover_url?: string;
   }): Promise<NewsArticle> => {
     const token = await getAuthToken();
     const response = await fetch('/api/admin/news', {
@@ -372,7 +373,7 @@ interface AdminAPIContextType {
 
   // News
   getNews: (type?: string) => Promise<NewsArticle[]>;
-  createNews: (data: { title: string; content: string; type?: string }) => Promise<void>;
+  createNews: (data: { title: string; content: string; type?: string; cover_url?: string }) => Promise<void>;
   deleteNews: (newsId: string) => Promise<void>;
 
   // Legendary Characters

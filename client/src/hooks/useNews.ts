@@ -6,6 +6,7 @@ export interface NewsItem {
   type: "main" | "community";
   title: string;
   content: string;
+  cover_url?: string;
   created_at: string;
 }
 
@@ -15,7 +16,7 @@ export function useNews(type: "main" | "community" = "main") {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("news")
-        .select("id, type, title, content, created_at")
+        .select("id, type, title, content, cover_url, created_at")
         .eq("type", type)
         .order("created_at", { ascending: false });
       if (error) throw error;
