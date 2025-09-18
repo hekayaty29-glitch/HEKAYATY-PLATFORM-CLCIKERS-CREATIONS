@@ -208,7 +208,7 @@ const adminAPI = {
   // News
   getNews: async (type: string = 'general'): Promise<NewsArticle[]> => {
     const token = await getAuthToken();
-    const response = await fetch(`/api/admin/news?type=${type}`, {
+    const response = await fetch(`/functions/v1/news?type=${type}`, {
       headers: {
         'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json',
@@ -225,7 +225,7 @@ const adminAPI = {
     cover_url?: string;
   }): Promise<NewsArticle> => {
     const token = await getAuthToken();
-    const response = await fetch('/api/admin/news', {
+    const response = await fetch('/functions/v1/news', {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${token}`,
@@ -239,7 +239,7 @@ const adminAPI = {
 
   deleteNews: async (newsId: string): Promise<void> => {
     const token = await getAuthToken();
-    const response = await fetch(`/api/admin/news/${newsId}`, {
+    const response = await fetch(`/functions/v1/news/${newsId}`, {
       method: 'DELETE',
       headers: {
         'Authorization': `Bearer ${token}`,
