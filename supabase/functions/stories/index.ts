@@ -33,7 +33,14 @@ Deno.serve(async (req) => {
         })
       }
 
-      return new Response(JSON.stringify(data || []), {
+      // Transform field names for frontend compatibility
+      const transformedData = (data || []).map(story => ({
+        ...story,
+        averageRating: story.average_rating || 0,
+        ratingCount: story.rating_count || 0
+      }))
+
+      return new Response(JSON.stringify(transformedData), {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' }
       })
     }
@@ -50,7 +57,14 @@ Deno.serve(async (req) => {
 
       if (error) throw error
 
-      return new Response(JSON.stringify(data || []), {
+      // Transform field names for frontend compatibility
+      const transformedData = (data || []).map(story => ({
+        ...story,
+        averageRating: story.average_rating || 0,
+        ratingCount: story.rating_count || 0
+      }))
+
+      return new Response(JSON.stringify(transformedData), {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' }
       })
     }
@@ -67,7 +81,14 @@ Deno.serve(async (req) => {
 
       if (error) throw error
 
-      return new Response(JSON.stringify(data || []), {
+      // Transform field names for frontend compatibility
+      const transformedData = (data || []).map(story => ({
+        ...story,
+        averageRating: story.average_rating || 0,
+        ratingCount: story.rating_count || 0
+      }))
+
+      return new Response(JSON.stringify(transformedData), {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' }
       })
     }
@@ -100,7 +121,14 @@ Deno.serve(async (req) => {
       const { data, error } = await query
       if (error) throw error
 
-      return new Response(JSON.stringify(data), {
+      // Transform field names for frontend compatibility
+      const transformedData = (data || []).map(story => ({
+        ...story,
+        averageRating: story.average_rating || 0,
+        ratingCount: story.rating_count || 0
+      }))
+
+      return new Response(JSON.stringify(transformedData), {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' }
       })
     }
@@ -430,7 +458,14 @@ Deno.serve(async (req) => {
 
       if (error) throw error
 
-      return new Response(JSON.stringify(data), {
+      // Transform field names for frontend compatibility
+      const transformedData = {
+        ...data,
+        averageRating: data.average_rating || 0,
+        ratingCount: data.rating_count || 0
+      }
+
+      return new Response(JSON.stringify(transformedData), {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' }
       })
     }
