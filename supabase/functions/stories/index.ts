@@ -252,14 +252,20 @@ Deno.serve(async (req) => {
         })
       }
       
-      // Get user profile name
+      // Get user profile name - fallback to user metadata if profile doesn't exist
+      let profileName = 'Anonymous User'
       const { data: profile } = await supabase
         .from('profiles')
         .select('full_name, username')
         .eq('id', user.id)
         .single()
       
-      const profileName = profile?.full_name || profile?.username || user.email?.split('@')[0] || 'Anonymous User'
+      if (profile) {
+        profileName = profile.full_name || profile.username || 'Anonymous User'
+      } else {
+        // Use user metadata as fallback
+        profileName = user.user_metadata?.full_name || user.email?.split('@')[0] || 'Anonymous User'
+      }
       
       // Get story title
       const { data: story } = await supabase
@@ -270,11 +276,11 @@ Deno.serve(async (req) => {
       
       const storyTitle = story?.title || 'Unknown Story'
       
-      // Check if rating exists
+      // Check if rating exists by profile name and story (avoid user_id foreign key)
       const { data: existingRating } = await supabase
         .from('ratings')
         .select('id')
-        .eq('user_id', user.id)
+        .eq('profile_name', profileName)
         .eq('story_id', storyId)
         .single()
       
@@ -287,7 +293,6 @@ Deno.serve(async (req) => {
           .update({ 
             rating, 
             review: review || '',
-            profile_name: profileName,
             story_title: storyTitle,
             updated_at: new Date().toISOString() 
           })
@@ -297,11 +302,10 @@ Deno.serve(async (req) => {
         data = result.data
         error = result.error
       } else {
-        // Create new rating - simple insert with profile name and story title
+        // Create new rating - simple insert without user_id foreign key
         const result = await supabase
           .from('ratings')
           .insert({
-            user_id: user.id,
             story_id: storyId,
             rating,
             review: review || '',
