@@ -252,33 +252,23 @@ Deno.serve(async (req) => {
         })
       }
       
-      // Ensure user profile exists
+      // Get user profile name
       const { data: profile } = await supabase
         .from('profiles')
-        .select('id')
+        .select('full_name, username')
         .eq('id', user.id)
         .single()
       
-      if (!profile) {
-        // Create profile if it doesn't exist
-        const { error: profileError } = await supabase
-          .from('profiles')
-          .insert({
-            id: user.id,
-            username: user.email?.split('@')[0] || 'user',
-            full_name: user.user_metadata?.full_name || user.email?.split('@')[0] || 'User',
-            avatar_url: user.user_metadata?.avatar_url || null,
-            created_at: new Date().toISOString()
-          })
-        
-        if (profileError) {
-          console.error('Profile creation error:', profileError)
-          return new Response(JSON.stringify({ error: 'Failed to create user profile' }), {
-            status: 500,
-            headers: { ...corsHeaders, 'Content-Type': 'application/json' }
-          })
-        }
-      }
+      const profileName = profile?.full_name || profile?.username || user.email?.split('@')[0] || 'Anonymous User'
+      
+      // Get story title
+      const { data: story } = await supabase
+        .from('stories')
+        .select('title')
+        .eq('id', storyId)
+        .single()
+      
+      const storyTitle = story?.title || 'Unknown Story'
       
       // Check if rating exists
       const { data: existingRating } = await supabase
@@ -294,14 +284,20 @@ Deno.serve(async (req) => {
         // Update existing rating
         const result = await supabase
           .from('ratings')
-          .update({ rating, review, updated_at: new Date().toISOString() })
+          .update({ 
+            rating, 
+            review: review || '',
+            profile_name: profileName,
+            story_title: storyTitle,
+            updated_at: new Date().toISOString() 
+          })
           .eq('id', existingRating.id)
           .select()
           .single()
         data = result.data
         error = result.error
       } else {
-        // Create new rating
+        // Create new rating - simple insert with profile name and story title
         const result = await supabase
           .from('ratings')
           .insert({
@@ -309,6 +305,8 @@ Deno.serve(async (req) => {
             story_id: storyId,
             rating,
             review: review || '',
+            profile_name: profileName,
+            story_title: storyTitle,
             created_at: new Date().toISOString()
           })
           .select()
