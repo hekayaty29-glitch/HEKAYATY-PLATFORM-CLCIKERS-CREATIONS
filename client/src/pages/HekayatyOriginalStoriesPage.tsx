@@ -5,7 +5,7 @@ import { apiRequest } from "@/lib/queryClient";
 import { Input } from "@/components/ui/input";
 import { Search, BookOpen } from "lucide-react";
 import { Link } from "wouter";
-import fantasyBackground from "@/assets/afe886e1-be42-446e-8d67-2019ebe6c8fd_13-58-27.png";
+import fantasyBackground from "@/assets/571601e5-d155-4362-b446-db1c4302f71c.png";
 
 export default function HekayatyOriginalStoriesPage() {
   const [searchQuery, setSearchQuery] = useState("");

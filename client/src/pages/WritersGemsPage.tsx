@@ -5,6 +5,7 @@ import { apiRequest } from "@/lib/queryClient";
 import StoryCard from "@/components/common/StoryCard";
 import { Input } from "@/components/ui/input";
 import { Search, BookOpen, Award } from "lucide-react";
+import gemsBackground from "@/assets/61e25244-e0d4-460d-907d-86223aad6ba0.png";
 
 export default function WritersGemsPage() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -33,7 +34,10 @@ export default function WritersGemsPage() {
         />
       </Helmet>
 
-      <div className="bg-gray-900 min-h-screen pt-8 pb-16">
+      <div
+        className="bg-cover bg-center bg-fixed bg-gradient-to-b from-purple-900/40 to-amber-900/30 min-h-screen pt-8 pb-16"
+        style={{ backgroundImage: `url(${gemsBackground})` }}
+      >
         <div className="container mx-auto max-w-6xl px-4">
           {/* Header */}
           <div className="text-center mb-8">
