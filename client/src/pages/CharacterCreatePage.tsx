@@ -42,7 +42,7 @@ export default function CharacterCreatePage() {
 
   const createCharacterMutation = useMutation({
     mutationFn: async (data: CharacterFormData) => {
-      const response = await apiRequest("POST", "/api/characters", data);
+      const response = await apiRequest("POST", "/characters", data);
       return response.json();
     },
     onSuccess: (character) => {
@@ -50,7 +50,7 @@ export default function CharacterCreatePage() {
         title: "Character Created!",
         description: `${character.name} has been added to the legends.`,
       });
-      queryClient.invalidateQueries({ queryKey: ["/api/characters"] });
+      queryClient.invalidateQueries({ queryKey: ["/characters"] });
       setLocation(`/characters/${character.id}`);
     },
     onError: (error: any) => {

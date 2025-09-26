@@ -54,7 +54,7 @@ export default function CreateCharacterPage() {
   // Create character mutation
   const createCharacter = useMutation({
     mutationFn: async (data: any) => {
-      const response = await apiRequest("POST", "/api/characters", data);
+      const response = await apiRequest("POST", "/characters", data);
       return response.json();
     },
     onSuccess: () => {

@@ -80,7 +80,7 @@ export default function HekayatyOriginalStoriesPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {filteredStories.map((story: any) => (
                 <Link key={story.id} href={`/story/${story.id}`}>
-                  <div className="story-card bg-amber-50 bg-opacity-10 backdrop-filter backdrop-blur-sm rounded-lg overflow-hidden border border-amber-500 hover:shadow-xl hover:scale-105 transition-all duration-300 cursor-pointer group">
+                  <div className="story-card bg-amber-50/20 rounded-lg overflow-hidden border border-amber-500 hover:shadow-xl hover:scale-105 transition-all duration-300 cursor-pointer group">
                     {/* Story Cover Image */}
                     <div className="relative h-48 overflow-hidden">
                       <img
@@ -88,7 +88,6 @@ export default function HekayatyOriginalStoriesPage() {
                         alt={story.title}
                         className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                       />
-                      <div className="absolute inset-0 bg-gradient-to-t from-brown-dark/60 to-transparent" />
                       
                       {/* Genre Badge */}
                       {story.genre && (
