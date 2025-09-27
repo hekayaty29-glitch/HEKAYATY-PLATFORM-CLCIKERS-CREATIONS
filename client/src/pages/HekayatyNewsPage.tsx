@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "@/hooks/use-toast";
 import newsBackground from "@/assets/Lucid_Realism_a_cinematic_photo_of_a_cinematic_fantasy_backgro_3.jpg";
+import { supabase } from "@/lib/supabase";
 
 
 export default function HekayatyNewsPage() {
@@ -44,8 +45,17 @@ export default function HekayatyNewsPage() {
     formData.append('file', file);
     formData.append('folder', 'news');
     
+    // Get the current session token
+    const { data: { session } } = await supabase.auth.getSession();
+    
+    const headers: Record<string, string> = {};
+    if (session?.access_token) {
+      headers['Authorization'] = `Bearer ${session.access_token}`;
+    }
+    
     const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/file-upload`, {
       method: 'POST',
+      headers,
       body: formData
     });
     
