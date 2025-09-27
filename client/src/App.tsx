@@ -31,6 +31,7 @@ import GenrePage from "@/pages/GenrePage";
 import GenreStoriesPage from "@/pages/GenreStoriesPage";
 import NewUserProfilePage from "@/pages/NewUserProfilePage";
 import BrowseStoriesPage from "@/pages/BrowseStoriesPage";
+import BrowseAllStoriesPage from "@/pages/BrowseAllStoriesPage";
 import CommunityPage from "@/pages/CommunityPage";
 import ClubDetailPage from "@/pages/ClubDetailPage";
 import WorkshopDetailPage from "@/pages/WorkshopDetailPage";
@@ -124,6 +125,7 @@ function Router() {
       <Route path="/genres" component={GenreStoriesPage} />
       <Route path="/stories" component={HekayatyOriginalStoriesPage} />
       <Route path="/browse" component={BrowseStoriesPage} />
+      <Route path="/browse-all" component={BrowseAllStoriesPage} />
       <Route path="/search" component={SearchPage} />
       <Route path="/top-rated" component={BrowseStoriesPage} />
       <Route path="/bookmarks" component={BrowseStoriesPage} />
