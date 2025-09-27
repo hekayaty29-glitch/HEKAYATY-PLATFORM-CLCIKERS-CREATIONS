@@ -3,10 +3,13 @@ import { useQuery } from "@tanstack/react-query";
 import { Helmet } from "react-helmet";
 import { apiRequest } from "@/lib/queryClient";
 import { Input } from "@/components/ui/input";
-import { Search, BookOpen, AlertTriangle } from "lucide-react";
+import { Search, BookOpen, AlertTriangle, Star, Bookmark } from "lucide-react";
 import { StoryCard as StoryCardType } from "@/lib/types";
-import StoryCard from "@/components/story/StoryCard";
 import Container from "@/components/layout/Container";
+import bgImage from "@/assets/d2c8245c-c591-4cc9-84d2-27252be8dffb.png";
+import { Link } from "wouter";
+import { Button } from "@/components/ui/button";
+import { cn, truncateText, formatDate } from "@/lib/utils";
 
 // Interface for API response that might have different field names
 interface ApiStoryResponse {
@@ -34,6 +37,75 @@ interface ApiStoryResponse {
   genres?: any[];
   authorId?: number;
   author_id?: number;
+}
+
+// Custom StoryCard with gold-brown background
+function CustomStoryCard({ story }: { story: StoryCardType }) {
+  return (
+    <div className="story-card bg-gradient-to-br from-amber-100 via-amber-50 to-yellow-100 border border-amber-200/50 rounded-lg shadow-lg overflow-hidden flex flex-col h-full hover:shadow-xl transition-all duration-300 hover:scale-105">
+      <Link 
+        href={`/story/${story.id}`} 
+        className="block relative group"
+      >
+        <img 
+          src={story.coverImage || ""} 
+          alt={`Cover for ${story.title}`} 
+          className="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-105"
+          loading="lazy"
+          decoding="async"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-amber-900/30 via-transparent to-transparent group-hover:from-amber-900/40 transition-colors" />
+      </Link>
+      
+      <div className="p-4 flex-1 flex flex-col bg-gradient-to-b from-amber-50/80 to-yellow-50/60">
+        <div className="flex justify-between items-start mb-2">
+          <div className="flex flex-wrap gap-1">
+            {story.genres.slice(0, 2).map((genre) => (
+              <Link 
+                key={genre.id} 
+                href={`/genres/${genre.id}`}
+                className={cn(
+                  "text-xs font-cinzel text-white px-2 py-1 rounded shadow-sm",
+                  "bg-gradient-to-r from-amber-600 to-amber-700 hover:from-amber-700 hover:to-amber-800 transition-all"
+                )}
+              >
+                {genre.name}
+              </Link>
+            ))}
+          </div>
+          <div className="flex items-center text-amber-600">
+            <Star className="h-4 w-4 fill-current" />
+            <span className="ml-1 text-sm font-medium">{story.averageRating.toFixed(1)}</span>
+          </div>
+        </div>
+        
+        <Link 
+          href={`/story/${story.id}`}
+          className="hover:text-amber-800 block mb-1 transition-colors"
+        >
+          <h3 className="font-cinzel text-lg font-bold text-amber-900">{story.title}</h3>
+        </Link>
+        
+        <p className="text-sm text-amber-800/80 mb-4 flex-grow leading-relaxed">
+          {truncateText(story.description, 100)}
+        </p>
+        
+        <div className="flex justify-between items-center mt-auto pt-2 border-t border-amber-200/50">
+          <span className="text-xs text-amber-700/70 font-medium">
+            {formatDate(story.createdAt)}
+          </span>
+          
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            className="text-amber-600 hover:text-amber-800 hover:bg-amber-100/50 transition-colors h-8 w-8"
+          >
+            <Bookmark className="h-4 w-4" />
+          </Button>
+        </div>
+      </div>
+    </div>
+  );
 }
 
 export default function BrowseAllStoriesPage() {
@@ -99,13 +171,20 @@ export default function BrowseAllStoriesPage() {
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-amber-900/20 to-brown-dark text-amber-50">
+    <div 
+      className="min-h-screen text-amber-50 bg-cover bg-center bg-no-repeat relative"
+      style={{ backgroundImage: `url(${bgImage})` }}
+    >
+      {/* Background overlay */}
+      <div className="absolute inset-0 bg-gradient-to-b from-amber-900/40 via-brown-dark/60 to-amber-900/40" />
+      
       <Helmet>
         <title>Browse All Stories - HEKAYATY</title>
         <meta name="description" content="Discover all published stories on HEKAYATY platform" />
       </Helmet>
 
-      <Container>
+      <div className="relative z-10">
+        <Container>
         <div className="py-8 px-4">
           {/* Header */}
           <div className="text-center mb-8">
@@ -175,7 +254,7 @@ export default function BrowseAllStoriesPage() {
               {filteredStories.length > 0 ? (
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
                   {filteredStories.map((story) => (
-                    <StoryCard 
+                    <CustomStoryCard 
                       key={story.id} 
                       story={story} 
                     />
@@ -206,7 +285,8 @@ export default function BrowseAllStoriesPage() {
             </>
           )}
         </div>
-      </Container>
+        </Container>
+      </div>
     </div>
   );
 }
