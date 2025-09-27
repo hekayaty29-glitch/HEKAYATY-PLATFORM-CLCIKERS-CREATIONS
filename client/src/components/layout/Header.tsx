@@ -116,10 +116,6 @@ export default function Header() {
             </DropdownMenuContent>
           </DropdownMenu>
           
-          <Link href="/top-rated" className="font-cinzel text-xs xl:text-sm hover:text-amber-500 transition-colors flex items-center gap-1">
-            <Award className="h-3 w-3 xl:h-4 xl:w-4" />
-            <span className="hidden xl:inline">Rankings</span>
-          </Link>
           
           <Link href="/talecraft" className="font-cinzel text-xs xl:text-sm hover:text-amber-500 transition-colors flex items-center gap-1">
             <Hammer className="h-3 w-3 xl:h-4 xl:w-4" />
@@ -276,10 +272,6 @@ export default function Header() {
                   <span>Get Code</span>
                 </Link>
                 
-                <Link href="/top-rated" onClick={closeMobileMenu} className="flex items-center py-2 px-1 rounded-md hover:bg-amber-900 transition-colors">
-                  <Award className="mr-2 h-5 w-5" />
-                  <span>Rankings</span>
-                </Link>
                 
                 <Link href="/talecraft" onClick={closeMobileMenu} className="flex items-center py-2 px-1 rounded-md hover:bg-amber-900 transition-colors">
                   <Hammer className="mr-2 h-5 w-5" />
