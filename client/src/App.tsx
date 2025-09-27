@@ -123,6 +123,7 @@ function Router() {
       <Route path="/genres/:id" component={GenreStoriesPage} />
       <Route path="/genres" component={GenreStoriesPage} />
       <Route path="/stories" component={HekayatyOriginalStoriesPage} />
+      <Route path="/browse" component={BrowseStoriesPage} />
       <Route path="/search" component={SearchPage} />
       <Route path="/top-rated" component={BrowseStoriesPage} />
       <Route path="/bookmarks" component={BrowseStoriesPage} />

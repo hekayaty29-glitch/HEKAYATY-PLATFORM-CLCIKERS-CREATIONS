@@ -26,7 +26,7 @@ export default function AllStoriesSection() {
         {/* Heading */}
         <div className="flex items-center justify-center gap-3 mb-10">
           <BookOpen className="h-6 w-6 text-amber-400" />
-          <Link href="/stories" className="cursor-pointer hover:text-amber-300 transition-colors">
+          <Link href="/browse" className="cursor-pointer hover:text-amber-300 transition-colors">
             <h2 className="font-cinzel text-3xl md:text-4xl font-bold text-center">
               Browse All Stories
             </h2>
@@ -68,7 +68,7 @@ export default function AllStoriesSection() {
         {/* Link to full browse page */}
         <div className="text-center mt-10">
           <Link
-            href="/stories"
+            href="/browse"
             className="inline-block bg-amber-500 hover:bg-amber-600 text-amber-50 font-cinzel py-2 px-6 rounded-full transition-colors"
           >
             View All Stories
