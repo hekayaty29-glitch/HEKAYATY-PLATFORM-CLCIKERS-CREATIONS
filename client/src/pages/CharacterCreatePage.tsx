@@ -42,7 +42,15 @@ export default function CharacterCreatePage() {
 
   const createCharacterMutation = useMutation({
     mutationFn: async (data: CharacterFormData) => {
-      const response = await apiRequest("POST", "/characters", data);
+      // Map frontend fields to database schema
+      const dbData = {
+        name: data.name,
+        description: data.description,
+        photo_url: data.image,
+        bio: data.backgroundStory || data.description,
+        // Note: role, characterType, and associatedStories are not stored in current schema
+      };
+      const response = await apiRequest("POST", "/characters", dbData);
       return response.json();
     },
     onSuccess: (character) => {

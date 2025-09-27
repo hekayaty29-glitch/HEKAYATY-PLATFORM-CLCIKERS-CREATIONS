@@ -54,7 +54,15 @@ export default function CreateCharacterPage() {
   // Create character mutation
   const createCharacter = useMutation({
     mutationFn: async (data: any) => {
-      const response = await apiRequest("POST", "/characters", data);
+      // Map frontend fields to database schema
+      const dbData = {
+        name: data.name,
+        description: data.description,
+        photo_url: data.image,
+        bio: data.backgroundStory || data.description,
+        // Note: role, characterType, and associatedStories are not stored in current schema
+      };
+      const response = await apiRequest("POST", "/characters", dbData);
       return response.json();
     },
     onSuccess: () => {
@@ -96,10 +104,7 @@ export default function CreateCharacterPage() {
         name: formData.name,
         description: formData.backgroundStory,
         backgroundStory: formData.backgroundStory,
-        characterType: formData.characterType,
-        role: formData.characterType, // For backward compatibility
         image: imageUrl,
-        associatedStories: formData.associatedStories,
       });
     } catch (error) {
       console.error("Error creating character:", error);
