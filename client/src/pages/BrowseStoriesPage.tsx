@@ -57,7 +57,7 @@ export default function BrowseStoriesPage() {
     : [...(fetchedGenres ?? []), { id: 999, name: "Historical", description: "Historical fiction", icon: "🏰" }];
 
   // Fetch stories based on page mode
-  const { data: stories, isLoading } = useQuery<StoryCardType[]>({
+  const { data: stories, isLoading, error: storiesError } = useQuery<StoryCardType[]>({
     queryKey: [
       isTopRated 
         ? "/api/stories/top-rated" 
@@ -66,35 +66,55 @@ export default function BrowseStoriesPage() {
           : "/stories"
     ],
     queryFn: async () => {
-      if (isTopRated) {
-        // For top-rated, we might need a different endpoint
-        const res = await apiRequest("GET", "/stories?is_published=true&sort=rating");
-        const data = await res.json();
-        return Array.isArray(data) ? data.filter(story => story && story.id) : [];
-      } else if (isBookmarks) {
-        // For bookmarks, we need user-specific data
-        const res = await apiRequest("GET", "/api/bookmarks");
-        const data = await res.json();
-        return Array.isArray(data) ? data.filter(story => story && story.id) : [];
-      } else {
-        // For all stories
-        const res = await apiRequest("GET", "/stories?is_published=true");
-        const data = await res.json();
-        return Array.isArray(data) ? data.filter(story => story && story.id) : [];
+      try {
+        console.log('Fetching stories...');
+        if (isTopRated) {
+          // For top-rated, we might need a different endpoint
+          const res = await apiRequest("GET", "/stories?is_published=true&sort=rating");
+          const data = await res.json();
+          console.log('Top-rated stories response:', data);
+          return Array.isArray(data) ? data.filter(story => story && story.id) : [];
+        } else if (isBookmarks) {
+          // For bookmarks, we need user-specific data
+          const res = await apiRequest("GET", "/api/bookmarks");
+          const data = await res.json();
+          console.log('Bookmarks response:', data);
+          return Array.isArray(data) ? data.filter(story => story && story.id) : [];
+        } else {
+          // For all stories
+          const res = await apiRequest("GET", "/stories?is_published=true");
+          const data = await res.json();
+          console.log('All stories response:', data);
+          return Array.isArray(data) ? data.filter(story => story && story.id) : [];
+        }
+      } catch (error) {
+        console.error('Error fetching stories:', error);
+        return [];
       }
     },
     enabled: !isBookmarks || isAuthenticated,
+    retry: 2,
+    staleTime: 1000 * 60 * 5, // 5 minutes
   });
 
   // Fetch comics if not bookmarks/top-rated
-  const { data: comics, isLoading: isLoadingComics } = useQuery<any[]>({
+  const { data: comics, isLoading: isLoadingComics, error: comicsError } = useQuery<any[]>({
     queryKey: ["/comics"],
     queryFn: async () => {
-      const res = await apiRequest("GET", "/comics");
-      const data = await res.json();
-      return Array.isArray(data) ? data.filter(comic => comic && comic.id) : [];
+      try {
+        console.log('Fetching comics...');
+        const res = await apiRequest("GET", "/comics");
+        const data = await res.json();
+        console.log('Comics response:', data);
+        return Array.isArray(data) ? data.filter(comic => comic && comic.id) : [];
+      } catch (error) {
+        console.error('Error fetching comics:', error);
+        return [];
+      }
     },
     enabled: !isTopRated && !isBookmarks,
+    retry: 2,
+    staleTime: 1000 * 60 * 5, // 5 minutes
   });
   
   // Update page title and description based on mode
@@ -286,6 +306,16 @@ export default function BrowseStoriesPage() {
           </Card>
           
           {/* Stories */}
+          {storiesError && (
+            <div className="text-center py-8 bg-red-50/10 rounded-lg border border-red-500/20 mx-3 sm:mx-0 mb-6">
+              <AlertTriangle className="h-8 w-8 text-red-500 mx-auto mb-2" />
+              <h3 className="font-cinzel text-lg text-white mb-2">Error Loading Stories</h3>
+              <p className="text-white/80 text-sm">
+                {storiesError.message || "Failed to load stories. Please try refreshing the page."}
+              </p>
+            </div>
+          )}
+          
           {isLoading ? (
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-4 lg:gap-6">
               {Array(12).fill(0).map((_, i) => (
