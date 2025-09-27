@@ -26,6 +26,7 @@ import ComicCard from "@/components/comic/ComicCard";
 import { Search, SlidersHorizontal, FilterX, BookOpen, Award, Bookmark, AlertTriangle } from "lucide-react";
 import Container from "@/components/layout/Container";
 import { useAuth } from "@/lib/auth";
+import { apiRequest } from "@/lib/queryClient";
 
 export default function BrowseStoriesPage() {
   const [location] = useLocation();
@@ -62,14 +63,37 @@ export default function BrowseStoriesPage() {
         ? "/api/stories/top-rated" 
         : isBookmarks 
           ? "/api/bookmarks" 
-          : "/api/stories"
+          : "/stories"
     ],
+    queryFn: async () => {
+      if (isTopRated) {
+        // For top-rated, we might need a different endpoint
+        const res = await apiRequest("GET", "/stories?is_published=true&sort=rating");
+        const data = await res.json();
+        return Array.isArray(data) ? data.filter(story => story && story.id) : [];
+      } else if (isBookmarks) {
+        // For bookmarks, we need user-specific data
+        const res = await apiRequest("GET", "/api/bookmarks");
+        const data = await res.json();
+        return Array.isArray(data) ? data.filter(story => story && story.id) : [];
+      } else {
+        // For all stories
+        const res = await apiRequest("GET", "/stories?is_published=true");
+        const data = await res.json();
+        return Array.isArray(data) ? data.filter(story => story && story.id) : [];
+      }
+    },
     enabled: !isBookmarks || isAuthenticated,
   });
 
   // Fetch comics if not bookmarks/top-rated
   const { data: comics, isLoading: isLoadingComics } = useQuery<any[]>({
-    queryKey: ["/api/comics"],
+    queryKey: ["/comics"],
+    queryFn: async () => {
+      const res = await apiRequest("GET", "/comics");
+      const data = await res.json();
+      return Array.isArray(data) ? data.filter(comic => comic && comic.id) : [];
+    },
     enabled: !isTopRated && !isBookmarks,
   });
   
