@@ -291,7 +291,7 @@ const ContentTabsComponent = ({ activeTab, setActiveTab, stories, comics }: any)
               {stories.map((story: any) => (
                 <div key={story.id} className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-6 p-4 border border-amber-100 rounded-lg hover:shadow-md hover:bg-amber-50/30 transition-all">
                   <img 
-                    src={story.image} 
+                    src={story.cover_url || story.poster_url || "https://images.unsplash.com/photo-1481627834876-b7833e8f5570?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80"} 
                     alt={story.title}
                     className="w-full md:w-48 h-32 object-cover rounded-lg"
                   />

@@ -8,6 +8,7 @@ import { useAdminAPI } from "@/context/AdminAPIContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "@/hooks/use-toast";
+import newsBackground from "@/assets/Lucid_Realism_a_cinematic_photo_of_a_cinematic_fantasy_backgro_3.jpg";
 
 
 export default function HekayatyNewsPage() {
@@ -41,8 +42,9 @@ export default function HekayatyNewsPage() {
   const uploadImage = async (file: File): Promise<string> => {
     const formData = new FormData();
     formData.append('file', file);
+    formData.append('folder', 'news');
     
-    const response = await fetch('/functions/v1/upload', {
+    const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/file-upload`, {
       method: 'POST',
       body: formData
     });
@@ -118,7 +120,13 @@ export default function HekayatyNewsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#15100A] text-amber-50 py-20 px-4">
+    <div 
+      className="min-h-screen bg-cover bg-center bg-fixed text-amber-50 py-20 px-4 relative"
+      style={{ backgroundImage: `url(${newsBackground})` }}
+    >
+      {/* Dark overlay for better text readability */}
+      <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/50 to-black/70"></div>
+      <div className="relative z-10">
       <Helmet>
         <title>Hekayaty News & Announcements</title>
         <meta name="description" content="All official announcements, competition results and new story updates from Hekayaty." />
@@ -276,6 +284,7 @@ export default function HekayatyNewsPage() {
             </div>
           ))}
         </div>
+      </div>
       </div>
     </div>
   );
