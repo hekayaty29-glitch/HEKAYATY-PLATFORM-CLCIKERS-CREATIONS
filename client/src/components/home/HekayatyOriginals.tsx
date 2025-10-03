@@ -117,7 +117,26 @@ export default function HekayatyOriginals({ stories, showSearch = false }: Props
             View All Originals
           </h3>
         </Link>
-        <p className="font-cormorant italic mt-2 text-amber-200">No originals available yet. Check back soon!</p>
+        
+        {!isAuthenticated ? (
+          <div className="mt-8 space-y-4">
+            <p className="font-cormorant italic text-lg text-amber-200 max-w-2xl mx-auto">
+              Discover exclusive original stories crafted by our talented authors. Join our community to unlock a world of imagination!
+            </p>
+            <Link
+              href="/login"
+              className="inline-block px-8 py-4 bg-gradient-to-r from-amber-500 to-amber-600 text-amber-900 font-cinzel font-bold text-lg rounded-full shadow-lg hover:from-amber-400 hover:to-amber-500 transform hover:scale-105 transition-all duration-300"
+            >
+              Sign In to Explore Stories
+            </Link>
+            <p className="text-amber-300 text-sm font-medium">
+              ✨ Join thousands of readers discovering magical tales ✨
+            </p>
+          </div>
+        ) : (
+          <p className="font-cormorant italic mt-2 text-amber-200">No originals available yet. Check back soon!</p>
+        )}
+        
         {isAdmin && (
           <Link
             href="/talecraft?targetPage=hekayaty_original"

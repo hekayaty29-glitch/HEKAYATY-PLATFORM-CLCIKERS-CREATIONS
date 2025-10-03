@@ -72,7 +72,25 @@ export default function SpecialStories() {
         <Link href="/special" className="group">
           <h3 className="font-cinzel text-2xl md:text-3xl text-amber-50 group-hover:text-amber-400 transition-colors">Browse Special Stories</h3>
         </Link>
-        <p className="font-cormorant italic mt-2 text-amber-200">No special stories available right now.</p>
+        
+        {!isAuthenticated ? (
+          <div className="mt-8 space-y-4">
+            <p className="font-cormorant italic text-lg text-amber-200 max-w-2xl mx-auto">
+              Discover handpicked special stories and exclusive collections. Premium tales await your exploration!
+            </p>
+            <Link
+              href="/login"
+              className="inline-block px-8 py-4 bg-gradient-to-r from-amber-500 to-amber-600 text-amber-900 font-cinzel font-bold text-lg rounded-full shadow-lg hover:from-amber-400 hover:to-amber-500 transform hover:scale-105 transition-all duration-300"
+            >
+              Sign In for Special Stories
+            </Link>
+            <p className="text-amber-300 text-sm font-medium">
+              ⭐ Access exclusive premium collections ⭐
+            </p>
+          </div>
+        ) : (
+          <p className="font-cormorant italic mt-2 text-amber-200">No special stories available right now.</p>
+        )}
       </section>
     );
   }

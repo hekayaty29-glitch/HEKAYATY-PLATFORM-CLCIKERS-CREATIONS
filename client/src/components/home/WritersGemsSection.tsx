@@ -101,13 +101,33 @@ export default function WritersGemsSection() {
         <Link href="/gems" className="group">
           <h3 className="font-cinzel text-2xl md:text-3xl text-amber-50 group-hover:text-amber-400 transition-colors">Browse Writer's Gems</h3>
         </Link>
-        <p className="font-cormorant italic mt-2 text-amber-200">No gem stories available currently.</p>
-        <Link
-          href="/publish"
-          className="inline-block mt-6 px-6 py-3 bg-amber-400 text-brown-dark font-semibold rounded shadow hover:bg-amber-500 transition-colors"
-        >
-          Publish your workshop gem
-        </Link>
+        
+        {!isAuthenticated ? (
+          <div className="mt-8 space-y-4">
+            <p className="font-cormorant italic text-lg text-amber-200 max-w-2xl mx-auto">
+              Uncover precious literary gems from our community of writers. Each story is a treasure waiting to be discovered!
+            </p>
+            <Link
+              href="/login"
+              className="inline-block px-8 py-4 bg-gradient-to-r from-amber-500 to-amber-600 text-amber-900 font-cinzel font-bold text-lg rounded-full shadow-lg hover:from-amber-400 hover:to-amber-500 transform hover:scale-105 transition-all duration-300"
+            >
+              Sign In to Discover Gems
+            </Link>
+            <p className="text-amber-300 text-sm font-medium">
+              💎 Unlock a treasure trove of amazing stories 💎
+            </p>
+          </div>
+        ) : (
+          <>
+            <p className="font-cormorant italic mt-2 text-amber-200">No gem stories available currently.</p>
+            <Link
+              href="/publish"
+              className="inline-block mt-6 px-6 py-3 bg-amber-400 text-brown-dark font-semibold rounded shadow hover:bg-amber-500 transition-colors"
+            >
+              Publish your workshop gem
+            </Link>
+          </>
+        )}
       </section>
     );
   }

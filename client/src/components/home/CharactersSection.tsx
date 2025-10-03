@@ -90,16 +90,36 @@ export default function CharactersSection() {
         <Link href="/characters" className="group">
           <h2 className="font-cinzel text-3xl md:text-4xl group-hover:text-amber-300 transition-colors">Explore Characters</h2>
         </Link>
-        <p className="font-cormorant italic mt-2 mb-6">Our legends are still being written. Check back later!</p>
         
-        {/* New Character Button */}
-        <div className="mt-8">
-          <Link href="/characters/new">
-            <Button className="bg-amber-600 hover:bg-amber-700 text-white font-cinzel px-6 py-3 text-lg">
-              ✨ Create New Character
-            </Button>
-          </Link>
-        </div>
+        {!isAuthenticated ? (
+          <div className="mt-8 space-y-4">
+            <p className="font-cormorant italic text-lg text-amber-200 max-w-2xl mx-auto">
+              Meet legendary heroes, mysterious villains, and mythical creatures. Every character has a story to tell!
+            </p>
+            <Link
+              href="/login"
+              className="inline-block px-8 py-4 bg-gradient-to-r from-amber-500 to-amber-600 text-amber-900 font-cinzel font-bold text-lg rounded-full shadow-lg hover:from-amber-400 hover:to-amber-500 transform hover:scale-105 transition-all duration-300"
+            >
+              Sign In to Meet Characters
+            </Link>
+            <p className="text-amber-300 text-sm font-medium">
+              🏰 Enter a world of legendary characters 🏰
+            </p>
+          </div>
+        ) : (
+          <>
+            <p className="font-cormorant italic mt-2 mb-6">Our legends are still being written. Check back later!</p>
+            
+            {/* New Character Button */}
+            <div className="mt-8">
+              <Link href="/characters/new">
+                <Button className="bg-amber-600 hover:bg-amber-700 text-white font-cinzel px-6 py-3 text-lg">
+                  ✨ Create New Character
+                </Button>
+              </Link>
+            </div>
+          </>
+        )}
       </section>
     );
   }
