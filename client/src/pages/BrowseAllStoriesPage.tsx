@@ -42,30 +42,30 @@ interface ApiStoryResponse {
 // Custom StoryCard with gold-brown background
 function CustomStoryCard({ story }: { story: StoryCardType }) {
   return (
-    <div className="story-card bg-gradient-to-br from-amber-100 via-amber-50 to-yellow-100 border border-amber-200/50 rounded-lg shadow-lg overflow-hidden flex flex-col h-full hover:shadow-xl transition-all duration-300 hover:scale-105">
+    <div className="story-card bg-gradient-to-br from-amber-100 via-amber-50 to-yellow-100 border border-amber-200/50 rounded-lg shadow-lg overflow-hidden flex flex-col h-full hover:shadow-xl transition-all duration-300 hover:scale-105 touch-manipulation">
       <Link 
         href={`/story/${story.id}`} 
-        className="block relative group"
+        className="block relative group touch-manipulation"
       >
         <img 
           src={story.coverImage || ""} 
           alt={`Cover for ${story.title}`} 
-          className="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-105"
+          className="w-full h-32 sm:h-40 md:h-48 object-cover transition-transform duration-300 group-hover:scale-105"
           loading="lazy"
           decoding="async"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-amber-900/30 via-transparent to-transparent group-hover:from-amber-900/40 transition-colors" />
       </Link>
       
-      <div className="p-4 flex-1 flex flex-col bg-gradient-to-b from-amber-50/80 to-yellow-50/60">
-        <div className="flex justify-between items-start mb-2">
+      <div className="p-2 sm:p-3 md:p-4 flex-1 flex flex-col bg-gradient-to-b from-amber-50/80 to-yellow-50/60">
+        <div className="flex justify-between items-start mb-1 sm:mb-2">
           <div className="flex flex-wrap gap-1">
-            {story.genres.slice(0, 2).map((genre) => (
+            {story.genres.slice(0, 1).map((genre) => (
               <Link 
                 key={genre.id} 
                 href={`/genres/${genre.id}`}
                 className={cn(
-                  "text-xs font-cinzel text-white px-2 py-1 rounded shadow-sm",
+                  "text-xs font-cinzel text-white px-1.5 sm:px-2 py-0.5 sm:py-1 rounded shadow-sm touch-manipulation",
                   "bg-gradient-to-r from-amber-600 to-amber-700 hover:from-amber-700 hover:to-amber-800 transition-all"
                 )}
               >
@@ -74,33 +74,33 @@ function CustomStoryCard({ story }: { story: StoryCardType }) {
             ))}
           </div>
           <div className="flex items-center text-amber-600">
-            <Star className="h-4 w-4 fill-current" />
-            <span className="ml-1 text-sm font-medium">{story.averageRating.toFixed(1)}</span>
+            <Star className="h-3 w-3 sm:h-4 sm:w-4 fill-current" />
+            <span className="ml-0.5 sm:ml-1 text-xs sm:text-sm font-medium">{story.averageRating.toFixed(1)}</span>
           </div>
         </div>
         
         <Link 
           href={`/story/${story.id}`}
-          className="hover:text-amber-800 block mb-1 transition-colors"
+          className="hover:text-amber-800 block mb-1 transition-colors touch-manipulation"
         >
-          <h3 className="font-cinzel text-lg font-bold text-amber-900">{story.title}</h3>
+          <h3 className="font-cinzel text-sm sm:text-base md:text-lg font-bold text-amber-900 line-clamp-2">{story.title}</h3>
         </Link>
         
-        <p className="text-sm text-amber-800/80 mb-4 flex-grow leading-relaxed">
-          {truncateText(story.description, 100)}
+        <p className="text-xs sm:text-sm text-amber-800/80 mb-2 sm:mb-3 flex-grow leading-relaxed line-clamp-2 sm:line-clamp-3">
+          {truncateText(story.description, 60)}
         </p>
         
-        <div className="flex justify-between items-center mt-auto pt-2 border-t border-amber-200/50">
-          <span className="text-xs text-amber-700/70 font-medium">
+        <div className="flex justify-between items-center mt-auto pt-1 sm:pt-2 border-t border-amber-200/50">
+          <span className="text-xs text-amber-700/70 font-medium truncate">
             {formatDate(story.createdAt)}
           </span>
           
           <Button 
             variant="ghost" 
             size="icon" 
-            className="text-amber-600 hover:text-amber-800 hover:bg-amber-100/50 transition-colors h-8 w-8"
+            className="text-amber-600 hover:text-amber-800 hover:bg-amber-100/50 transition-colors h-6 w-6 sm:h-8 sm:w-8 touch-manipulation min-h-[44px] min-w-[44px] sm:min-h-[32px] sm:min-w-[32px]"
           >
-            <Bookmark className="h-4 w-4" />
+            <Bookmark className="h-3 w-3 sm:h-4 sm:w-4" />
           </Button>
         </div>
       </div>
@@ -185,36 +185,36 @@ export default function BrowseAllStoriesPage() {
 
       <div className="relative z-10">
         <Container>
-        <div className="py-8 px-4">
+        <div className="py-6 sm:py-8 px-4 sm:px-6">
           {/* Header */}
-          <div className="text-center mb-8">
-            <div className="flex items-center justify-center gap-3 mb-4">
-              <BookOpen className="h-8 w-8 text-amber-400" />
-              <h1 className="font-cinzel text-4xl md:text-5xl font-bold">
+          <div className="text-center mb-6 sm:mb-8">
+            <div className="flex items-center justify-center gap-2 sm:gap-3 mb-3 sm:mb-4">
+              <BookOpen className="h-6 w-6 sm:h-8 sm:w-8 text-amber-400" />
+              <h1 className="font-cinzel text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold">
                 Browse All Stories
               </h1>
-              <BookOpen className="h-8 w-8 text-amber-400" />
+              <BookOpen className="h-6 w-6 sm:h-8 sm:w-8 text-amber-400" />
             </div>
-            <p className="text-amber-200 text-lg max-w-2xl mx-auto">
+            <p className="text-amber-200 text-base sm:text-lg max-w-2xl mx-auto px-4">
               Discover all the amazing stories published on HEKAYATY platform
             </p>
           </div>
 
           {/* Search */}
-          <div className="relative max-w-md mx-auto mb-8">
+          <div className="relative max-w-md mx-auto mb-6 sm:mb-8 px-4">
             <Input
               type="text"
               placeholder="Search stories, authors..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full py-3 pl-4 pr-10 rounded-full bg-amber-50/10 placeholder-amber-100 text-amber-50 focus:outline-none focus:ring-2 focus:ring-amber-500 border-amber-500/50"
+              className="w-full py-3 sm:py-4 pl-4 pr-12 rounded-full bg-amber-50/10 placeholder-amber-100 text-amber-50 focus:outline-none focus:ring-2 focus:ring-amber-500 border-amber-500/50 text-base touch-manipulation min-h-[48px]"
             />
-            <Search className="absolute right-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-amber-400" />
+            <Search className="absolute right-4 top-1/2 transform -translate-y-1/2 h-5 w-5 sm:h-6 sm:w-6 text-amber-400" />
           </div>
 
           {/* Stats */}
-          <div className="text-center mb-8">
-            <p className="text-amber-300">
+          <div className="text-center mb-6 sm:mb-8 px-4">
+            <p className="text-amber-300 text-sm sm:text-base">
               {isLoading ? (
                 "Loading stories..."
               ) : error ? (
@@ -230,10 +230,10 @@ export default function BrowseAllStoriesPage() {
 
           {/* Error Display */}
           {error && (
-            <div className="text-center py-8 bg-red-50/10 rounded-lg border border-red-500/20 mb-8">
-              <AlertTriangle className="h-12 w-12 text-red-500 mx-auto mb-4" />
-              <h3 className="font-cinzel text-xl text-white mb-2">Error Loading Stories</h3>
-              <p className="text-white/80">
+            <div className="text-center py-6 sm:py-8 bg-red-50/10 rounded-lg border border-red-500/20 mb-6 mx-4">
+              <AlertTriangle className="h-10 w-10 sm:h-12 sm:w-12 text-red-500 mx-auto mb-3 sm:mb-4" />
+              <h3 className="font-cinzel text-lg sm:text-xl text-white mb-2 px-4">Error Loading Stories</h3>
+              <p className="text-white/80 text-sm sm:text-base px-4">
                 Failed to load stories. Please try refreshing the page.
               </p>
             </div>
@@ -241,9 +241,9 @@ export default function BrowseAllStoriesPage() {
 
           {/* Loading State */}
           {isLoading && (
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-4 lg:gap-6 px-4">
               {Array(10).fill(0).map((_, i) => (
-                <div key={i} className="animate-pulse bg-amber-50/10 rounded-lg h-80 border border-amber-500/20"></div>
+                <div key={i} className="animate-pulse bg-amber-50/10 rounded-lg h-64 sm:h-72 lg:h-80 border border-amber-500/20"></div>
               ))}
             </div>
           )}
@@ -252,7 +252,7 @@ export default function BrowseAllStoriesPage() {
           {!isLoading && !error && (
             <>
               {filteredStories.length > 0 ? (
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-4 lg:gap-6 px-4">
                   {filteredStories.map((story) => (
                     <CustomStoryCard 
                       key={story.id} 
@@ -261,12 +261,12 @@ export default function BrowseAllStoriesPage() {
                   ))}
                 </div>
               ) : (
-                <div className="text-center py-16 bg-amber-50/10 rounded-lg border border-amber-500/20">
-                  <BookOpen className="h-16 w-16 text-amber-500 mx-auto mb-4" />
-                  <h3 className="font-cinzel text-2xl text-white mb-2">
+                <div className="text-center py-12 sm:py-16 bg-amber-50/10 rounded-lg border border-amber-500/20 mx-4">
+                  <BookOpen className="h-12 w-12 sm:h-16 sm:w-16 text-amber-500 mx-auto mb-3 sm:mb-4" />
+                  <h3 className="font-cinzel text-xl sm:text-2xl text-white mb-2 px-4">
                     {searchQuery ? "No Stories Found" : "No Stories Available"}
                   </h3>
-                  <p className="text-amber-200 max-w-md mx-auto">
+                  <p className="text-amber-200 max-w-md mx-auto text-sm sm:text-base px-4">
                     {searchQuery 
                       ? `No stories match your search for "${searchQuery}". Try a different search term.`
                       : "There are no published stories available at the moment. Check back later for new content!"
@@ -275,7 +275,7 @@ export default function BrowseAllStoriesPage() {
                   {searchQuery && (
                     <button
                       onClick={() => setSearchQuery("")}
-                      className="mt-4 px-6 py-2 bg-amber-500 hover:bg-amber-600 text-brown-dark rounded-full font-medium transition-colors"
+                      className="mt-4 sm:mt-6 px-6 py-3 bg-amber-500 hover:bg-amber-600 active:bg-amber-700 text-brown-dark rounded-full font-medium transition-colors touch-manipulation min-h-[48px] text-base"
                     >
                       Clear Search
                     </button>

@@ -1,0 +1,210 @@
+/* Mobile and Touch Enhancements */
+
+/* Smooth scrolling for all elements */
+* {
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Improve touch targets */
+.touch-manipulation {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: rgba(245, 158, 11, 0.2);
+}
+
+/* Better button touch targets */
+button, 
+[role="button"], 
+input[type="button"], 
+input[type="submit"] {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: rgba(245, 158, 11, 0.2);
+}
+
+/* Minimum touch target sizes */
+@media (max-width: 768px) {
+  button:not(.no-min-size),
+  [role="button"]:not(.no-min-size),
+  a:not(.no-min-size),
+  input[type="button"]:not(.no-min-size),
+  input[type="submit"]:not(.no-min-size) {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
+
+/* Improve form inputs on mobile */
+input, 
+textarea, 
+select {
+  font-size: 16px; /* Prevents zoom on iOS */
+  -webkit-appearance: none;
+  appearance: none;
+  border-radius: 8px;
+}
+
+/* Better scrollbars */
+.scrollbar-thin {
+  scrollbar-width: thin;
+  scrollbar-color: rgb(245 158 11) rgba(245 158 11 / 0.1);
+}
+
+.scrollbar-thin::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: rgba(245, 158, 11, 0.1);
+  border-radius: 3px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background: rgb(245, 158, 11);
+  border-radius: 3px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb:hover {
+  background: rgb(217, 119, 6);
+}
+
+/* Line clamp utilities */
+.line-clamp-1 {
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.line-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Safe area insets for notched devices */
+.safe-area-inset-top {
+  padding-top: env(safe-area-inset-top);
+}
+
+.safe-area-inset-bottom {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.safe-area-inset-left {
+  padding-left: env(safe-area-inset-left);
+}
+
+.safe-area-inset-right {
+  padding-right: env(safe-area-inset-right);
+}
+
+/* Improved focus states for accessibility */
+*:focus-visible {
+  outline: 2px solid rgb(245, 158, 11);
+  outline-offset: 2px;
+}
+
+/* Better active states for touch */
+.touch-manipulation:active {
+  transform: scale(0.98);
+  transition: transform 0.1s ease;
+}
+
+/* Smooth transitions */
+.transition-all {
+  transition-property: all;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 300ms;
+}
+
+/* Mobile-specific improvements */
+@media (max-width: 768px) {
+  /* Larger text for better readability */
+  body {
+    font-size: 16px;
+    line-height: 1.6;
+  }
+  
+  /* Better spacing for mobile */
+  .container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+  
+  /* Improved card spacing */
+  .story-card {
+    margin-bottom: 0.5rem;
+  }
+  
+  /* Better modal/sheet positioning */
+  [data-radix-popper-content-wrapper] {
+    z-index: 9999 !important;
+  }
+}
+
+/* High DPI displays */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  /* Sharper borders and shadows */
+  .border {
+    border-width: 0.5px;
+  }
+}
+
+/* Landscape mobile optimizations */
+@media (max-width: 768px) and (orientation: landscape) {
+  .mobile-landscape-compact {
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+  }
+}
+
+/* Dark mode improvements */
+@media (prefers-color-scheme: dark) {
+  .scrollbar-thin::-webkit-scrollbar-track {
+    background: rgba(245, 158, 11, 0.05);
+  }
+}
+
+/* Reduce motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Better hover states for touch devices */
+@media (hover: hover) and (pointer: fine) {
+  .hover\:scale-105:hover {
+    transform: scale(1.05);
+  }
+  
+  .hover\:shadow-xl:hover {
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  }
+}
+
+/* Touch-specific styles */
+@media (hover: none) and (pointer: coarse) {
+  .hover\:scale-105 {
+    transition: transform 0.2s ease;
+  }
+  
+  .hover\:scale-105:active {
+    transform: scale(1.02);
+  }
+}

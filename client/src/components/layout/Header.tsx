@@ -58,8 +58,8 @@ export default function Header() {
   }, [unreadCount]);
 
   return (
-    <header className="text-amber-50 shadow-lg sticky top-0 z-50" style={{ backgroundColor: '#151008' }}>
-      <div className="container mx-auto px-3 sm:px-4 py-2 sm:py-3 flex justify-between items-center">
+    <header className="text-amber-50 shadow-lg sticky top-0 z-50 safe-area-inset-top" style={{ backgroundColor: '#151008' }}>
+      <div className="container mx-auto px-4 sm:px-6 py-3 sm:py-4 flex justify-between items-center min-h-[60px] sm:min-h-[70px]">
         <div className="flex items-center">
           <Link href="/" className="text-xl sm:text-2xl md:text-3xl font-cinzel font-bold">
             <span className="text-amber-500">Heka</span>yaty
@@ -143,10 +143,6 @@ export default function Header() {
             </Link>
           )}
           
-          <Link href="/community" className="font-cinzel text-xs xl:text-sm hover:text-amber-500 transition-colors flex items-center gap-1">
-            <Users className="h-3 w-3 xl:h-4 xl:w-4" />
-            <span className="hidden xl:inline">Community</span>
-          </Link>
         </nav>
         
         <div className="flex items-center space-x-2 sm:space-x-3 md:space-x-4">
@@ -223,11 +219,11 @@ export default function Header() {
           {/* Mobile menu button */}
           <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
             <SheetTrigger asChild>
-              <Button variant="ghost" className="lg:hidden p-0 h-8 w-8 sm:h-9 sm:w-9 rounded-full">
-                <Menu className="h-4 w-4 sm:h-5 sm:w-5 text-amber-50" />
+              <Button variant="ghost" className="lg:hidden p-2 h-10 w-10 sm:h-12 sm:w-12 rounded-full touch-manipulation min-h-[44px] min-w-[44px] hover:bg-amber-500/20 active:bg-amber-500/30 transition-colors">
+                <Menu className="h-5 w-5 sm:h-6 sm:w-6 text-amber-50" />
               </Button>
             </SheetTrigger>
-            <SheetContent className="bg-midnight-blue text-amber-50 border-amber-500 w-[280px] sm:w-[320px]">
+            <SheetContent className="bg-midnight-blue text-amber-50 border-amber-500 w-[85vw] max-w-[350px] sm:w-[320px] safe-area-inset-right">
               <SheetHeader>
                 <SheetTitle className="text-amber-50">
                   <Link href="/" onClick={closeMobileMenu} className="inline-flex items-center text-xl sm:text-2xl font-cinzel font-bold mb-4 sm:mb-6">
@@ -238,10 +234,10 @@ export default function Header() {
                   Explore magical worlds of stories
                 </SheetDescription>
               </SheetHeader>
-              <div className="py-4 sm:py-6 space-y-3 sm:space-y-4 max-h-[calc(100vh-200px)] overflow-y-auto">
-                <Link href="/home" onClick={closeMobileMenu} className="flex items-center py-3 px-3 rounded-md hover:bg-amber-900 transition-colors touch-manipulation">
-                  <Home className="mr-3 h-5 w-5" />
-                  <span className="text-base">Home</span>
+              <div className="py-4 sm:py-6 space-y-2 max-h-[calc(100vh-200px)] overflow-y-auto scrollbar-thin scrollbar-thumb-amber-500 scrollbar-track-amber-900/20">
+                <Link href="/home" onClick={closeMobileMenu} className="flex items-center py-4 px-4 rounded-lg hover:bg-amber-900/50 active:bg-amber-900/70 transition-colors touch-manipulation min-h-[48px] text-base font-medium">
+                  <Home className="mr-4 h-6 w-6 text-amber-400" />
+                  <span>Home</span>
                 </Link>
                 {isAuthenticated && user && (
                   <div className="flex items-center space-x-3 mb-4 sm:mb-6 p-3 bg-amber-900/20 rounded-lg">
@@ -258,65 +254,69 @@ export default function Header() {
                   </div>
                 )}
                 
-                <Link href="/originals" onClick={closeMobileMenu} className="flex items-center py-2 px-1 rounded-md hover:bg-amber-900 transition-colors">
-                  <BookOpen className="mr-2 h-5 w-5" />
+                <Link href="/originals" onClick={closeMobileMenu} className="flex items-center py-4 px-4 rounded-lg hover:bg-amber-900/50 active:bg-amber-900/70 transition-colors touch-manipulation min-h-[48px] text-base font-medium">
+                  <BookOpen className="mr-4 h-6 w-6 text-amber-400" />
                   <span>Discover</span>
                 </Link>
                 
-                <Link href="/genres" onClick={closeMobileMenu} className="flex items-center py-2 px-1 rounded-md hover:bg-amber-900 transition-colors">
-                  <Award className="mr-2 h-5 w-5" />
+                <Link href="/genres" onClick={closeMobileMenu} className="flex items-center py-4 px-4 rounded-lg hover:bg-amber-900/50 active:bg-amber-900/70 transition-colors touch-manipulation min-h-[48px] text-base font-medium">
+                  <Award className="mr-4 h-6 w-6 text-amber-400" />
                   <span>Genres</span>
                 </Link>
-                <Link href="/subscribe" onClick={closeMobileMenu} className="flex items-center py-2 px-1 rounded-md hover:bg-amber-900 transition-colors">
-                  <Star className="mr-2 h-5 w-5" />
+                <Link href="/subscribe" onClick={closeMobileMenu} className="flex items-center py-4 px-4 rounded-lg hover:bg-amber-900/50 active:bg-amber-900/70 transition-colors touch-manipulation min-h-[48px] text-base font-medium">
+                  <Star className="mr-4 h-6 w-6 text-amber-400" />
                   <span>Get Code</span>
                 </Link>
                 
                 
-                <Link href="/talecraft" onClick={closeMobileMenu} className="flex items-center py-2 px-1 rounded-md hover:bg-amber-900 transition-colors">
-                  <Hammer className="mr-2 h-5 w-5" />
+                <Link href="/talecraft" onClick={closeMobileMenu} className="flex items-center py-4 px-4 rounded-lg hover:bg-amber-900/50 active:bg-amber-900/70 transition-colors touch-manipulation min-h-[48px] text-base font-medium">
+                  <Hammer className="mr-4 h-6 w-6 text-amber-400" />
                   <span>TaleCraft</span>
                 </Link>
                 
                 
                 {isAuthenticated && (
-                  <Link href="/talecraft" onClick={closeMobileMenu} className="flex items-center py-2 px-1 rounded-md hover:bg-amber-900 transition-colors">
-                    <PenSquare className="mr-2 h-5 w-5" />
+                  <Link href="/talecraft" onClick={closeMobileMenu} className="flex items-center py-4 px-4 rounded-lg hover:bg-amber-900/50 active:bg-amber-900/70 transition-colors touch-manipulation min-h-[48px] text-base font-medium">
+                    <PenSquare className="mr-4 h-6 w-6 text-amber-400" />
                     <span>Write</span>
                   </Link>
                 )}
                 
                 {isAuthenticated && isAdmin && (
-                  <Link href="/admin" onClick={closeMobileMenu} className="flex items-center py-2 px-1 rounded-md hover:bg-amber-900 transition-colors">
-                    <Shield className="mr-2 h-5 w-5" />
+                  <Link href="/admin" onClick={closeMobileMenu} className="flex items-center py-4 px-4 rounded-lg hover:bg-amber-900/50 active:bg-amber-900/70 transition-colors touch-manipulation min-h-[48px] text-base font-medium">
+                    <Shield className="mr-4 h-6 w-6 text-amber-400" />
                     <span>Admin</span>
                   </Link>
                 )}
                 
-                <Link href="/community" onClick={closeMobileMenu} className="flex items-center py-2 px-1 rounded-md hover:bg-amber-900 transition-colors">
-                  <Users className="mr-2 h-5 w-5" />
-                  <span>Community</span>
-                </Link>
                 
                 {isAuthenticated ? (
                   <>
-                    <Link href={`/profile/${user?.id}`} onClick={closeMobileMenu} className="flex items-center py-2 px-1 rounded-md hover:bg-amber-900 transition-colors">Profile</Link>
-                    <button 
-                      onClick={() => {
-                        logout();
-                        closeMobileMenu();
-                      }}
-                      className="w-full text-left flex items-center py-2 px-1 rounded-md hover:bg-amber-900 transition-colors"
-                    >
-                      Logout
-                    </button>
+                    <div className="border-t border-amber-500/30 pt-4 mt-4">
+                      <Link href={`/profile/${user?.id}`} onClick={closeMobileMenu} className="flex items-center py-4 px-4 rounded-lg hover:bg-amber-900/50 active:bg-amber-900/70 transition-colors touch-manipulation min-h-[48px] text-base font-medium">
+                        <Users className="mr-4 h-6 w-6 text-amber-400" />
+                        <span>Profile</span>
+                      </Link>
+                      <button 
+                        onClick={() => {
+                          logout();
+                          closeMobileMenu();
+                        }}
+                        className="w-full text-left flex items-center py-4 px-4 rounded-lg hover:bg-red-900/50 active:bg-red-900/70 transition-colors touch-manipulation min-h-[48px] text-base font-medium text-red-300"
+                      >
+                        <svg className="mr-4 h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                        </svg>
+                        <span>Logout</span>
+                      </button>
+                    </div>
                   </>
                 ) : (
-                  <div className="pt-4 flex flex-col space-y-2">
-                    <Button asChild variant="outline" className="border-amber-500 text-amber-50 hover:bg-amber-900 hover:text-amber-50">
+                  <div className="border-t border-amber-500/30 pt-6 mt-6 flex flex-col space-y-3">
+                    <Button asChild variant="outline" className="border-amber-500 text-amber-50 hover:bg-amber-900 hover:text-amber-50 min-h-[48px] text-base font-medium touch-manipulation">
                       <Link href="/login" onClick={closeMobileMenu}>Sign In</Link>
                     </Button>
-                    <Button asChild className="bg-amber-500 hover:bg-amber-600 text-brown-dark">
+                    <Button asChild className="bg-amber-500 hover:bg-amber-600 text-brown-dark min-h-[48px] text-base font-medium touch-manipulation">
                       <Link href="/register" onClick={closeMobileMenu}>Sign Up</Link>
                     </Button>
                   </div>

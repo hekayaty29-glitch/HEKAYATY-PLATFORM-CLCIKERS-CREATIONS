@@ -75,7 +75,7 @@ export default function Footer() {
                 <Link href="/talecraft" className="hover:text-amber-500 transition-colors touch-manipulation block py-1">TaleCraft</Link>
               </li>
               <li>
-                <Link href="/community" className="hover:text-amber-500 transition-colors touch-manipulation block py-1">Community</Link>
+                <a href="https://hekayaty-community.vercel.app/" target="_blank" rel="noopener noreferrer" className="hover:text-amber-500 transition-colors touch-manipulation block py-1">Community</a>
               </li>
             </ul>
           </div>

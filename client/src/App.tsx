@@ -32,7 +32,7 @@ import GenreStoriesPage from "@/pages/GenreStoriesPage";
 import NewUserProfilePage from "@/pages/NewUserProfilePage";
 import BrowseStoriesPage from "@/pages/BrowseStoriesPage";
 import BrowseAllStoriesPage from "@/pages/BrowseAllStoriesPage";
-import CommunityPage from "@/pages/CommunityPage";
+import CommunityRedirect from "@/components/CommunityRedirect";
 import ClubDetailPage from "@/pages/ClubDetailPage";
 import WorkshopDetailPage from "@/pages/WorkshopDetailPage";
 import HekayatyOriginalStoriesPage from "@/pages/HekayatyOriginalStoriesPage";
@@ -129,7 +129,7 @@ function Router() {
       <Route path="/search" component={SearchPage} />
       <Route path="/top-rated" component={BrowseStoriesPage} />
       <Route path="/bookmarks" component={BrowseStoriesPage} />
-        <Route path="/community" component={CommunityPage} />
+        <Route path="/community" component={CommunityRedirect} />
         <Route path="/clubs/:id" component={ClubDetailPage} />
         <Route path="/workshops/:id" component={WorkshopDetailPage} />
       <Route path="/gallery" component={ArtGalleryPage} />
