@@ -143,6 +143,11 @@ export default function Header() {
             </Link>
           )}
           
+          <a href="https://hekayaty-community.vercel.app/" target="_blank" rel="noopener noreferrer" className="font-cinzel text-xs xl:text-sm hover:text-amber-500 transition-colors flex items-center gap-1">
+            <Users className="h-3 w-3 xl:h-4 xl:w-4" />
+            <span className="hidden xl:inline">Community</span>
+          </a>
+          
         </nav>
         
         <div className="flex items-center space-x-2 sm:space-x-3 md:space-x-4">
@@ -288,6 +293,11 @@ export default function Header() {
                     <span>Admin</span>
                   </Link>
                 )}
+                
+                <a href="https://hekayaty-community.vercel.app/" target="_blank" rel="noopener noreferrer" onClick={closeMobileMenu} className="flex items-center py-4 px-4 rounded-lg hover:bg-amber-900/50 active:bg-amber-900/70 transition-colors touch-manipulation min-h-[48px] text-base font-medium">
+                  <Users className="mr-4 h-6 w-6 text-amber-400" />
+                  <span>Community</span>
+                </a>
                 
                 
                 {isAuthenticated ? (
