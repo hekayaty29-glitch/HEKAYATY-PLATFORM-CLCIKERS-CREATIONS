@@ -16,6 +16,7 @@ import Footer from "@/components/layout/Footer";
 import PublishFAB from "@/components/layout/PublishFAB";
 import HekyChat from "@/components/chat/HekyChat";
 import NotFound from "@/pages/not-found";
+import ProtectedStoryRoute from "@/components/auth/ProtectedStoryRoute";
 import HomePage from "@/pages/HomePage";
 import SignInPage from "@/pages/SignInPage";
 import SignUpPage from "@/pages/SignUpPage";
@@ -113,9 +114,9 @@ function Router() {
       {/* Specific routes first */}
 {/* General routes */}
       <Route path="/projects/:id" component={ProjectReaderPage} />
-      <Route path="/story/:id" component={StoryPage} />
-      <Route path="/story/:storyId/chapters" component={StoryChaptersPage} />
-      <Route path="/story/:storyId/chapter/:chapterId" component={ChapterReaderPage} />
+      <Route path="/story/:id" component={() => <ProtectedStoryRoute><StoryPage /></ProtectedStoryRoute>} />
+      <Route path="/story/:storyId/chapters" component={() => <ProtectedStoryRoute><StoryChaptersPage /></ProtectedStoryRoute>} />
+      <Route path="/story/:storyId/chapter/:chapterId" component={() => <ProtectedStoryRoute><ChapterReaderPage /></ProtectedStoryRoute>} />
       <Route path="/publish" component={PublishStoryWizardPage} />
       <Route path="/publish-old" component={PublishStoryPage} />
       <Route path="/publish-comic" component={PublishComicWizardPage} />
@@ -136,9 +137,9 @@ function Router() {
       <Route path="/notifications" component={NotificationsPage} />
       <Route path="/originals" component={HekayatyOriginalStoriesPage} />
       {/* Originals sub-routes */}
-      <Route path="/originals/:id" component={OriginalStoryWorldPage} />
-      <Route path="/originals/:id/chapters" component={OriginalChaptersPage} />
-      <Route path="/originals/:storyId/chapters/:chapterId/pages/:pageNum" component={OriginalReadingPage} />
+      <Route path="/originals/:id" component={() => <ProtectedStoryRoute><OriginalStoryWorldPage /></ProtectedStoryRoute>} />
+      <Route path="/originals/:id/chapters" component={() => <ProtectedStoryRoute><OriginalChaptersPage /></ProtectedStoryRoute>} />
+      <Route path="/originals/:storyId/chapters/:chapterId/pages/:pageNum" component={() => <ProtectedStoryRoute><OriginalReadingPage /></ProtectedStoryRoute>} />
       <Route path="/clubs/:id" component={ClubPage} />
       <Route path="/workshops/:id" component={WorkshopPage} />
       <Route path="/special" component={SpecialStoriesPage} />
@@ -146,8 +147,8 @@ function Router() {
       <Route path="/talecraft" component={TalesCraftPage} />
       <Route path="/gems" component={WritersGemsPage} />
       <Route path="/whispers" component={WhispersOfWordsPage} />
-      <Route path="/listen/:storyId/:chapterId" component={ListenChapterPage} />
-      <Route path="/listen/:storyId" component={ListenStoryPage} />
+      <Route path="/listen/:storyId/:chapterId" component={() => <ProtectedStoryRoute><ListenChapterPage /></ProtectedStoryRoute>} />
+      <Route path="/listen/:storyId" component={() => <ProtectedStoryRoute><ListenStoryPage /></ProtectedStoryRoute>} />
       <Route path="/bazaar" component={() => <GuardedRoute flag="store" component={BookBazaarPage} />} />
       <Route path="/recommendations" component={() => <GuardedRoute flag="recommendations" component={RecommendationsPage} />} />
       <Route path="/wallet" component={() => <GuardedRoute flag="wallet" component={WalletPage} />} />

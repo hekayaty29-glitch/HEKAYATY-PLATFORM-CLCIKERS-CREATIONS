@@ -35,7 +35,15 @@ export function LoginForm() {
     
     try {
       await loginWithGoogle();
-      navigate("/profile");
+      
+      // Check for redirect after login
+      const redirectPath = localStorage.getItem('redirectAfterLogin');
+      if (redirectPath) {
+        localStorage.removeItem('redirectAfterLogin');
+        navigate(redirectPath);
+      } else {
+        navigate("/profile");
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : "Login failed. Please try again.");
     } finally {
