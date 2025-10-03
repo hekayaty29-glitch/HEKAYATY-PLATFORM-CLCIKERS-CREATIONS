@@ -1,9 +1,10 @@
-import { Star, Search } from "lucide-react";
+import { Star, Search, Lock } from "lucide-react";
 import bgImg from "@/assets/00a75467-b343-4cf1-a5c7-0b7d1270efc4.png";
 import { Link } from "wouter";
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
+import { useAuth } from "@/lib/auth";
 
 interface Story {
   id: number;
@@ -30,6 +31,7 @@ const useSpecialStories = () =>
 export default function SpecialStories() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedGenre, setSelectedGenre] = useState("all");
+  const { isAuthenticated } = useAuth();
 
   const { data: stories, isLoading, error } = useSpecialStories();
 
@@ -115,37 +117,107 @@ export default function SpecialStories() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
-          {topRated.map((story) => (
-            <Link
-              key={story.id}
-              href={`/stories/${story.id}`}
-              className="story-card bg-amber-50/10 p-6 rounded-lg border border-amber-500 hover:shadow-lg transition-all flex flex-col items-center"
-            >
-              <div className="text-6xl mb-4">{story.cover}</div>
-              <h4 className="font-cinzel text-xl font-bold text-amber-100 mb-1 text-center">
-                {story.title}
-              </h4>
-              <p className="text-amber-200 text-sm">by {story.author}</p>
-            </Link>
-          ))}
+          {topRated.map((story) => {
+            const handleClick = (e: React.MouseEvent) => {
+              if (!isAuthenticated) {
+                e.preventDefault();
+                // Store the intended destination
+                localStorage.setItem('redirectAfterLogin', `/story/${story.id}`);
+                // Redirect to login
+                window.location.href = '/login';
+              }
+            };
+
+            return (
+              <Link
+                key={story.id}
+                href={isAuthenticated ? `/story/${story.id}` : '/login'}
+              >
+                <div 
+                  className="story-card bg-amber-50/10 p-6 rounded-lg border border-amber-500 hover:shadow-lg transition-all flex flex-col items-center relative group"
+                  onClick={handleClick}
+                >
+                  {/* Lock overlay for non-authenticated users */}
+                  {!isAuthenticated && (
+                    <div className="absolute inset-0 bg-black/50 flex items-center justify-center rounded-lg">
+                      <div className="bg-amber-500 text-amber-900 p-3 rounded-full shadow-lg">
+                        <Lock className="h-6 w-6" />
+                      </div>
+                    </div>
+                  )}
+                  
+                  <div className="text-6xl mb-4">{story.cover}</div>
+                  <h4 className="font-cinzel text-xl font-bold text-amber-100 mb-1 text-center">
+                    {story.title}
+                  </h4>
+                  <p className="text-amber-200 text-sm mb-3">by {story.author}</p>
+                  
+                  {/* Sign in prompt for non-authenticated users */}
+                  {!isAuthenticated && (
+                    <div className="text-center mt-2">
+                      <span className="inline-flex items-center gap-2 text-amber-400 text-sm font-medium">
+                        <Lock className="h-4 w-4" />
+                        Sign in to read
+                      </span>
+                    </div>
+                  )}
+                </div>
+              </Link>
+            );
+          })}
         </div>
 
         {/* Collections */}
         <h3 className="font-cinzel text-2xl mb-6 text-center text-amber-200">Best Collections</h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {bestCollections.map((story) => (
-            <Link
-              key={story.id}
-              href={`/stories/${story.id}`}
-              className="story-card bg-amber-50/10 p-6 rounded-lg border border-amber-500 hover:shadow-lg transition-all flex flex-col items-center"
-            >
-              <div className="text-6xl mb-4">{story.cover}</div>
-              <h4 className="font-cinzel text-xl font-bold text-amber-100 mb-1 text-center">
-                {story.title}
-              </h4>
-              <p className="text-amber-200 text-sm">{story.author}</p>
-            </Link>
-          ))}
+          {bestCollections.map((story) => {
+            const handleClick = (e: React.MouseEvent) => {
+              if (!isAuthenticated) {
+                e.preventDefault();
+                // Store the intended destination
+                localStorage.setItem('redirectAfterLogin', `/story/${story.id}`);
+                // Redirect to login
+                window.location.href = '/login';
+              }
+            };
+
+            return (
+              <Link
+                key={story.id}
+                href={isAuthenticated ? `/story/${story.id}` : '/login'}
+              >
+                <div 
+                  className="story-card bg-amber-50/10 p-6 rounded-lg border border-amber-500 hover:shadow-lg transition-all flex flex-col items-center relative group"
+                  onClick={handleClick}
+                >
+                  {/* Lock overlay for non-authenticated users */}
+                  {!isAuthenticated && (
+                    <div className="absolute inset-0 bg-black/50 flex items-center justify-center rounded-lg">
+                      <div className="bg-amber-500 text-amber-900 p-3 rounded-full shadow-lg">
+                        <Lock className="h-6 w-6" />
+                      </div>
+                    </div>
+                  )}
+                  
+                  <div className="text-6xl mb-4">{story.cover}</div>
+                  <h4 className="font-cinzel text-xl font-bold text-amber-100 mb-1 text-center">
+                    {story.title}
+                  </h4>
+                  <p className="text-amber-200 text-sm mb-3">{story.author}</p>
+                  
+                  {/* Sign in prompt for non-authenticated users */}
+                  {!isAuthenticated && (
+                    <div className="text-center mt-2">
+                      <span className="inline-flex items-center gap-2 text-amber-400 text-sm font-medium">
+                        <Lock className="h-4 w-4" />
+                        Sign in to read
+                      </span>
+                    </div>
+                  )}
+                </div>
+              </Link>
+            );
+          })}
         </div>
         <div className="text-center mt-12">
           <Link

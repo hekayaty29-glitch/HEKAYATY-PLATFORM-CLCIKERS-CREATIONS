@@ -2,9 +2,10 @@ import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import { useAdmin } from "@/context/AdminContext";
+import { useAuth } from "@/lib/auth";
 import { Link } from "wouter";
 import charactersBg from "@/assets/873e935e-c511-4eda-9951-9f09e141d1de_11-16-25.png";
-import { Sparkles, BookOpen } from "lucide-react";
+import { Sparkles, BookOpen, Lock } from "lucide-react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 
@@ -33,6 +34,7 @@ export default function CharactersSection() {
 
   const { data: characters, isLoading } = useCharacters();
   const { isAdmin } = useAdmin();
+  const { isAuthenticated } = useAuth();
   const qc = useQueryClient();
 
   const addCharacter = useMutation({
@@ -211,29 +213,70 @@ export default function CharactersSection() {
 
         {/* Character Grid */}
         <div className="grid gap-8 sm:grid-cols-2 md:grid-cols-3">
-          {filtered.map((char) => (
-            <motion.div
-              key={char.id}
-              whileHover={{ y: -6, boxShadow: "0 0 12px rgba(255,221,160,0.4)" }}
-              className="bg-[#1d140c]/60 backdrop-blur-sm border border-amber-700 rounded-lg overflow-hidden shadow-lg transition-transform hover:shadow-amber-700/40"
-            >
-              <img src={char.image || char.photo_url || "/placeholder-character.jpg"} alt={char.name} className="w-full h-48 object-cover object-top" />
-              <div className="p-4 space-y-2">
-                <h3 className="font-cinzel text-xl text-amber-100">{char.name}</h3>
-                <p className="text-sm text-amber-200 line-clamp-3 min-h-[3.6em]">{char.description}</p>
-                <div className="flex gap-2 mt-4">
-                  <Link href={`/characters/${char.id}`} className="flex-1">
-                    <Button size="sm" variant="secondary" className="w-full bg-amber-700 hover:bg-amber-800 text-white font-cinzel">
-                      <BookOpen className="h-4 w-4 mr-1" /> Read More
-                    </Button>
-                  </Link>
-                  <Button size="sm" className="flex-1 bg-amber-600 hover:bg-amber-700 text-white font-cinzel">
-                    ✍️ Write
-                  </Button>
+          {filtered.map((char) => {
+            const handleCharacterClick = (e: React.MouseEvent) => {
+              if (!isAuthenticated) {
+                e.preventDefault();
+                // Store the intended destination
+                localStorage.setItem('redirectAfterLogin', `/characters/${char.id}`);
+                // Redirect to login
+                window.location.href = '/login';
+              }
+            };
+
+            return (
+              <motion.div
+                key={char.id}
+                whileHover={{ y: -6, boxShadow: "0 0 12px rgba(255,221,160,0.4)" }}
+                className="bg-[#1d140c]/60 backdrop-blur-sm border border-amber-700 rounded-lg overflow-hidden shadow-lg transition-transform hover:shadow-amber-700/40 relative"
+              >
+                <div className="relative">
+                  <img src={char.image || char.photo_url || "/placeholder-character.jpg"} alt={char.name} className="w-full h-48 object-cover object-top" />
+                  
+                  {/* Lock overlay for non-authenticated users */}
+                  {!isAuthenticated && (
+                    <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
+                      <div className="bg-amber-500 text-amber-900 p-3 rounded-full shadow-lg">
+                        <Lock className="h-6 w-6" />
+                      </div>
+                    </div>
+                  )}
                 </div>
-              </div>
-            </motion.div>
-          ))}
+                
+                <div className="p-4 space-y-2">
+                  <h3 className="font-cinzel text-xl text-amber-100">{char.name}</h3>
+                  <p className="text-sm text-amber-200 line-clamp-3 min-h-[3.6em]">{char.description}</p>
+                  
+                  <div className="flex gap-2 mt-4">
+                    {isAuthenticated ? (
+                      <>
+                        <Link href={`/characters/${char.id}`} className="flex-1">
+                          <Button size="sm" variant="secondary" className="w-full bg-amber-700 hover:bg-amber-800 text-white font-cinzel">
+                            <BookOpen className="h-4 w-4 mr-1" /> Read More
+                          </Button>
+                        </Link>
+                        <Button size="sm" className="flex-1 bg-amber-600 hover:bg-amber-700 text-white font-cinzel">
+                          ✍️ Write
+                        </Button>
+                      </>
+                    ) : (
+                      <div className="w-full text-center">
+                        <Button 
+                          size="sm" 
+                          variant="secondary" 
+                          className="w-full bg-amber-700/60 text-white font-cinzel cursor-pointer"
+                          onClick={handleCharacterClick}
+                        >
+                          <Lock className="h-4 w-4 mr-2" />
+                          Sign in to explore
+                        </Button>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </motion.div>
+            );
+          })}
         </div>
       </div>
     </section>

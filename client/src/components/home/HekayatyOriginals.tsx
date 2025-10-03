@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import { useAuth } from "@/lib/auth";
 import bgImg from "@/assets/571601e5-d155-4362-b446-db1c4302f71c.png";
-import { Star, Search } from "lucide-react";
+import { Star, Search, Lock } from "lucide-react";
 import { useState } from "react";
 
 export interface OriginalStory {
@@ -68,7 +68,7 @@ const useOriginalStories = () =>
 
 export default function HekayatyOriginals({ stories, showSearch = false }: Props) {
   const { data: fetched, isLoading } = useOriginalStories();
-  const { user } = useAuth();
+  const { user, isAuthenticated } = useAuth();
   const isAdmin = !!user?.isAdmin;
 
   const originals = stories ?? fetched ?? [];
@@ -186,41 +186,74 @@ export default function HekayatyOriginals({ stories, showSearch = false }: Props
         )}
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {filtered.map((story) => (
-            <Link key={story.id} href={`/story/${story.id}`}>
-              <div className="story-card bg-amber-50 bg-opacity-10 backdrop-filter backdrop-blur-sm rounded-lg overflow-hidden border border-amber-500 hover:shadow-xl hover:scale-105 transition-all duration-300 cursor-pointer group">
-                {/* Story Cover Image */}
-                <div className="relative h-48 overflow-hidden">
-                  <img
-                    src={story.cover_url || story.poster_url || (story.cover && story.cover.startsWith('http') ? story.cover : "https://images.unsplash.com/photo-1481627834876-b7833e8f5570?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80")}
-                    alt={story.title}
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-brown-dark/60 to-transparent" />
+          {filtered.map((story) => {
+            const handleClick = (e: React.MouseEvent) => {
+              if (!isAuthenticated) {
+                e.preventDefault();
+                // Store the intended destination
+                localStorage.setItem('redirectAfterLogin', `/story/${story.id}`);
+                // Redirect to login
+                window.location.href = '/login';
+              }
+            };
+
+            return (
+              <Link key={story.id} href={isAuthenticated ? `/story/${story.id}` : '/login'}>
+                <div 
+                  className="story-card bg-amber-50 bg-opacity-10 backdrop-filter backdrop-blur-sm rounded-lg overflow-hidden border border-amber-500 hover:shadow-xl hover:scale-105 transition-all duration-300 cursor-pointer group relative"
+                  onClick={handleClick}
+                >
+                  {/* Story Cover Image */}
+                  <div className="relative h-48 overflow-hidden">
+                    <img
+                      src={story.cover_url || story.poster_url || (story.cover && story.cover.startsWith('http') ? story.cover : "https://images.unsplash.com/photo-1481627834876-b7833e8f5570?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80")}
+                      alt={story.title}
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-brown-dark/60 to-transparent" />
+                    
+                    {/* Lock overlay for non-authenticated users */}
+                    {!isAuthenticated && (
+                      <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
+                        <div className="bg-amber-500 text-amber-900 p-3 rounded-full shadow-lg">
+                          <Lock className="h-6 w-6" />
+                        </div>
+                      </div>
+                    )}
+                    
+                    {/* Genre Badge */}
+                    <div className="absolute top-3 right-3">
+                      <span className="bg-amber-500/90 text-amber-50 text-xs font-medium px-2 py-1 rounded-full">
+                        {story.genre}
+                      </span>
+                    </div>
+                  </div>
                   
-                  {/* Genre Badge */}
-                  <div className="absolute top-3 right-3">
-                    <span className="bg-amber-500/90 text-amber-50 text-xs font-medium px-2 py-1 rounded-full">
-                      {story.genre}
-                    </span>
+                  {/* Card Content */}
+                  <div className="p-4">
+                    <h3 className="font-cinzel text-lg font-bold mb-2 text-amber-100 group-hover:text-amber-300 transition-colors line-clamp-2">
+                      {story.title}
+                    </h3>
+                    
+                    {/* Synopsis */}
+                    <p className="text-amber-50/80 text-sm leading-relaxed line-clamp-3 mb-3">
+                      {story.synopsis}
+                    </p>
+                    
+                    {/* Sign in prompt for non-authenticated users */}
+                    {!isAuthenticated && (
+                      <div className="text-center">
+                        <span className="inline-flex items-center gap-2 text-amber-400 text-sm font-medium">
+                          <Lock className="h-4 w-4" />
+                          Sign in to read
+                        </span>
+                      </div>
+                    )}
                   </div>
                 </div>
-                
-                {/* Card Content */}
-                <div className="p-4">
-                  <h3 className="font-cinzel text-lg font-bold mb-2 text-amber-100 group-hover:text-amber-300 transition-colors line-clamp-2">
-                    {story.title}
-                  </h3>
-                  
-                  
-                  {/* Synopsis */}
-                  <p className="text-amber-50/80 text-sm leading-relaxed line-clamp-3">
-                    {story.synopsis}
-                  </p>
-                </div>
-              </div>
-            </Link>
-          ))}
+              </Link>
+            );
+          })}
         </div>
       </div>
     </section>

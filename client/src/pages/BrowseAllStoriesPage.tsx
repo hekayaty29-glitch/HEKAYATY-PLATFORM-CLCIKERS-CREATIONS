@@ -3,13 +3,14 @@ import { useQuery } from "@tanstack/react-query";
 import { Helmet } from "react-helmet";
 import { apiRequest } from "@/lib/queryClient";
 import { Input } from "@/components/ui/input";
-import { Search, BookOpen, AlertTriangle, Star, Bookmark } from "lucide-react";
+import { Search, BookOpen, AlertTriangle, Star, Bookmark, Lock } from "lucide-react";
 import { StoryCard as StoryCardType } from "@/lib/types";
 import Container from "@/components/layout/Container";
 import bgImage from "@/assets/d2c8245c-c591-4cc9-84d2-27252be8dffb.png";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { cn, truncateText, formatDate } from "@/lib/utils";
+import { useAuth } from "@/lib/auth";
 
 // Interface for API response that might have different field names
 interface ApiStoryResponse {
@@ -40,12 +41,22 @@ interface ApiStoryResponse {
 }
 
 // Custom StoryCard with gold-brown background
-function CustomStoryCard({ story }: { story: StoryCardType }) {
+function CustomStoryCard({ story, isAuthenticated }: { story: StoryCardType; isAuthenticated: boolean }) {
+  const handleClick = (e: React.MouseEvent) => {
+    if (!isAuthenticated) {
+      e.preventDefault();
+      // Store the intended destination
+      localStorage.setItem('redirectAfterLogin', `/story/${story.id}`);
+      // Redirect to login
+      window.location.href = '/login';
+    }
+  };
   return (
-    <div className="story-card bg-gradient-to-br from-amber-100 via-amber-50 to-yellow-100 border border-amber-200/50 rounded-lg shadow-lg overflow-hidden flex flex-col h-full hover:shadow-xl transition-all duration-300 hover:scale-105 touch-manipulation">
+    <div className="story-card bg-gradient-to-br from-amber-100 via-amber-50 to-yellow-100 border border-amber-200/50 rounded-lg shadow-lg overflow-hidden flex flex-col h-full hover:shadow-xl transition-all duration-300 hover:scale-105 touch-manipulation relative">
       <Link 
-        href={`/story/${story.id}`} 
+        href={isAuthenticated ? `/story/${story.id}` : '/login'} 
         className="block relative group touch-manipulation"
+        onClick={handleClick}
       >
         <img 
           src={story.coverImage || ""} 
@@ -55,6 +66,15 @@ function CustomStoryCard({ story }: { story: StoryCardType }) {
           decoding="async"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-amber-900/30 via-transparent to-transparent group-hover:from-amber-900/40 transition-colors" />
+        
+        {/* Lock overlay for non-authenticated users */}
+        {!isAuthenticated && (
+          <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
+            <div className="bg-amber-500 text-amber-900 p-2 rounded-full shadow-lg">
+              <Lock className="h-5 w-5" />
+            </div>
+          </div>
+        )}
       </Link>
       
       <div className="p-2 sm:p-3 md:p-4 flex-1 flex flex-col bg-gradient-to-b from-amber-50/80 to-yellow-50/60">
@@ -110,6 +130,7 @@ function CustomStoryCard({ story }: { story: StoryCardType }) {
 
 export default function BrowseAllStoriesPage() {
   const [searchQuery, setSearchQuery] = useState("");
+  const { isAuthenticated } = useAuth();
 
   // Simple fetch all published stories
   const { data: stories = [], isLoading, error } = useQuery<StoryCardType[]>({
@@ -257,6 +278,7 @@ export default function BrowseAllStoriesPage() {
                     <CustomStoryCard 
                       key={story.id} 
                       story={story} 
+                      isAuthenticated={isAuthenticated}
                     />
                   ))}
                 </div>
