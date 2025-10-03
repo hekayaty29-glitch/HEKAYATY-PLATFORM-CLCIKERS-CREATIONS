@@ -117,11 +117,6 @@ export default function Header() {
           </DropdownMenu>
           
           
-          <Link href="/talecraft" className="font-cinzel text-xs xl:text-sm hover:text-amber-500 transition-colors flex items-center gap-1">
-            <Hammer className="h-3 w-3 xl:h-4 xl:w-4" />
-            <span className="hidden xl:inline">TaleCraft</span>
-          </Link>
-          
           
           {showRecs && (
              <Link href="/recommendations" className="font-cinzel text-xs xl:text-sm hover:text-amber-500 transition-colors flex items-center gap-1">
@@ -129,12 +124,6 @@ export default function Header() {
                <span className="hidden xl:inline">For You</span>
              </Link>
            )}
-           {isAuthenticated && (
-             <Link href="/talecraft" className="font-cinzel text-xs xl:text-sm hover:text-amber-500 transition-colors flex items-center gap-1">
-              <PenSquare className="h-3 w-3 xl:h-4 xl:w-4" />
-              <span className="hidden xl:inline">Write</span>
-            </Link>
-          )}
           
           {isAuthenticated && isAdmin && (
             <Link href="/admin" className="font-cinzel text-xs xl:text-sm hover:text-amber-500 transition-colors flex items-center gap-1">
@@ -274,18 +263,7 @@ export default function Header() {
                 </Link>
                 
                 
-                <Link href="/talecraft" onClick={closeMobileMenu} className="flex items-center py-4 px-4 rounded-lg hover:bg-amber-900/50 active:bg-amber-900/70 transition-colors touch-manipulation min-h-[48px] text-base font-medium">
-                  <Hammer className="mr-4 h-6 w-6 text-amber-400" />
-                  <span>TaleCraft</span>
-                </Link>
                 
-                
-                {isAuthenticated && (
-                  <Link href="/talecraft" onClick={closeMobileMenu} className="flex items-center py-4 px-4 rounded-lg hover:bg-amber-900/50 active:bg-amber-900/70 transition-colors touch-manipulation min-h-[48px] text-base font-medium">
-                    <PenSquare className="mr-4 h-6 w-6 text-amber-400" />
-                    <span>Write</span>
-                  </Link>
-                )}
                 
                 {isAuthenticated && isAdmin && (
                   <Link href="/admin" onClick={closeMobileMenu} className="flex items-center py-4 px-4 rounded-lg hover:bg-amber-900/50 active:bg-amber-900/70 transition-colors touch-manipulation min-h-[48px] text-base font-medium">

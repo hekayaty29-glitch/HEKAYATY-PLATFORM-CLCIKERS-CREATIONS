@@ -8,7 +8,6 @@ import EpicComicsSection from "@/components/home/EpicComicsSection";
 
 import SpecialStories from "@/components/home/SpecialStories";
 import TalesOfProphetsSection from "@/components/home/TalesOfProphetsSection";
-import TaleCraftSection from "@/components/home/TaleCraftSection";
 import WritersGemsSection from "@/components/home/WritersGemsSection";
 
 import AllStoriesSection from "@/components/home/AllStoriesSection";
@@ -39,8 +38,6 @@ export default function HomePage() {
         <CharactersSection />
         <SectionDivider />
         <SpecialStories />
-        <SectionDivider />
-        <TaleCraftSection />
         <SectionDivider />
         <WritersGemsSection />
         <SectionDivider />
