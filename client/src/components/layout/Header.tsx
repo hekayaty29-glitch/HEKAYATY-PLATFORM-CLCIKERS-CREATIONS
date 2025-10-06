@@ -72,7 +72,7 @@ export default function Header() {
             <Home className="h-3 w-3 xl:h-4 xl:w-4" />
             <span className="hidden xl:inline">Home</span>
           </Link>
-          <Link href="/originals" className="font-cinzel text-xs xl:text-sm hover:text-amber-500 transition-colors flex items-center gap-1">
+          <Link href="/browse-all" className="font-cinzel text-xs xl:text-sm hover:text-amber-500 transition-colors flex items-center gap-1">
             <BookOpen className="h-3 w-3 xl:h-4 xl:w-4" />
             <span className="hidden xl:inline">Discover</span>
           </Link>
@@ -82,39 +82,6 @@ export default function Header() {
             <span className="hidden xl:inline">Get Code</span>
           </Link>
           
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="link" className="font-cinzel text-xs xl:text-sm text-amber-50 hover:text-amber-500 p-0 flex items-center gap-1">
-                <Award className="h-3 w-3 xl:h-4 xl:w-4" />
-                <span className="hidden xl:inline">Genres</span>
-                <ChevronDown className="h-2 w-2 xl:h-3 xl:w-3" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="center" className="bg-midnight-blue border-amber-500">
-              <DropdownMenuItem asChild>
-                <Link href="/genres/1" className="cursor-pointer hover:bg-amber-900">Fantasy</Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem asChild>
-                <Link href="/genres/2" className="cursor-pointer hover:bg-amber-900">Romance</Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem asChild>
-                <Link href="/genres/3" className="cursor-pointer hover:bg-amber-900">Mystery</Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem asChild>
-                <Link href="/genres/4" className="cursor-pointer hover:bg-amber-900">Science Fiction</Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem asChild>
-                <Link href="/genres/5" className="cursor-pointer hover:bg-amber-900">Horror</Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem asChild>
-                <Link href="/genres/6" className="cursor-pointer hover:bg-amber-900">Adventure</Link>
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem asChild>
-                <Link href="/genres" className="cursor-pointer hover:bg-amber-900">All Genres</Link>
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
           
           
           
@@ -248,15 +215,11 @@ export default function Header() {
                   </div>
                 )}
                 
-                <Link href="/originals" onClick={closeMobileMenu} className="flex items-center py-4 px-4 rounded-lg hover:bg-amber-900/50 active:bg-amber-900/70 transition-colors touch-manipulation min-h-[48px] text-base font-medium">
+                <Link href="/browse-all" onClick={closeMobileMenu} className="flex items-center py-4 px-4 rounded-lg hover:bg-amber-900/50 active:bg-amber-900/70 transition-colors touch-manipulation min-h-[48px] text-base font-medium">
                   <BookOpen className="mr-4 h-6 w-6 text-amber-400" />
                   <span>Discover</span>
                 </Link>
                 
-                <Link href="/genres" onClick={closeMobileMenu} className="flex items-center py-4 px-4 rounded-lg hover:bg-amber-900/50 active:bg-amber-900/70 transition-colors touch-manipulation min-h-[48px] text-base font-medium">
-                  <Award className="mr-4 h-6 w-6 text-amber-400" />
-                  <span>Genres</span>
-                </Link>
                 <Link href="/subscribe" onClick={closeMobileMenu} className="flex items-center py-4 px-4 rounded-lg hover:bg-amber-900/50 active:bg-amber-900/70 transition-colors touch-manipulation min-h-[48px] text-base font-medium">
                   <Star className="mr-4 h-6 w-6 text-amber-400" />
                   <span>Get Code</span>
