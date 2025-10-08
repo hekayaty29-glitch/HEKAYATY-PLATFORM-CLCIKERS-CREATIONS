@@ -624,11 +624,17 @@ export default function StoryPage() {
                 )}
                 
                 {/* Video Upload Button - Show for story authors */}
-                {isAuthenticated && user && story.author && user.id === story.author.id && (
+                {isAuthenticated && (
                   <Button 
                     variant="outline" 
                     className="border-red-500 text-red-600 bg-transparent hover:bg-red-500 hover:text-white"
-                    onClick={() => setShowVideoUpload(!showVideoUpload)}
+                    onClick={() => {
+                      console.log('Video button clicked');
+                      console.log('User:', user);
+                      console.log('Story author:', story.author);
+                      console.log('Is author:', user && story.author && user.id === story.author.id);
+                      setShowVideoUpload(!showVideoUpload);
+                    }}
                   >
                     <Video className="mr-2 h-4 w-4" />
                     {story.youtube_url ? 'Edit Video' : 'Add Video'}
