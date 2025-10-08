@@ -35,7 +35,8 @@ import {
   AlertTriangle,
   Calendar,
   Clock,
-  Bookmark
+  Bookmark,
+  Video
 } from "lucide-react";
 import { StoryDetail, Rating } from "@/lib/types";
 import { useAuth } from "@/lib/auth";
@@ -44,6 +45,8 @@ import { apiRequest } from "@/lib/queryClient";
 import { cn, formatDate, calculateReadTime, getRatingStars } from "@/lib/utils";
 import { Reader } from "@/components/story/Reader";
 import OriginalPdfViewer from "@/components/story/OriginalPdfViewer";
+import VideoSection from "@/components/story/VideoSection";
+import VideoUploadForm from "@/components/story/VideoUploadForm";
 import {
   Form,
   FormControl,
@@ -65,9 +68,19 @@ const ratingFormSchema = z.object({
 
 export default function StoryPage() {
   const [, params] = useRoute("/story/:id");
-  const storyId = params?.id ?? "";
+  const storyId = (params as { id: string } | null)?.id ?? "";
   console.log('StoryPage params:', params);
   console.log('StoryPage storyId:', storyId);
+  
+  // Early return if no story ID
+  if (!storyId) {
+    return (
+      <div className="container mx-auto max-w-6xl px-4 py-10 text-center">
+        <h1 className="text-2xl font-cinzel font-bold text-brown-dark">Invalid Story URL</h1>
+        <p className="text-gray-600 mt-2">Please check the story URL and try again.</p>
+      </div>
+    );
+  }
   const { user, isAuthenticated } = useAuth();
   const isAdmin = user?.username === 'Admin';
   const { toast } = useToast();
@@ -80,6 +93,7 @@ export default function StoryPage() {
   const [uploadingChapter, setUploadingChapter] = useState(false);
   const [chapterTitle, setChapterTitle] = useState("");
   const [chapterOrder, setChapterOrder] = useState(1);
+  const [showVideoUpload, setShowVideoUpload] = useState(false);
 
   const form = useForm<z.infer<typeof ratingFormSchema>>({
     resolver: zodResolver(ratingFormSchema),
@@ -609,6 +623,18 @@ export default function StoryPage() {
                   </Dialog>
                 )}
                 
+                {/* Video Upload Button - Show for story authors */}
+                {isAuthenticated && user && story.author && user.id === story.author.id && (
+                  <Button 
+                    variant="outline" 
+                    className="border-red-500 text-red-600 bg-transparent hover:bg-red-500 hover:text-white"
+                    onClick={() => setShowVideoUpload(!showVideoUpload)}
+                  >
+                    <Video className="mr-2 h-4 w-4" />
+                    {story.youtube_url ? 'Edit Video' : 'Add Video'}
+                  </Button>
+                )}
+                
                 <Dialog open={showRatingForm} onOpenChange={setShowRatingForm}>
                   <DialogTrigger asChild>
                     <Button variant="outline" className="border-amber-500 text-brown-dark bg-transparent hover:bg-amber-500 hover:text-white">
@@ -694,6 +720,25 @@ export default function StoryPage() {
           </div>
           
           <Separator className="my-8 bg-amber-500/30" />
+          
+          {/* Video Section */}
+          <VideoSection 
+            youtubeUrl={story.youtube_url} 
+            storyTitle={story.title} 
+          />
+          
+          {/* Video Upload Form - Show for story authors */}
+          {showVideoUpload && isAuthenticated && user && story.author && user.id === story.author.id && (
+            <VideoUploadForm
+              storyId={storyId}
+              currentVideoUrl={story.youtube_url}
+              onClose={() => setShowVideoUpload(false)}
+              onSuccess={() => {
+                // Refresh story data to show updated video
+                queryClient.invalidateQueries({ queryKey: [`/stories/${storyId}`] });
+              }}
+            />
+          )}
           
           {/* Content Display - Stories use Reader, Comics use PDF Viewer */}
           <div className="flex flex-col-reverse lg:flex-row gap-8">
