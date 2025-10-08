@@ -733,8 +733,8 @@ export default function StoryPage() {
             storyTitle={story.title} 
           />
           
-          {/* Video Upload Form - Show for story authors */}
-          {showVideoUpload && isAuthenticated && user && story.author && user.id === story.author.id && (
+          {/* Video Upload Form - Show for authenticated users */}
+          {showVideoUpload && isAuthenticated && (
             <VideoUploadForm
               storyId={storyId}
               currentVideoUrl={story.youtube_url}

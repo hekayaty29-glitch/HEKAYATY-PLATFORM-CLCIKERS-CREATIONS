@@ -33,7 +33,7 @@ export default function VideoUploadForm({
     mutationFn: async (url: string) => {
       const normalizedUrl = url ? normalizeYouTubeUrl(url) : null;
       
-      const response = await apiRequest('PATCH', `/stories/${storyId}`, {
+      const response = await apiRequest('PUT', `/stories/${storyId}`, {
         youtube_url: normalizedUrl
       });
       
